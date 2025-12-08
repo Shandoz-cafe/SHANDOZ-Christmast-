@@ -225,3 +225,51 @@ body{
   .hero-sub{max-width:100%}
   .main-nav{display:none}
 }
+
+/* Add these rules to your existing styles.css (or merge them) */
+
+/* Ensure large menu images scale down responsively and preserve intrinsic aspect ratio */
+.responsive-img,
+.menu-item {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* Grid example - keep your existing layout but ensure images don't overflow */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+/* Snow container (full panel inside the holiday modal) */
+.hs-snow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* let clicks pass through */
+  overflow: hidden;
+  z-index: 10; /* above panel artwork but below controls if needed */
+}
+
+/* small visual tweak for snow canvas if used */
+.hs-snow canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+
+/* Prefer reduced motion: hide heavy animations */
+@media (prefers-reduced-motion: reduce) {
+  .hs-snow,
+  .hs-snow canvas {
+    display: none;
+  }
+}
