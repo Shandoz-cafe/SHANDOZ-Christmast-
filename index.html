@@ -32,7 +32,7 @@
         <p class="hs-promo">Kode Promo: <strong id="hs-promo-code">HOLIDAY25</strong></p>
 
         <div class="hs-ctas">
-          <a id="hs-use-wa" class="btn btn-gold" href="#" target="_blank" rel="noopener">Gunakan Promo (WhatsApp)</a>
+          <a id="hs-use-wa" class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Gunakan Promo (WhatsApp)</a>
           <button id="hs-card" class="btn btn-outline">Unduh Kartu Ucapan</button>
         </div>
 
@@ -56,14 +56,15 @@
 
       <!-- decorative canvas for confetti -->
       <canvas id="hs-confetti" class="hs-confetti" aria-hidden="true"></canvas>
-      <!-- subtle snow layer -->
+      <!-- subtle snow layer (canvas will be injected into this container by snow.js) -->
       <div id="hs-snow" class="hs-snow" aria-hidden="true"></div>
     </div>
   </div>
 
   <!-- Site-level audio loop (background ambience) -->
   <audio id="bg-audio" loop preload="auto">
-    <source src="Valir Phoenix.mp3" type="audio/mpeg">
+    <!-- encode space in filename to be safe in HTML -->
+    <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
@@ -86,7 +87,7 @@
         <li><a href="#menu" class="nav-link">Menu</a></li>
         <li><a href="#gallery" class="nav-link">Gallery</a></li>
         <li><a href="#about" class="nav-link">Tentang</a></li>
-        <li><a href="#order" class="nav-link">Order / WhatsApp</a></li>
+        <li><a href="#order" class="nav-link play-audio">Order / WhatsApp</a></li>
       </ul>
     </nav>
     <button id="off-close" class="off-close" aria-label="Tutup menu">✕</button>
@@ -112,7 +113,7 @@
       </nav>
 
       <div class="header-actions">
-        <a class="btn btn-gold" href="#order">Order / WhatsApp</a>
+        <a class="btn btn-gold play-audio" href="#order">Order / WhatsApp</a>
       </div>
     </div>
   </header>
@@ -125,7 +126,7 @@
           <h1 class="hero-title">Selamat Natal &amp; Tahun Baru dari SHANDO'Z</h1>
           <p class="hero-sub">Nikmati suasana hangat, secangkir kopi istimewa, dan promo eksklusif kami. Alamat: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
           <div class="hero-ctas">
-            <a class="btn btn-gold" href="#menu">Lihat Menu</a>
+            <a class="btn btn-gold play-audio" href="#menu">Lihat Menu</a>
             <a class="btn btn-ghost" href="#promo">Lihat Promo</a>
           </div>
         </div>
@@ -163,7 +164,7 @@
             <div class="promo-card">
               <h3>Merry &amp; Happy New Year Offer</h3>
               <p>Kode Promo: <strong>HOLIDAY25</strong> — diskon hingga 25% untuk paket kado spesial.</p>
-              <a class="btn btn-gold" href="#order" id="use-promo">Gunakan Promo</a>
+              <a class="btn btn-gold play-audio" href="#order" id="use-promo">Gunakan Promo</a>
             </div>
           </div>
         </div>
@@ -179,13 +180,14 @@
         </header>
 
         <div class="menu-grid">
-          <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu4.jpg" alt="Menu 4" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu5.jpg" alt="Menu 5" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu6.jpg" alt="Menu 6" class="menu-item lightbox-trigger" loading="lazy">
-          <img src="menu7.jpg" alt="Menu 7" class="menu-item lightbox-trigger" loading="lazy">
+          <!-- added intrinsic size attributes to reduce layout shift for large images -->
+          <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu4.jpg" alt="Menu 4" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu5.jpg" alt="Menu 5" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu6.jpg" alt="Menu 6" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu7.jpg" alt="Menu 7" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
         </div>
       </div>
     </section>
@@ -231,22 +233,22 @@
             <p>Banceuy Permai C3 No. 88, Sumur Bandung, ID</p>
 
             <h4>WhatsApp Business</h4>
-            <p><a href="https://wa.me/6285706370841" target="_blank" rel="noopener">085706370841 (WhatsApp)</a></p>
+            <p><a href="https://wa.me/6285706370841" target="_blank" rel="noopener" class="play-audio">085706370841 (WhatsApp)</a></p>
 
             <h4>Telepon</h4>
             <p>085706370841</p>
           </div>
 
-          <div <div class="map-card">
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!..."
-    >
-  </iframe>
-</div>
+          <div class="map-card">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!..."
+              width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              aria-label="Map to SHANDO'Z CAFE & COFFEE BAR">
+            </iframe>
+          </div>
 
-            <div class="small-cta">
-              <a class="btn btn-gold" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Pesan via WhatsApp</a>
-            </div>
+          <div class="small-cta">
+            <a class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Pesan via WhatsApp</a>
           </div>
         </div>
       </div>
@@ -259,7 +261,7 @@
         </header>
 
         <p>Klik tombol Order / WhatsApp untuk langsung menghubungi kami.</p>
-        <a class="btn btn-gold" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a>
+        <a class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a>
       </div>
     </section>
   </main>
@@ -269,7 +271,7 @@
       <div>
         <h3>SHANDO'Z CAFE & COFFEE BAR</h3>
         <p>Banceuy Permai C3 No. 88, Sumur Bandung, ID</p>
-        <p>WhatsApp: <a href="https://wa.me/6285706370841">085706370841</a></p>
+        <p>WhatsApp: <a href="https://wa.me/6285706370841" class="play-audio">085706370841</a></p>
       </div>
 
       <div>
@@ -298,6 +300,36 @@
     <img id="lb-img" src="" alt="">
   </div>
 
-  <script src="script.js"></script>
+  <!-- Snow effect script (separate file snow.js) -->
+  <script src="snow.js" defer></script>
+  <!-- Main site script (existing) -->
+  <script src="script.js" defer></script>
+
+  <!-- Autoplay on click: play bg-audio when user clicks links with class 'play-audio' or wa.me links -->
+  <script>
+    (function () {
+      function tryPlayAudio() {
+        const audio = document.getElementById('bg-audio');
+        if (!audio) return;
+        const p = audio.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(function () {
+            // ignore; user agent may block autoplay despite gesture in some cases
+          });
+        }
+      }
+
+      document.addEventListener('click', function (ev) {
+        // find closest anchor
+        const a = ev.target.closest && ev.target.closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href') || '';
+        // play if anchor marked or if it's a wa.me link
+        if (a.classList.contains('play-audio') || href.indexOf('wa.me') !== -1) {
+          tryPlayAudio();
+        }
+      }, {passive: true});
+    })();
+  </script>
 </body>
 </html>
