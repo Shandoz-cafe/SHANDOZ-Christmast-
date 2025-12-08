@@ -395,3 +395,120 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 }); // DOMContentLoaded end
+
+// Lightweight canvas-based snow effect.
+// Drop this file as "snow.js" and it's already added with defer in index.html.
+// It injects a canvas into #hs-snow and animates simple flakes.
+// Respects prefers-reduced-motion and reduces particles on small screens.
+
+(function () {
+  const container = document.getElementById('hs-snow');
+  if (!container) return;
+
+  // Respect user's motion preference
+  const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  // Create canvas
+  const canvas = document.createElement('canvas');
+  canvas.setAttribute('aria-hidden', 'true');
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+
+  let flakes = [];
+  let width = 0;
+  let height = 0;
+  let lastTime = 0;
+
+  function setup() {
+    const dpr = window.devicePixelRatio || 1;
+    width = container.clientWidth;
+    height = container.clientHeight;
+    canvas.width = Math.max(1, Math.floor(width * dpr));
+    canvas.height = Math.max(1, Math.floor(height * dpr));
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const area = width * height;
+    // number of flakes scaled to area; clamp to reasonable range
+    const base = Math.min(Math.max(Math.round(area / 15000), 12), 120);
+    flakes = [];
+    for (let i = 0; i < base; i++) {
+      flakes.push(createFlake(true));
+    }
+  }
+
+  function createFlake(randomInit = false) {
+    const x = Math.random() * width;
+    const y = randomInit ? Math.random() * height : -10;
+    const size = 1.5 + Math.random() * 4.5; // radius
+    const speed = 20 + Math.random() * 60; // px per second
+    const drift = (-0.5 + Math.random()) * 40; // horizontal drift per second
+    const opacity = 0.4 + Math.random() * 0.6;
+    const sway = Math.random() * 2 * Math.PI;
+    const swaySpeed = 0.5 + Math.random() * 1.5;
+    return { x, y, size, speed, drift, opacity, sway, swaySpeed };
+  }
+
+  function update(dt) {
+    for (let f of flakes) {
+      f.y += f.speed * dt;
+      f.x += f.drift * dt * 0.2 + Math.sin(f.sway) * (f.size * 0.12);
+      f.sway += f.swaySpeed * dt;
+
+      // recycle
+      if (f.y - f.size > height || f.x < -50 || f.x > width + 50) {
+        const idx = flakes.indexOf(f);
+        flakes[idx] = createFlake(false);
+      }
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+    for (let f of flakes) {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+      // draw soft circle
+      const gradient = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size);
+      gradient.addColorStop(0, `rgba(255,255,255,${f.opacity})`);
+      gradient.addColorStop(1, `rgba(255,255,255,${Math.max(0, f.opacity - 0.6)})`);
+      ctx.fillStyle = gradient;
+      ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function tick(t) {
+    if (!lastTime) lastTime = t;
+    const dt = Math.min(0.06, (t - lastTime) / 1000); // clamp dt to avoid big jumps
+    lastTime = t;
+    update(dt);
+    draw();
+    requestAnimationFrame(tick);
+  }
+
+  // Resize observer to adapt to layout changes
+  let resizeTimer;
+  function onResize() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      setup();
+    }, 120);
+  }
+
+  window.addEventListener('resize', onResize);
+  // If the container becomes visible later (modal open), re-setup so flakes populate correctly.
+  const obs = new MutationObserver(() => {
+    // if container has size > 0, ensure canvas matches
+    if (container.clientWidth > 0 && container.clientHeight > 0) {
+      setup();
+    }
+  });
+  obs.observe(container, { attributes: true, childList: true, subtree: false });
+
+  // Initialize and start
+  setup();
+  requestAnimationFrame(tick);
+})();
