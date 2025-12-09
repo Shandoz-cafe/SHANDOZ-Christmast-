@@ -225,3 +225,33 @@ body{
 
 /* snow canvas */
 .hs-snow canvas{position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none}
+
+/* ===== Fix for compositing seams / tile borders on some mobile GPUs =====
+   These rules reduce visual “checkerboard” seams caused by compositor tiling.
+   Add them near top of styles.css (after :root) or at end.
+*/
+html, body {
+  /* keep existing gradient but make sure it doesn't repeat or tile */
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  /* force the browser to create its own compositing layer to avoid seams */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+/* Ensure main content also has its own composite layer (helps on some devices) */
+main, .container, .hero, .menu-grid {
+  will-change: transform, opacity;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Slight z-index adjustments to keep overlays above background layers */
+.site-header { z-index: 220; }   /* header above most content */
+.hs-panel { z-index: 260; }     /* holiday modal above header */
+.lightbox, .lightbox[aria-hidden="false"] { z-index: 400; }
