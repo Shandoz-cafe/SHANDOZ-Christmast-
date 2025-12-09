@@ -155,14 +155,69 @@ body{
 .footer-col h3,h4{margin:0 0 8px;color:var(--gold-2)}
 .footer-bottom{border-top:1px solid rgba(255,255,255,0.03);padding:12px 0;margin-top:18px}
 
-/* lightbox */
+/* ===== Lightbox (updated) ===== */
+/* backdrop + centering */
 .lightbox{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);z-index:200;opacity:0;visibility:hidden;transition:opacity .2s;
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.88);
+  z-index:1200;
+  padding:20px;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .18s ease, visibility .18s;
 }
-.lightbox[aria-hidden="false"]{opacity:1;visibility:visible}
-.lb-close{position:absolute;right:22px;top:18px;border:0;background:transparent;color:#fff;font-size:22px}
+/* shown state */
+.lightbox[aria-hidden="false"]{
+  opacity:1;
+  visibility:visible;
+}
 
-/* reveal reveal animations (text naik saat scroll) */
+/* Inner image: constrain size so it won't zoom past viewport.
+   Use max-width and max-height with sensible caps for desktop/mobile. */
+#lb-img {
+  max-width: min(94vw, 1200px);
+  max-height: min(86vh, 1000px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display:block;
+  border-radius:8px;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.6);
+  background:#0a0a0a;
+}
+
+/* Caption under image */
+.lb-caption { margin-top:12px; color:#e8e8e8; font-size:14px; text-align:center; }
+
+/* Prominent close control */
+.lb-close{
+  position:absolute;
+  right:18px;
+  top:18px;
+  width:54px;
+  height:54px;
+  border-radius:10px;
+  background:rgba(0,0,0,0.6);
+  color:#fff;
+  border:0;
+  font-size:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1250;
+  cursor:pointer;
+}
+.lb-close:hover{ background:rgba(0,0,0,0.78); }
+.lb-close:focus{ outline:3px solid rgba(242,209,107,0.95); outline-offset:3px; }
+
+/* prevent page scroll when lightbox open */
+body.lb-open{ overflow:hidden; touch-action:none; }
+
+/* reveal animations */
 .reveal{transform:translateY(18px);opacity:0;transition:transform .72s cubic-bezier(.2,.9,.2,1),opacity .6s}
 .reveal.in-view{transform:translateY(0);opacity:1}
 
@@ -226,8 +281,6 @@ body{
   .main-nav{display:none}
 }
 
-/* Add these rules to your existing styles.css (or merge them) */
-
 /* Ensure large menu images scale down responsively and preserve intrinsic aspect ratio */
 .responsive-img,
 .menu-item {
@@ -239,7 +292,7 @@ body{
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
-/* Grid example - keep your existing layout but ensure images don't overflow */
+/* Grid: don't overflow */
 .menu-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
@@ -247,16 +300,7 @@ body{
   align-items: start;
 }
 
-/* Snow container (full panel inside the holiday modal) */
-.hs-snow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none; /* let clicks pass through */
-  overflow: hidden;
-  z-index: 10; /* above panel artwork but below controls if needed */
-}
-
-/* small visual tweak for snow canvas if used */
+/* Snow canvas tweaks */
 .hs-snow canvas {
   position: absolute;
   inset: 0;
