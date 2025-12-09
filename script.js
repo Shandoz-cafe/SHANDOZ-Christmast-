@@ -329,3 +329,20 @@ document.addEventListener('DOMContentLoaded', () => {
     try { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view')); } catch(e){}
   }
 });
+
+// Small repaint hack to remove compositor seams on some mobile browsers.
+// This briefly toggles a 3D transform to force the renderer to repaint tiles.
+window.addEventListener('load', () => {
+  try {
+    // brief transform to nudge the compositor; removed shortly after
+    document.documentElement.style.transform = 'translateZ(0)';
+    window.requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.documentElement.style.transform = '';
+      }, 60);
+    });
+  } catch (e) {
+    // ignore if not allowed
+    console.warn('repaint hack failed', e);
+  }
+});
