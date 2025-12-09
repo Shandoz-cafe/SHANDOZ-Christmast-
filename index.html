@@ -5,25 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SHANDO'Z CAFE & COFFEE BAR • Holiday Special</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="styles.css" />
   <meta name="theme-color" content="#061f19" />
-  <!-- Quick fallback so .reveal won't leave page blank if JS crashes -->
   <script>
+    // quick fallback so .reveal won't leave page blank if JS crashes
     document.addEventListener('DOMContentLoaded', function () {
-      try { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view')); } catch(e){/* ignore */ }
+      try { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view')); } catch(e) {}
     });
   </script>
 </head>
 <body>
-  <!-- Special holiday modal (will be shown once per day unless dismissed) -->
+  <!-- Holiday modal -->
   <div id="holiday-special" class="holiday-special" aria-hidden="true" role="dialog" aria-label="Holiday greeting">
     <div class="hs-panel" role="document">
       <button class="hs-close" id="hs-close" aria-label="Tutup modal">✕</button>
-
       <div class="hs-left">
         <h2 class="hs-title">Merry Christmas &amp; Happy New Year</h2>
         <p class="hs-sub">SHANDO'Z CAFE &amp; COFFEE BAR — Banceuy Permai C3 No. 88, Sumur Bandung</p>
@@ -65,36 +60,31 @@
     </div>
   </div>
 
-  <!-- Site-level audio loop (background ambience) -->
+  <!-- Audio -->
   <audio id="bg-audio" loop preload="auto">
     <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
-
-  <!-- Floating audio control -->
   <button id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play ambience">▶︎</button>
 
-  <!-- Hamburger (three-line) action button -->
+  <!-- Hamburger -->
   <button id="hamburger" class="hamburger" aria-label="Menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
 
-  <!-- Offcanvas menu -->
+  <!-- Offcanvas -->
   <aside id="offcanvas" class="offcanvas" aria-hidden="true">
     <nav class="off-nav" aria-label="Site options">
       <ul>
         <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         <li><a href="#promo" class="nav-link">Promo</a></li>
         <li><a href="#menu" class="nav-link">Menu</a></li>
-        <li><a href="#gallery" class="nav-link">Gallery</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
         <li><a href="#about" class="nav-link">Tentang</a></li>
-        <li><a href="#order" class="nav-link play-audio">Order / WhatsApp</a></li>
       </ul>
     </nav>
     <button id="off-close" class="off-close" aria-label="Tutup menu">✕</button>
   </aside>
 
-  <!-- Overlay -->
   <div id="overlay" class="overlay" hidden></div>
 
   <header class="site-header">
@@ -108,7 +98,7 @@
         <ul>
           <li><a href="#menu" class="nav-link">Menu</a></li>
           <li><a href="#promo" class="nav-link">Promo</a></li>
-          <li><a href="#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="gallery.html" class="nav-link">Gallery</a></li>
           <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         </ul>
       </nav>
@@ -120,7 +110,7 @@
   </header>
 
   <main>
-    <!-- HERO -->
+    <!-- Hero / Promo / Menu sections (unchanged) -->
     <section class="hero reveal" id="hero" data-reveal>
       <div class="container hero-inner">
         <div class="hero-content">
@@ -139,7 +129,6 @@
       </div>
     </section>
 
-    <!-- PROMO -->
     <section id="promo" class="section promo reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -152,19 +141,16 @@
             <img src="promo1.jpg" alt="Promo 1" loading="lazy" class="lightbox-trigger">
             <img src="promo2.jpg" alt="Promo 2" loading="lazy" class="lightbox-trigger">
             <img src="promo3.jpg" alt="Promo 3" loading="lazy" class="lightbox-trigger">
-            <img src="promo4.jpg" alt="Promo 4" loading="lazy" class="lightbox-trigger">
-            <img src="promo5.jpg" alt="Promo 5" loading="lazy" class="lightbox-trigger">
           </div>
 
           <div class="promo-media">
             <video controls preload="metadata" class="promo-video">
               <source src="qponpromo.mp4" type="video/mp4">
-              Your browser does not support the video tag.
             </video>
 
             <div class="promo-card">
               <h3>Merry &amp; Happy New Year Offer</h3>
-              <p>Kode Promo: <strong>HOLIDAY25</strong> — diskon hingga 25% untuk paket kado spesial.</p>
+              <p>Kode Promo: <strong>HOLIDAY25</strong></p>
               <a class="btn btn-gold play-audio" href="#order" id="use-promo">Gunakan Promo</a>
             </div>
           </div>
@@ -172,7 +158,6 @@
       </div>
     </section>
 
-    <!-- MENU -->
     <section id="menu" class="section menu reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -181,41 +166,18 @@
         </header>
 
         <div class="menu-grid">
-          <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu4.jpg" alt="Menu 4" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu5.jpg" alt="Menu 5" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu6.jpg" alt="Menu 6" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu7.jpg" alt="Menu 7" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
+          <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy">
+          <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy">
+          <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy">
         </div>
       </div>
     </section>
 
-    <!-- GALLERY -->
-    <section id="gallery" class="section gallery reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Gallery</h2>
-          <p>Suasana di SHANDO'Z CAFE &amp; COFFEE BAR.</p>
-        </header>
-
-        <div class="gallery-grid">
-          <img src="gal1.jpg" alt="Gal 1" class="lightbox-trigger" loading="lazy">
-          <img src="gal2.jpg" alt="Gal 2" class="lightbox-trigger" loading="lazy">
-          <img src="gal3.jpg" alt="Gal 3" class="lightbox-trigger" loading="lazy">
-          <img src="gal4.jpg" alt="Gal 4" class="lightbox-trigger" loading="lazy">
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT -->
     <section id="about" class="section about reveal" data-reveal>
       <div class="container">
         <header class="section-header">
           <h2>Tentang SHANDO'Z</h2>
         </header>
-
         <p class="lead">SHANDO'Z CAFE &amp; COFFEE BAR: tempat ngopi nyaman dengan sentuhan mewah.</p>
       </div>
     </section>
@@ -225,7 +187,6 @@
         <header class="section-header">
           <h2>Order Sekarang</h2>
         </header>
-
         <p>Klik tombol Order / WhatsApp untuk langsung menghubungi kami.</p>
         <a class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a>
       </div>
@@ -242,12 +203,15 @@
     </div>
   </footer>
 
-  <!-- Lightbox modal -->
+  <!-- Lightbox (shared) -->
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Gambar besar">
     <button id="lb-close" class="lb-close" aria-label="Tutup gambar">✕</button>
+    <button id="lb-prev" class="lb-nav lb-prev" aria-label="Sebelumnya">‹</button>
+    <button id="lb-next" class="lb-nav lb-next" aria-label="Selanjutnya">›</button>
     <div class="lb-inner">
       <img id="lb-img" src="" alt="">
       <div class="lb-caption" id="lb-caption" aria-hidden="true"></div>
+      <a id="lb-download" class="lb-download" href="#" download aria-hidden="true">Unduh</a>
     </div>
   </div>
 
