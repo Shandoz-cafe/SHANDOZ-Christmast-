@@ -1,6 +1,5 @@
 // Main JS — combined interactions: offcanvas, reveal-on-scroll, lightbox, audio control,
 // confetti utilities, hero parallax, and holiday-special modal + countdown.
-// Put this file at end of <body> (already done in index.html).
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -59,13 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
     a.addEventListener('click', (e) => {
       const href = a.getAttribute('href');
       if (!href || href.startsWith('http') || href.startsWith('https') || href.startsWith('mailto:')) return;
-      e.preventDefault();
-      const target = document.querySelector(href);
-      if (target) {
-        target.scrollIntoView({behavior:'smooth', block:'start'});
-        target.setAttribute('tabindex','-1');
-        target.focus({preventScroll:true});
-        setTimeout(()=> target.removeAttribute('tabindex'), 1200);
+      // If link points to a fragment on same page, smooth-scroll (skip external page links)
+      if (href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({behavior:'smooth', block:'start'});
+          target.setAttribute('tabindex','-1');
+          target.focus({preventScroll:true});
+          setTimeout(()=> target.removeAttribute('tabindex'), 1200);
+        }
       }
     });
   });
@@ -92,38 +94,73 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* -----------------------
-     Lightbox (images)
+     Lightbox (images) — improved
      ----------------------- */
   const lightbox = document.getElementById('lightbox');
   const lbImg = document.getElementById('lb-img');
   const lbClose = document.getElementById('lb-close');
+  const lbCaption = document.getElementById('lb-caption');
+
+  function openLightbox(src, altText) {
+    if (!lightbox || !lbImg) return;
+    lbImg.src = src;
+    if (lbCaption) {
+      if (altText) {
+        lbCaption.textContent = altText;
+        lbCaption.setAttribute('aria-hidden','false');
+      } else {
+        lbCaption.textContent = '';
+        lbCaption.setAttribute('aria-hidden','true');
+      }
+    }
+    lightbox.setAttribute('aria-hidden','false');
+    // prevent background scroll
+    document.body.classList.add('lb-open');
+    // focus close button for accessibility
+    if (lbClose) lbClose.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || !lbImg) return;
+    lightbox.setAttribute('aria-hidden','true');
+    document.body.classList.remove('lb-open');
+    // clear image after a small timeout to avoid flicker on very slow devices
+    setTimeout(() => { lbImg.src = ''; if (lbCaption) { lbCaption.textContent = ''; lbCaption.setAttribute('aria-hidden','true'); } }, 150);
+  }
 
   document.querySelectorAll('.lightbox-trigger').forEach(img => {
     img.addEventListener('click', (e) => {
       const src = img.getAttribute('src');
+      const alt = img.getAttribute('alt') || '';
       if (!src) return;
-      if (lbImg) lbImg.src = src;
-      if (lightbox) lightbox.setAttribute('aria-hidden','false');
+      openLightbox(src, alt);
     });
   });
-  if (lbClose) lbClose.addEventListener('click', () => {
-    if (lightbox) lightbox.setAttribute('aria-hidden','true');
-    if (lbImg) lbImg.src = '';
-  });
-  if (lightbox) lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) {
-      lightbox.setAttribute('aria-hidden','true');
-      if (lbImg) lbImg.src = '';
+
+  if (lbClose) lbClose.addEventListener('click', closeLightbox);
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      // close when clicking backdrop (not the image)
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox && lightbox.getAttribute('aria-hidden') === 'false') {
+      closeLightbox();
     }
   });
 
   /* -----------------------
-     Background audio control
+     Background audio control + autoplay-on-link-click
      ----------------------- */
   const audio = document.getElementById('bg-audio');
   const audioToggle = document.getElementById('audio-toggle');
-  if (audio && audioToggle) {
+  if (audio) {
+    // set initial volume
     audio.volume = 0.28;
+  }
+  if (audio && audioToggle) {
     audioToggle.addEventListener('click', () => {
       const playing = audioToggle.getAttribute('aria-pressed') === 'true';
       if (playing) {
@@ -137,6 +174,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Play background audio when user clicks any link (<a>), to satisfy "automatic nyala music backgroundnya saat klik apa saja pada halaman link"
+  function tryPlayAudio() {
+    if (!audio) return;
+    // attempt to play (may be blocked by browser until user gesture)
+    audio.play().catch(()=>{ /* ignore */ });
+    // update toggle state UI
+    if (audioToggle) {
+      audioToggle.setAttribute('aria-pressed','true');
+      audioToggle.textContent = '⏸';
+    }
+  }
+  document.addEventListener('click', function (ev) {
+    const a = ev.target.closest && ev.target.closest('a');
+    if (!a) return;
+    // any anchor click triggers attempt to play background audio
+    tryPlayAudio();
+  }, {passive:true});
 
   /* -----------------------
      Confetti utilities (canvas + DOM)
@@ -396,11 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 }); // DOMContentLoaded end
 
-// Lightweight canvas-based snow effect.
-// Drop this file as "snow.js" and it's already added with defer in index.html.
-// It injects a canvas into #hs-snow and animates simple flakes.
-// Respects prefers-reduced-motion and reduces particles on small screens.
-
+// Lightweight canvas-based snow effect (kept as-is).
 (function () {
   const container = document.getElementById('hs-snow');
   if (!container) return;
@@ -512,3 +563,92 @@ document.addEventListener('DOMContentLoaded', () => {
   setup();
   requestAnimationFrame(tick);
 })();
+```
+
+```html name=contact.html url=https://github.com/Shandoz-cafe/SHANDOZ-Christmast-/blob/main/contact.html
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kontak & Lokasi — SHANDO'Z CAFE & COFFEE BAR</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="SHANDO'Z Home">
+        <div class="brand-mark" aria-hidden="true">S'</div>
+        <span class="brand-text">SHANDO'Z CAFE & COFFEE BAR</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html#menu" class="nav-link">Menu</a></li>
+          <li><a href="index.html#promo" class="nav-link">Promo</a></li>
+          <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section contact">
+      <div class="container">
+        <header class="section-header">
+          <h2>Kontak & Lokasi</h2>
+          <p>Hubungi kami atau lihat lokasi di peta.</p>
+        </header>
+
+        <div class="contact-grid">
+          <div>
+            <h3>Alamat</h3>
+            <p>Banceuy Permai C3 No. 88, Sumur Bandung, Indonesia</p>
+            <h3>Telepon / WhatsApp</h3>
+            <p><a class="btn btn-gold" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a></p>
+            <h3>Jam Operasional</h3>
+            <p>Senin–Minggu: 08:00 — 22:00 (waktu setempat)</p>
+          </div>
+
+          <div>
+            <h3>Peta Lokasi</h3>
+            <div class="map-card" style="height:360px;border-radius:12px;overflow:hidden;">
+              <iframe
+                src="https://maps.app.goo.gl/79vUGCkKjksmPMjC8?g_st=ac"
+                width="100%" height="100%" style="border:0;" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <p style="margin-top:20px;">Kembali ke <a href="index.html">halaman utama</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-bottom">
+        <small>© SHANDO'Z CAFE &amp; COFFEE BAR</small>
+      </div>
+    </div>
+  </footer>
+
+  <audio id="bg-audio" loop preload="auto">
+    <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <script src="script.js" defer></script>
+</body>
+</html>
+```
+
+Ringkasan perubahan & langkah selanjutnya:
+- Saya memperbaiki lightbox agar gambar menu/promo tidak nge-zoom berlebihan dengan batas max-width/max-height pada #lb-img, membuat tombol close lebih besar/kontras, dan menambahkan penanganan keyboard (ESC) dan klik backdrop untuk menutup. Saat lightbox terbuka, background tidak akan menggulir (body.lb-open).
+- Saya memisahkan Kontak & Lokasi ke halaman terpisah contact.html dan memperbarui tautan navigasi di index.html/offcanvas agar mengarah ke contact.html (tidak lagi menampilkan bagian kontak pada halaman utama).
+- Saya menambahkan auto-play attempt untuk background music saat pengguna mengklik link apapun (<a>) di halaman — script akan mencoba memutar audio pada klik link dan juga memperbarui tombol toggle.
+- Saya mengupdate styles.css dan script.js sesuai perbaikan di atas.
+
+Catatan penting:
+- Browser modern dapat memblokir autoplay sebelum ada gesture pengguna. Saya menambahkan mekanisme untuk mencoba memutar saat klik link; namun jika browser tetap memblokir, pengguna harus menekan tombol audio (▶︎) atau klik link lagi untuk memberikan gesture.
+- Jika mau, saya bisa membuat PR di repo dengan file-file ini atau hanya kirim patch/commit. Mau saya commit langsung ke repo (butuh akses/konfirmasi branch) atau kamu yang copy-paste file hasil edit ini?
