@@ -82,7 +82,8 @@
   <aside id="offcanvas" class="offcanvas" aria-hidden="true">
     <nav class="off-nav" aria-label="Site options">
       <ul>
-        <li><a href="#contact" class="nav-link">Kontak & Lokasi</a></li>
+        <!-- contact now points to a separate page -->
+        <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         <li><a href="#promo" class="nav-link">Promo</a></li>
         <li><a href="#menu" class="nav-link">Menu</a></li>
         <li><a href="#gallery" class="nav-link">Gallery</a></li>
@@ -98,7 +99,7 @@
 
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="#" aria-label="SHANDO'Z Home">
+      <a class="brand" href="index.html" aria-label="SHANDO'Z Home">
         <div class="brand-mark" aria-hidden="true">S'</div>
         <span class="brand-text">SHANDO'Z CAFE & COFFEE BAR</span>
       </a>
@@ -108,7 +109,8 @@
           <li><a href="#menu" class="nav-link">Menu</a></li>
           <li><a href="#promo" class="nav-link">Promo</a></li>
           <li><a href="#gallery" class="nav-link">Gallery</a></li>
-          <li><a href="#contact" class="nav-link">Kontak</a></li>
+          <!-- contact now links to separate page -->
+          <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         </ul>
       </nav>
 
@@ -180,7 +182,7 @@
         </header>
 
         <div class="menu-grid">
-          <!-- added intrinsic size attributes to reduce layout shift for large images -->
+          <!-- intrinsic sizes and responsive class kept -->
           <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
           <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
           <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
@@ -209,7 +211,7 @@
       </div>
     </section>
 
-    <!-- About & location -->
+    <!-- About -->
     <section id="about" class="section about reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -217,26 +219,6 @@
         </header>
 
         <p class="lead">SHANDO'Z CAFE &amp; COFFEE BAR: tempat ngopi nyaman dengan sentuhan mewah. Alamat lengkap: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
-      </div>
-    </section>
-
-    <!-- Contact / order -->
-    <section id="contact" class="section contact reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Kontak & Lokasi</h2>
-        </header>
-
-          <div class="map-card">
-            <iframe
-              src="https://maps.app.goo.gl/79vUGCkKjksmPMjC8?g_st=ac">
-            </iframe>
-          </div>
-
-          <div class="small-cta">
-            <a class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Pesan via WhatsApp</a>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -263,9 +245,12 @@
   </footer>
 
   <!-- Simple lightbox modal for images -->
-  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog">
-    <button id="lb-close" class="lb-close" aria-label="Tutup">✕</button>
-    <img id="lb-img" src="" alt="">
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Gambar besar">
+    <button id="lb-close" class="lb-close" aria-label="Tutup gambar">✕</button>
+    <div class="lb-inner">
+      <img id="lb-img" src="" alt="">
+      <div class="lb-caption" id="lb-caption" aria-hidden="true"></div>
+    </div>
   </div>
 
   <!-- Snow effect script (separate file snow.js) -->
@@ -273,31 +258,6 @@
   <!-- Main site script (existing) -->
   <script src="script.js" defer></script>
 
-  <!-- Autoplay on click: play bg-audio when user clicks links with class 'play-audio' or wa.me links -->
-  <script>
-    (function () {
-      function tryPlayAudio() {
-        const audio = document.getElementById('bg-audio');
-        if (!audio) return;
-        const p = audio.play();
-        if (p && typeof p.catch === 'function') {
-          p.catch(function () {
-            // ignore; user agent may block autoplay despite gesture in some cases
-          });
-        }
-      }
-
-      document.addEventListener('click', function (ev) {
-        // find closest anchor
-        const a = ev.target.closest && ev.target.closest('a');
-        if (!a) return;
-        const href = a.getAttribute('href') || '';
-        // play if anchor marked or if it's a wa.me link
-        if (a.classList.contains('play-audio') || href.indexOf('wa.me') !== -1) {
-          tryPlayAudio();
-        }
-      }, {passive: true});
-    })();
-  </script>
+  <!-- NOTE: autoplay-on-link-click is handled in script.js now (plays when any <a> is clicked). -->
 </body>
 </html>
