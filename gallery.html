@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gallery — SHANDO'Z CAFE & COFFEE BAR</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="theme-color" content="#061f19" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="SHANDO'Z Home">
+        <div class="brand-mark" aria-hidden="true">S'</div>
+        <span class="brand-text">SHANDO'Z CAFE & COFFEE BAR</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="index.html#menu" class="nav-link">Menu</a></li>
+          <li><a href="index.html#promo" class="nav-link">Promo</a></li>
+          <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+          <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="section gallery-section reveal" id="gallery" data-reveal>
+      <div class="container">
+        <header class="section-header">
+          <h2>Gallery</h2>
+          <p>Suasana & menu di SHANDO'Z CAFE &amp; COFFEE BAR.</p>
+        </header>
+
+        <!-- Masonry-ish gallery using CSS columns for a modern look -->
+        <div class="masonry">
+          <!-- add data-caption attribute for captions; images should be optimized for web -->
+          <figure class="masonry-item">
+            <img src="gal1.jpg" alt="French Fries / Menu" class="lightbox-trigger" loading="lazy" data-caption="Crispy Fries — favorit pelanggan">
+          </figure>
+          <figure class="masonry-item">
+            <img src="gal2.jpg" alt="Coffee & Ambience" class="lightbox-trigger" loading="lazy" data-caption="Suasana hangat di malam hari">
+          </figure>
+          <figure class="masonry-item">
+            <img src="gal3.jpg" alt="Signature Dish" class="lightbox-trigger" loading="lazy" data-caption="Signature Dish kami">
+          </figure>
+          <figure class="masonry-item">
+            <img src="gal4.jpg" alt="Dessert" class="lightbox-trigger" loading="lazy" data-caption="Dessert spesial">
+          </figure>
+          <figure class="masonry-item">
+            <img src="gal5.jpg" alt="Interior" class="lightbox-trigger" loading="lazy" data-caption="Interior cozy">
+          </figure>
+          <figure class="masonry-item">
+            <img src="gal6.jpg" alt="Outdoor" class="lightbox-trigger" loading="lazy" data-caption="Outdoor seating">
+          </figure>
+          <!-- Add more items as needed -->
+        </div>
+
+        <p style="margin-top:20px;">Kembali ke <a href="index.html">halaman utama</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-bottom">
+        <div class="container">
+          <small>© SHANDO'Z CAFE &amp; COFFEE BAR</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Shared lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Gambar besar">
+    <button id="lb-close" class="lb-close" aria-label="Tutup gambar">✕</button>
+    <button id="lb-prev" class="lb-nav lb-prev" aria-label="Sebelumnya">‹</button>
+    <button id="lb-next" class="lb-nav lb-next" aria-label="Selanjutnya">›</button>
+    <div class="lb-inner">
+      <img id="lb-img" src="" alt="">
+      <div class="lb-caption" id="lb-caption" aria-hidden="true"></div>
+      <a id="lb-download" class="lb-download" href="#" download aria-hidden="true">Unduh</a>
+    </div>
+  </div>
+
+  <audio id="bg-audio" loop preload="auto">
+    <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
+  </audio>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
