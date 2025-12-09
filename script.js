@@ -1,27 +1,27 @@
-// Main JS — robust and fixed: lightbox constraints, autoplay-on-link-click, contact moved to contact.html,
-// and defensive try/catch so page doesn't remain blank if a runtime error happens.
+// Main JS — robust, includes lightbox, offcanvas, autoplay-on-link-click, holiday modal with countdown,
+// confetti + snow triggers, and defensive checks to avoid leaving page blank on errors.
 
 document.addEventListener('DOMContentLoaded', () => {
   try {
-    /* -----------------------
-       Offcanvas (hamburger)
-       ----------------------- */
+
+    /* Offcanvas (hamburger) */
     const hamburger = document.getElementById('hamburger');
     const offcanvas = document.getElementById('offcanvas');
     const overlay = document.getElementById('overlay');
     const offClose = document.getElementById('off-close');
 
     function openOffcanvas(){
-      if (offcanvas) offcanvas.setAttribute('aria-hidden','false');
-      if (hamburger) hamburger.setAttribute('aria-expanded','true');
-      if (overlay) overlay.removeAttribute('hidden');
+      if (!offcanvas || !hamburger || !overlay) return;
+      offcanvas.setAttribute('aria-hidden','false');
+      hamburger.setAttribute('aria-expanded','true');
+      overlay.removeAttribute('hidden');
     }
     function closeOffcanvas(){
-      if (offcanvas) offcanvas.setAttribute('aria-hidden','true');
-      if (hamburger) hamburger.setAttribute('aria-expanded','false');
-      if (overlay) overlay.setAttribute('hidden','');
+      if (!offcanvas || !hamburger || !overlay) return;
+      offcanvas.setAttribute('aria-hidden','true');
+      hamburger.setAttribute('aria-expanded','false');
+      overlay.setAttribute('hidden','');
     }
-
     if (hamburger) hamburger.addEventListener('click', () => {
       const expanded = hamburger.getAttribute('aria-expanded') === 'true';
       if (expanded) closeOffcanvas(); else openOffcanvas();
@@ -30,28 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (overlay) overlay.addEventListener('click', closeOffcanvas);
     document.querySelectorAll('.off-nav a').forEach(a => a.addEventListener('click', closeOffcanvas));
 
-    /* -----------------------
-       Reveal on scroll (text naik)
-       ----------------------- */
+    /* Reveal on scroll */
     const revealEls = document.querySelectorAll('[data-reveal]');
     if ('IntersectionObserver' in window) {
-      const revealObserver = new IntersectionObserver((entries) => {
+      const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view');
-            revealObserver.unobserve(entry.target);
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.18 });
-      revealEls.forEach(el => revealObserver.observe(el));
+      revealEls.forEach(el => observer.observe(el));
     } else {
-      // fallback: show all
       revealEls.forEach(el => el.classList.add('in-view'));
     }
 
-    /* -----------------------
-       Smooth anchors + focus (fragment links only)
-       ----------------------- */
+    /* Smooth anchors (fragments) */
     document.querySelectorAll('a.nav-link, a[href^="#"]').forEach(a => {
       a.addEventListener('click', (e) => {
         const href = a.getAttribute('href');
@@ -69,9 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    /* -----------------------
-       Hero tiny parallax
-       ----------------------- */
+    /* Parallax small */
     const heroTitle = document.querySelector('.hero-title');
     if (heroTitle) {
       let ticking = false;
@@ -82,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const rect = heroTitle.getBoundingClientRect();
           const winH = window.innerHeight;
           const visibleRatio = Math.max(0, Math.min(1, (winH - rect.top) / (winH + rect.height)));
-          const translate = (1 - visibleRatio) * 12; // up to 12px
+          const translate = (1 - visibleRatio) * 12;
           heroTitle.style.setProperty('--parallax', `${translate}px`);
           heroTitle.classList.add('parallax');
           ticking = false;
@@ -90,130 +83,85 @@ document.addEventListener('DOMContentLoaded', () => {
       }, {passive:true});
     }
 
-    /* -----------------------
-       Lightbox (images) — improved open/close/caption + accessibility
-       ----------------------- */
+    /* Lightbox */
     const lightbox = document.getElementById('lightbox');
     const lbImg = document.getElementById('lb-img');
     const lbClose = document.getElementById('lb-close');
     const lbCaption = document.getElementById('lb-caption');
 
-    function openLightbox(src, altText) {
+    function openLightbox(src, alt) {
       if (!lightbox || !lbImg) return;
       lbImg.src = src;
       if (lbCaption) {
-        if (altText) {
-          lbCaption.textContent = altText;
-          lbCaption.setAttribute('aria-hidden','false');
-        } else {
-          lbCaption.textContent = '';
-          lbCaption.setAttribute('aria-hidden','true');
-        }
+        lbCaption.textContent = alt || '';
+        lbCaption.setAttribute('aria-hidden', alt ? 'false' : 'true');
       }
       lightbox.setAttribute('aria-hidden','false');
       document.body.classList.add('lb-open');
       if (lbClose) lbClose.focus();
     }
-
     function closeLightbox() {
       if (!lightbox || !lbImg) return;
       lightbox.setAttribute('aria-hidden','true');
       document.body.classList.remove('lb-open');
-      setTimeout(() => {
-        lbImg.src = '';
-        if (lbCaption) { lbCaption.textContent = ''; lbCaption.setAttribute('aria-hidden','true'); }
-      }, 120);
+      setTimeout(()=> { lbImg.src=''; if (lbCaption) { lbCaption.textContent=''; lbCaption.setAttribute('aria-hidden','true'); } }, 120);
     }
-
     document.querySelectorAll('.lightbox-trigger').forEach(img => {
-      img.addEventListener('click', (e) => {
+      img.addEventListener('click', () => {
         const src = img.getAttribute('src') || img.dataset.src;
         const alt = img.getAttribute('alt') || '';
         if (!src) return;
         openLightbox(src, alt);
       });
     });
-
     if (lbClose) lbClose.addEventListener('click', closeLightbox);
-    if (lightbox) lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && lightbox && lightbox.getAttribute('aria-hidden') === 'false') {
-        closeLightbox();
-      }
-    });
+    if (lightbox) lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.getAttribute('aria-hidden') === 'false') closeLightbox(); });
 
-    /* -----------------------
-       Background audio control + autoplay-on-link-click
-       ----------------------- */
+    /* Audio control + autoplay on any link click */
     const audio = document.getElementById('bg-audio');
     const audioToggle = document.getElementById('audio-toggle');
     if (audio) audio.volume = 0.28;
-
     if (audio && audioToggle) {
       audioToggle.addEventListener('click', () => {
         const playing = audioToggle.getAttribute('aria-pressed') === 'true';
-        if (playing) {
-          audio.pause();
-          audioToggle.setAttribute('aria-pressed','false');
-          audioToggle.textContent = '▶︎';
-        } else {
-          audio.play().catch(()=>{});
-          audioToggle.setAttribute('aria-pressed','true');
-          audioToggle.textContent = '⏸';
-        }
+        if (playing) { audio.pause(); audioToggle.setAttribute('aria-pressed','false'); audioToggle.textContent='▶︎'; }
+        else { audio.play().catch(()=>{}); audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent='⏸'; }
       });
     }
-
     function tryPlayAudio() {
       if (!audio) return;
-      audio.play().then(()=> {
-        if (audioToggle) {
-          audioToggle.setAttribute('aria-pressed','true');
-          audioToggle.textContent = '⏸';
-        }
-      }).catch(()=> {
-        // some browsers block autoplay even after click — ignore silently
-      });
+      audio.play().then(()=> { if (audioToggle) { audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent='⏸'; } }).catch(()=>{/* ignored */});
     }
-
-    // Try to play audio when user clicks any link (<a>) — this satisfies "klik apa saja"
     document.addEventListener('click', function (ev) {
       const a = ev.target.closest && ev.target.closest('a');
       if (!a) return;
-      // allow normal navigation but attempt to start background audio
       tryPlayAudio();
     }, {passive:true});
 
-    /* -----------------------
-       Confetti utilities (canvas + DOM)
-       ----------------------- */
-    function smallDomConfetti(count, centerPercent = 50) {
+    /* small DOM confetti + canvas burst */
+    function smallDomConfetti(count, centerPercent=50) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       for (let i=0;i<count;i++){
         const el = document.createElement('div');
         el.className = 'confetti-piece';
         el.style.left = (centerPercent + (Math.random()-0.5)*40) + '%';
         el.style.top = (35 + Math.random()*30) + '%';
-        el.style.width = el.style.height = (6 + Math.random()*10) + 'px';
+        const size = 6 + Math.random()*10;
+        el.style.width = el.style.height = size + 'px';
         el.style.background = ['#d4af37','#f2d16b','#ffffff','#ffdca3'][Math.floor(Math.random()*4)];
         el.style.opacity = '0.95';
         el.style.borderRadius = '2px';
-        el.style.zIndex = 400;
+        el.style.zIndex = 420;
         document.body.appendChild(el);
         const vy = 40 + Math.random()*160;
         el.animate([
           { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
           { transform: `translateY(${vy}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
-        ], {
-          duration: 700 + Math.random()*900,
-          easing: 'cubic-bezier(.2,.7,.2,1)'
-        });
+        ], { duration: 700 + Math.random()*900, easing:'cubic-bezier(.2,.7,.2,1)' });
         setTimeout(()=> el.remove(), 1800);
       }
     }
-
     function burstConfettiCanvas(canvas, pieces) {
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -224,21 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
       function rand(a,b){return Math.random()*(b-a)+a;}
       const colors = ['#d4af37','#f2d16b','#ffffff','#ffdca3'];
       for (let i=0;i<pieces;i++){
-        conf.push({
-          x: rand(W*0.2,W*0.8),
-          y: rand(H*0.2,H*0.8),
-          r: rand(4,10),
-          vx: rand(-3,3),
-          vy: rand(1,5),
-          rot: rand(0,360),
-          color: colors[Math.floor(rand(0,colors.length))],
-          life: rand(60,140)
-        });
+        conf.push({ x: rand(W*0.2,W*0.8), y: rand(H*0.2,H*0.8), r: rand(4,10), vx: rand(-3,3), vy: rand(1,5), rot: rand(0,360), color: colors[Math.floor(rand(0,colors.length))], life: rand(60,140) });
       }
       let frame=0;
       function draw(){
         ctx.clearRect(0,0,W,H);
-        conf.forEach((p, idx) => {
+        conf.forEach((p,idx) => {
           ctx.save();
           ctx.translate(p.x,p.y);
           ctx.rotate((p.rot + Math.sin(frame/10+idx)/10) * Math.PI / 180);
@@ -250,35 +189,23 @@ document.addEventListener('DOMContentLoaded', () => {
           p.life--;
         });
         frame++;
-        for (let i = conf.length -1; i >=0; i--){
-          if (conf[i].life <= 0 || conf[i].y > H + 20) conf.splice(i,1);
-        }
+        for (let i = conf.length -1; i >=0; i--) if (conf[i].life <= 0 || conf[i].y > H + 20) conf.splice(i,1);
         if (conf.length > 0) requestAnimationFrame(draw);
         else ctx.clearRect(0,0,W,H);
       }
       draw();
     }
 
-    /* -----------------------
-       Promo button delight
-       ----------------------- */
     const usePromo = document.getElementById('use-promo');
-    if (usePromo) {
-      usePromo.addEventListener('click', (e) => {
-        smallDomConfetti(24);
-      });
-    }
+    if (usePromo) usePromo.addEventListener('click', () => smallDomConfetti(24));
 
-    /* -----------------------
-       Holiday special modal + countdown
-       ----------------------- */
-    (function holidaySpecial() {
+    /* Holiday modal + countdown + interactions */
+    (function holidaySpecial(){
       const MODAL_ID = 'holiday-special';
       const STORAGE_KEY = 'hs_dismiss_until';
       const promoCode = 'HOLIDAY25';
       const businessWA = '6285706370841';
       const businessName = "SHANDO'Z CAFE & COFFEE BAR";
-
       const modal = document.getElementById(MODAL_ID);
       if (!modal) return;
 
@@ -304,144 +231,101 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(year + 1, 0, 1, 0, 0, 0);
       }
 
-      function updateCountdown() {
+      let prev = {days:'', hours:'', mins:'', secs:''};
+      function updateCountdown(){
         const target = getTarget();
         const now = new Date();
         let diff = Math.max(0, target - now);
-        const secs = Math.floor((diff/1000) % 60);
-        const mins = Math.floor((diff/1000/60) % 60);
-        const hrs = Math.floor((diff/1000/3600) % 24);
-        const days = Math.floor(diff/1000/3600/24);
-        if (daysEl) daysEl.textContent = String(days).padStart(2,'0');
-        if (hoursEl) hoursEl.textContent = String(hrs).padStart(2,'0');
-        if (minsEl) minsEl.textContent = String(mins).padStart(2,'0');
-        if (secsEl) secsEl.textContent = String(secs).padStart(2,'0');
+        const secs = String(Math.floor((diff/1000) % 60)).padStart(2,'0');
+        const mins = String(Math.floor((diff/1000/60) % 60)).padStart(2,'0');
+        const hrs = String(Math.floor((diff/1000/3600) % 24)).padStart(2,'0');
+        const days = String(Math.floor(diff/1000/3600/24)).padStart(2,'0');
+
+        if (daysEl && prev.days !== days) { daysEl.textContent = days; pulse('days'); prev.days = days; }
+        if (hoursEl && prev.hours !== hrs) { hoursEl.textContent = hrs; pulse('hours'); prev.hours = hrs; }
+        if (minsEl && prev.mins !== mins) { minsEl.textContent = mins; pulse('mins'); prev.mins = mins; }
+        if (secsEl && prev.secs !== secs) { secsEl.textContent = secs; pulse('secs'); prev.secs = secs; }
+
+        if (diff <= 0) clearInterval(timer);
+      }
+      function pulse(key){
+        try {
+          const el = document.querySelector(`.hs-count-item[data-key="${key}"]`);
+          if (!el) return;
+          el.classList.add('pulse');
+          setTimeout(()=> el.classList.remove('pulse'), 420);
+        } catch(e){}
       }
       updateCountdown();
       const timer = setInterval(updateCountdown, 1000);
 
-      function isDismissedForToday() {
+      function isDismissedForToday(){
         const until = localStorage.getItem(STORAGE_KEY);
         if (!until) return false;
-        const dt = new Date(until);
-        const now = new Date();
-        return now < dt;
+        return new Date() < new Date(until);
       }
-      function dismissForToday() {
-        const tomorrow = new Date();
-        tomorrow.setHours(23,59,59,999);
-        localStorage.setItem(STORAGE_KEY, tomorrow.toISOString());
+      function dismissForToday(){
+        const t = new Date();
+        t.setHours(23,59,59,999);
+        localStorage.setItem(STORAGE_KEY, t.toISOString());
       }
 
-      function showModal() {
+      function showModal(){
         modal.setAttribute('aria-hidden','false');
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
           burstConfettiCanvas(confettiCanvas, 80);
           smallDomConfetti(24, 50);
         }
       }
-      function hideModal() { modal.setAttribute('aria-hidden','true'); }
+      function hideModal(){ modal.setAttribute('aria-hidden','true'); }
 
       if (useWA) {
         const text = encodeURIComponent(`Halo ${businessName}, saya mau menggunakan promo ${promoCode}. Mohon bantuannya untuk pemesanan.`);
         useWA.href = `https://wa.me/${businessWA}?text=${text}`;
-        useWA.addEventListener('click', () => {
-          if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) smallDomConfetti(18, 50);
-        });
+        useWA.addEventListener('click', () => { if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) smallDomConfetti(18,50); });
       }
 
-      if (cardBtn) {
-        cardBtn.addEventListener('click', () => {
-          const w = window.open('', '_blank', 'width=800,height=600');
-          const html = `
-            <html><head><title>Kartu Ucapan SHANDO'Z</title>
-            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-            <style>
-              body{margin:0;font-family:Playfair Display, serif;background:linear-gradient(180deg,#061f19,#021010);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}
-              .card{width:720px;padding:40px;border-radius:18px;background:rgba(255,255,255,0.02);text-align:center;border:1px solid rgba(255,255,255,0.04)}
-              h1{color:#f2d16b;margin:0 0 10px;font-size:3rem}
-              p{color:rgba(255,255,255,0.9);margin:0}
-              .footer{margin-top:18px;color:#d4af37}
-            </style></head><body>
-              <div class="card">
-                <h1>Merry Christmas</h1>
-                <p>Warm wishes from SHANDO'Z CAFE & COFFEE BAR</p>
-                <p class="footer">Alamat: Banceuy Permai C3 No. 88, Sumur Bandung • WhatsApp: 085706370841</p>
-                <p style="margin-top:16px;color:#fff">Kode Promo: <strong style="color:#d4af37">${promoCode}</strong></p>
-              </div>
-              <script>window.print()</script>
-            </body></html>`;
-          w.document.write(html);
-          w.document.close();
-        });
-      }
-
-      if (closeBtn) closeBtn.addEventListener('click', () => {
-        if (hideCheckbox && hideCheckbox.checked) dismissForToday();
-        hideModal();
-      });
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-          if (hideCheckbox && hideCheckbox.checked) dismissForToday();
-          hideModal();
-        }
+      if (cardBtn) cardBtn.addEventListener('click', () => {
+        const w = window.open('', '_blank', 'width=800,height=600');
+        const html = `<html><head><title>Kartu Ucapan</title><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Playfair Display, serif;background:linear-gradient(180deg,#061f19,#021010);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}.card{width:720px;padding:40px;border-radius:18px;background:rgba(255,255,255,0.02);text-align:center;border:1px solid rgba(255,255,255,0.04)}h1{color:#f2d16b;margin:0 0 10px;font-size:3rem}</style></head><body><div class="card"><h1>Merry Christmas</h1><p>Warm wishes from SHANDO'Z CAFE & COFFEE BAR</p><p style="margin-top:16px;color:#fff">Kode Promo: <strong style="color:#d4af37">${promoCode}</strong></p></div><script>window.print()</script></body></html>`;
+        w.document.write(html); w.document.close();
       });
 
-      if (!isDismissedForToday()) {
-        setTimeout(showModal, 700);
-      }
+      if (closeBtn) closeBtn.addEventListener('click', () => { if (hideCheckbox && hideCheckbox.checked) dismissForToday(); hideModal(); });
+      modal.addEventListener('click', (e) => { if (e.target === modal) { if (hideCheckbox && hideCheckbox.checked) dismissForToday(); hideModal(); } });
 
-      // snow effect
-      function initSnow() {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        const container = snowLayer;
-        if (!container) return;
-        const H = container.clientHeight || window.innerHeight;
-        const count = 18;
-        for (let i=0;i<count;i++){
-          const s = document.createElement('div');
-          s.className = 'hs-snowflake';
-          s.textContent = '✦';
-          s.style.position = 'absolute';
-          s.style.left = Math.floor(Math.random()*100) + '%';
-          s.style.top = (-10 - Math.random()*40) + 'px';
-          s.style.fontSize = (8 + Math.random()*20) + 'px';
-          s.style.opacity = (0.2 + Math.random()*0.9).toFixed(2);
-          s.style.color = '#f2d16b';
-          s.style.filter = 'drop-shadow(0 2px 6px rgba(0,0,0,0.6))';
-          container.appendChild(s);
-          (function(el){
-            const duration = 8000 + Math.random()*10000;
-            el.animate([
-              { transform: `translateY(0)`, opacity: el.style.opacity },
-              { transform: `translateY(${H + 40}px)`, opacity: 0.06 }
-            ], { duration, easing:'linear' });
-            setTimeout(()=> el.remove(), duration + 200);
-          })(s);
+      if (!isDismissedForToday()) setTimeout(showModal, 700);
+
+      // small decorative snow fallback if snow.js absent
+      try {
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          if (snowLayer && !snowLayer.querySelector('canvas')) {
+            const H = snowLayer.clientHeight || 240;
+            for (let i=0;i<12;i++){
+              const s = document.createElement('div');
+              s.className = 'hs-snowflake';
+              s.textContent = '✦';
+              s.style.position = 'absolute';
+              s.style.left = `${Math.floor(Math.random()*100)}%`;
+              s.style.top = `${-10 - Math.random()*40}px`;
+              s.style.fontSize = `${8 + Math.random()*20}px`;
+              s.style.opacity = `${(0.2 + Math.random()*0.9).toFixed(2)}`;
+              s.style.color = '#f2d16b';
+              snowLayer.appendChild(s);
+              (function(el){ const dur = 8000 + Math.random()*10000; el.animate([{transform:'translateY(0)', opacity: el.style.opacity},{transform:`translateY(${H+40}px)`, opacity:0.06}], {duration: dur, easing:'linear'}); setTimeout(()=> el.remove(), dur+200); })(s);
+            }
+          }
         }
-      }
-      initSnow();
+      } catch(e){/* ignore */}
+    })();
 
-    })(); // end holidaySpecial
-
-    /* -----------------------
-       Resize fallback (canvas)
-       ----------------------- */
+    /* Resize handler for canvases */
     window.addEventListener('resize', () => {
-      const canv = document.querySelectorAll('.hs-confetti');
-      canv.forEach(c => {
-        if (c && c.getContext) {
-          c.width = c.clientWidth;
-          c.height = c.clientHeight;
-        }
-      });
+      document.querySelectorAll('.hs-confetti').forEach(c => { if (c && c.getContext) { c.width = c.clientWidth; c.height = c.clientHeight; } });
     });
 
   } catch (err) {
-    // Ensure UI becomes visible if something failed
-    console.error('Runtime error in main script:', err);
-    try {
-      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in-view'); });
-    } catch (e) { /* ignore */ }
+    console.error('Runtime error:', err);
+    try { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view')); } catch(e){}
   }
 });
