@@ -1,10 +1,12 @@
-// Main JS — robust, includes lightbox, offcanvas, autoplay-on-link-click, holiday modal with countdown,
-// confetti + snow triggers, and defensive checks to avoid leaving page blank on errors.
+// Full interactions: offcanvas, reveal, lightbox (prev/next/download), audio control,
+// holiday modal (countdown + confetti), snow fallback, and repaint hack.
+// Use this file as the canonical script.js in your repo.
 
 document.addEventListener('DOMContentLoaded', () => {
   try {
-
-    /* Offcanvas (hamburger) */
+    /* -----------------------
+       Offcanvas (hamburger)
+    ----------------------- */
     const hamburger = document.getElementById('hamburger');
     const offcanvas = document.getElementById('offcanvas');
     const overlay = document.getElementById('overlay');
@@ -30,108 +32,42 @@ document.addEventListener('DOMContentLoaded', () => {
     if (overlay) overlay.addEventListener('click', closeOffcanvas);
     document.querySelectorAll('.off-nav a').forEach(a => a.addEventListener('click', closeOffcanvas));
 
-    /* Reveal on scroll */
+    /* -----------------------
+       Reveal on scroll
+    ----------------------- */
     const revealEls = document.querySelectorAll('[data-reveal]');
     if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
+      const revealObserver = new IntersectionObserver((entries, obs) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view');
-            observer.unobserve(entry.target);
+            obs.unobserve(entry.target);
           }
         });
       }, { threshold: 0.18 });
-      revealEls.forEach(el => observer.observe(el));
+      revealEls.forEach(el => revealObserver.observe(el));
     } else {
       revealEls.forEach(el => el.classList.add('in-view'));
     }
 
-    /* Smooth anchors (fragments) */
-    document.querySelectorAll('a.nav-link, a[href^="#"]').forEach(a => {
-      a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href');
-        if (!href) return;
-        if (href.startsWith('#')) {
-          e.preventDefault();
-          const target = document.querySelector(href);
-          if (target) {
-            target.scrollIntoView({behavior:'smooth', block:'start'});
-            target.setAttribute('tabindex','-1');
-            target.focus({preventScroll:true});
-            setTimeout(()=> target.removeAttribute('tabindex'), 1200);
-          }
-        }
-      });
-    });
-
-    /* Parallax small */
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
-      let ticking = false;
-      window.addEventListener('scroll', () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          const rect = heroTitle.getBoundingClientRect();
-          const winH = window.innerHeight;
-          const visibleRatio = Math.max(0, Math.min(1, (winH - rect.top) / (winH + rect.height)));
-          const translate = (1 - visibleRatio) * 12;
-          heroTitle.style.setProperty('--parallax', `${translate}px`);
-          heroTitle.classList.add('parallax');
-          ticking = false;
-        });
-      }, {passive:true});
-    }
-
-    /* Lightbox */
-    const lightbox = document.getElementById('lightbox');
-    const lbImg = document.getElementById('lb-img');
-    const lbClose = document.getElementById('lb-close');
-    const lbCaption = document.getElementById('lb-caption');
-
-    function openLightbox(src, alt) {
-      if (!lightbox || !lbImg) return;
-      lbImg.src = src;
-      if (lbCaption) {
-        lbCaption.textContent = alt || '';
-        lbCaption.setAttribute('aria-hidden', alt ? 'false' : 'true');
-      }
-      lightbox.setAttribute('aria-hidden','false');
-      document.body.classList.add('lb-open');
-      if (lbClose) lbClose.focus();
-    }
-    function closeLightbox() {
-      if (!lightbox || !lbImg) return;
-      lightbox.setAttribute('aria-hidden','true');
-      document.body.classList.remove('lb-open');
-      setTimeout(()=> { lbImg.src=''; if (lbCaption) { lbCaption.textContent=''; lbCaption.setAttribute('aria-hidden','true'); } }, 120);
-    }
-    document.querySelectorAll('.lightbox-trigger').forEach(img => {
-      img.addEventListener('click', () => {
-        const src = img.getAttribute('src') || img.dataset.src;
-        const alt = img.getAttribute('alt') || '';
-        if (!src) return;
-        openLightbox(src, alt);
-      });
-    });
-    if (lbClose) lbClose.addEventListener('click', closeLightbox);
-    if (lightbox) lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lightbox && lightbox.getAttribute('aria-hidden') === 'false') closeLightbox(); });
-
-    /* Audio control + autoplay on any link click */
+    /* -----------------------
+       Audio control + autoplay on any link click
+    ----------------------- */
     const audio = document.getElementById('bg-audio');
     const audioToggle = document.getElementById('audio-toggle');
     if (audio) audio.volume = 0.28;
     if (audio && audioToggle) {
       audioToggle.addEventListener('click', () => {
         const playing = audioToggle.getAttribute('aria-pressed') === 'true';
-        if (playing) { audio.pause(); audioToggle.setAttribute('aria-pressed','false'); audioToggle.textContent='▶︎'; }
-        else { audio.play().catch(()=>{}); audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent='⏸'; }
+        if (playing) { audio.pause(); audioToggle.setAttribute('aria-pressed','false'); audioToggle.textContent = '▶︎'; }
+        else { audio.play().catch(()=>{}); audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent = '⏸'; }
       });
     }
     function tryPlayAudio() {
       if (!audio) return;
-      audio.play().then(()=> { if (audioToggle) { audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent='⏸'; } }).catch(()=>{/* ignored */});
+      audio.play().then(()=> {
+        if (audioToggle) { audioToggle.setAttribute('aria-pressed','true'); audioToggle.textContent = '⏸'; }
+      }).catch(()=>{ /* ignore autoplay blocked */ });
     }
     document.addEventListener('click', function (ev) {
       const a = ev.target.closest && ev.target.closest('a');
@@ -139,8 +75,85 @@ document.addEventListener('DOMContentLoaded', () => {
       tryPlayAudio();
     }, {passive:true});
 
-    /* small DOM confetti + canvas burst */
-    function smallDomConfetti(count, centerPercent=50) {
+    /* -----------------------
+       Lightbox with prev/next and download
+    ----------------------- */
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lb-img');
+    const lbCaption = document.getElementById('lb-caption');
+    const lbClose = document.getElementById('lb-close');
+    const lbPrev = document.getElementById('lb-prev');
+    const lbNext = document.getElementById('lb-next');
+    const lbDownload = document.getElementById('lb-download');
+
+    // Gather triggers dynamically so pages that add items later still work
+    function getTriggers() {
+      return Array.from(document.querySelectorAll('.lightbox-trigger')).filter(el => el.tagName.toLowerCase() === 'img' || el instanceof HTMLImageElement);
+    }
+
+    let currentIndex = -1;
+    function showLightbox(index) {
+      const triggers = getTriggers();
+      if (!triggers.length) return;
+      currentIndex = ((index % triggers.length) + triggers.length) % triggers.length;
+      const img = triggers[currentIndex];
+      const src = img.getAttribute('src') || img.dataset.src;
+      const caption = img.dataset.caption || img.getAttribute('alt') || '';
+      if (!src) return;
+      if (lbImg) lbImg.src = src;
+      if (lbCaption) { lbCaption.textContent = caption; lbCaption.setAttribute('aria-hidden', caption ? 'false' : 'true'); }
+      if (lbDownload) { lbDownload.href = src; lbDownload.setAttribute('aria-hidden', 'false'); }
+      if (lightbox) lightbox.setAttribute('aria-hidden','false');
+      document.body.classList.add('lb-open');
+      if (lbClose) lbClose.focus();
+    }
+    function hideLightbox() {
+      if (!lightbox) return;
+      lightbox.setAttribute('aria-hidden','true');
+      document.body.classList.remove('lb-open');
+      setTimeout(()=> {
+        if (lbImg) lbImg.src = '';
+        if (lbCaption) { lbCaption.textContent=''; lbCaption.setAttribute('aria-hidden','true'); }
+        if (lbDownload) lbDownload.setAttribute('aria-hidden','true');
+      }, 120);
+    }
+    function showPrev() { showLightbox(currentIndex - 1); }
+    function showNext() { showLightbox(currentIndex + 1); }
+
+    // Attach click handlers to current triggers
+    function initLightboxTriggers() {
+      const triggers = getTriggers();
+      triggers.forEach((img, idx) => {
+        // avoid adding multiple listeners
+        if (!img.dataset.lbAttached) {
+          img.addEventListener('click', (e) => {
+            e.preventDefault();
+            // recompute triggers and show correct index
+            const all = getTriggers();
+            const newIndex = all.indexOf(img);
+            showLightbox(newIndex >= 0 ? newIndex : idx);
+          });
+          img.dataset.lbAttached = '1';
+        }
+      });
+    }
+    initLightboxTriggers();
+
+    if (lbClose) lbClose.addEventListener('click', hideLightbox);
+    if (lbPrev) lbPrev.addEventListener('click', showPrev);
+    if (lbNext) lbNext.addEventListener('click', showNext);
+    if (lightbox) lightbox.addEventListener('click', (e) => { if (e.target === lightbox) hideLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox || lightbox.getAttribute('aria-hidden') === 'true') return;
+      if (e.key === 'Escape') hideLightbox();
+      if (e.key === 'ArrowLeft') showPrev();
+      if (e.key === 'ArrowRight') showNext();
+    });
+
+    /* -----------------------
+       Confetti & small DOM confetti utility
+    ----------------------- */
+    function smallDomConfetti(count, centerPercent = 50) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       for (let i=0;i<count;i++){
         const el = document.createElement('div');
@@ -153,15 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.opacity = '0.95';
         el.style.borderRadius = '2px';
         el.style.zIndex = 420;
+        el.style.position = 'fixed';
         document.body.appendChild(el);
         const vy = 40 + Math.random()*160;
         el.animate([
           { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
           { transform: `translateY(${vy}px) rotate(${Math.random()*720}deg)`, opacity: 0 }
-        ], { duration: 700 + Math.random()*900, easing:'cubic-bezier(.2,.7,.2,1)' });
+        ], {
+          duration: 700 + Math.random()*900,
+          easing: 'cubic-bezier(.2,.7,.2,1)'
+        });
         setTimeout(()=> el.remove(), 1800);
       }
     }
+
     function burstConfettiCanvas(canvas, pieces) {
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -172,12 +190,21 @@ document.addEventListener('DOMContentLoaded', () => {
       function rand(a,b){return Math.random()*(b-a)+a;}
       const colors = ['#d4af37','#f2d16b','#ffffff','#ffdca3'];
       for (let i=0;i<pieces;i++){
-        conf.push({ x: rand(W*0.2,W*0.8), y: rand(H*0.2,H*0.8), r: rand(4,10), vx: rand(-3,3), vy: rand(1,5), rot: rand(0,360), color: colors[Math.floor(rand(0,colors.length))], life: rand(60,140) });
+        conf.push({
+          x: rand(W*0.2,W*0.8),
+          y: rand(H*0.2,H*0.8),
+          r: rand(4,10),
+          vx: rand(-3,3),
+          vy: rand(1,5),
+          rot: rand(0,360),
+          color: colors[Math.floor(rand(0,colors.length))],
+          life: rand(60,140)
+        });
       }
       let frame=0;
       function draw(){
         ctx.clearRect(0,0,W,H);
-        conf.forEach((p,idx) => {
+        conf.forEach((p, idx) => {
           ctx.save();
           ctx.translate(p.x,p.y);
           ctx.rotate((p.rot + Math.sin(frame/10+idx)/10) * Math.PI / 180);
@@ -189,23 +216,25 @@ document.addEventListener('DOMContentLoaded', () => {
           p.life--;
         });
         frame++;
-        for (let i = conf.length -1; i >=0; i--) if (conf[i].life <= 0 || conf[i].y > H + 20) conf.splice(i,1);
+        for (let i = conf.length -1; i >=0; i--){
+          if (conf[i].life <= 0 || conf[i].y > H + 20) conf.splice(i,1);
+        }
         if (conf.length > 0) requestAnimationFrame(draw);
         else ctx.clearRect(0,0,W,H);
       }
       draw();
     }
 
-    const usePromo = document.getElementById('use-promo');
-    if (usePromo) usePromo.addEventListener('click', () => smallDomConfetti(24));
-
-    /* Holiday modal + countdown + interactions */
-    (function holidaySpecial(){
+    /* -----------------------
+       Holiday special modal + countdown + interactions
+    ----------------------- */
+    (function holidaySpecial() {
       const MODAL_ID = 'holiday-special';
       const STORAGE_KEY = 'hs_dismiss_until';
       const promoCode = 'HOLIDAY25';
       const businessWA = '6285706370841';
       const businessName = "SHANDO'Z CAFE & COFFEE BAR";
+
       const modal = document.getElementById(MODAL_ID);
       if (!modal) return;
 
@@ -232,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       let prev = {days:'', hours:'', mins:'', secs:''};
-      function updateCountdown(){
+      function updateCountdown() {
         const target = getTarget();
         const now = new Date();
         let diff = Math.max(0, target - now);
@@ -241,14 +270,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const hrs = String(Math.floor((diff/1000/3600) % 24)).padStart(2,'0');
         const days = String(Math.floor(diff/1000/3600/24)).padStart(2,'0');
 
-        if (daysEl && prev.days !== days) { daysEl.textContent = days; pulse('days'); prev.days = days; }
-        if (hoursEl && prev.hours !== hrs) { hoursEl.textContent = hrs; pulse('hours'); prev.hours = hrs; }
-        if (minsEl && prev.mins !== mins) { minsEl.textContent = mins; pulse('mins'); prev.mins = mins; }
-        if (secsEl && prev.secs !== secs) { secsEl.textContent = secs; pulse('secs'); prev.secs = secs; }
+        if (daysEl && prev.days !== days) { daysEl.textContent = days; pulseCount('days'); prev.days = days; }
+        if (hoursEl && prev.hours !== hrs) { hoursEl.textContent = hrs; pulseCount('hours'); prev.hours = hrs; }
+        if (minsEl && prev.mins !== mins) { minsEl.textContent = mins; pulseCount('mins'); prev.mins = mins; }
+        if (secsEl && prev.secs !== secs) { secsEl.textContent = secs; pulseCount('secs'); prev.secs = secs; }
 
         if (diff <= 0) clearInterval(timer);
       }
-      function pulse(key){
+      function pulseCount(key) {
         try {
           const el = document.querySelector(`.hs-count-item[data-key="${key}"]`);
           if (!el) return;
@@ -259,25 +288,26 @@ document.addEventListener('DOMContentLoaded', () => {
       updateCountdown();
       const timer = setInterval(updateCountdown, 1000);
 
-      function isDismissedForToday(){
+      function isDismissedForToday() {
         const until = localStorage.getItem(STORAGE_KEY);
         if (!until) return false;
-        return new Date() < new Date(until);
+        const dt = new Date(until);
+        return new Date() < dt;
       }
-      function dismissForToday(){
-        const t = new Date();
-        t.setHours(23,59,59,999);
-        localStorage.setItem(STORAGE_KEY, t.toISOString());
+      function dismissForToday() {
+        const tomorrow = new Date();
+        tomorrow.setHours(23,59,59,999);
+        localStorage.setItem(STORAGE_KEY, tomorrow.toISOString());
       }
 
-      function showModal(){
+      function showModal() {
         modal.setAttribute('aria-hidden','false');
-        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           burstConfettiCanvas(confettiCanvas, 80);
           smallDomConfetti(24, 50);
         }
       }
-      function hideModal(){ modal.setAttribute('aria-hidden','true'); }
+      function hideModal() { modal.setAttribute('aria-hidden','true'); }
 
       if (useWA) {
         const text = encodeURIComponent(`Halo ${businessName}, saya mau menggunakan promo ${promoCode}. Mohon bantuannya untuk pemesanan.`);
@@ -285,18 +315,28 @@ document.addEventListener('DOMContentLoaded', () => {
         useWA.addEventListener('click', () => { if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) smallDomConfetti(18,50); });
       }
 
-      if (cardBtn) cardBtn.addEventListener('click', () => {
-        const w = window.open('', '_blank', 'width=800,height=600');
-        const html = `<html><head><title>Kartu Ucapan</title><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"><style>body{margin:0;font-family:Playfair Display, serif;background:linear-gradient(180deg,#061f19,#021010);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}.card{width:720px;padding:40px;border-radius:18px;background:rgba(255,255,255,0.02);text-align:center;border:1px solid rgba(255,255,255,0.04)}h1{color:#f2d16b;margin:0 0 10px;font-size:3rem}</style></head><body><div class="card"><h1>Merry Christmas</h1><p>Warm wishes from SHANDO'Z CAFE & COFFEE BAR</p><p style="margin-top:16px;color:#fff">Kode Promo: <strong style="color:#d4af37">${promoCode}</strong></p></div><script>window.print()</script></body></html>`;
-        w.document.write(html); w.document.close();
-      });
+      if (cardBtn) {
+        cardBtn.addEventListener('click', () => {
+          const w = window.open('', '_blank', 'width=800,height=600');
+          const html = `
+            <html><head><title>Kartu Ucapan SHANDO'Z</title>
+            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+            <style>body{margin:0;font-family:Playfair Display, serif;background:linear-gradient(180deg,#061f19,#021010);color:#fff;display:flex;align-items:center;justify-content:center;height:100vh}.card{width:720px;padding:40px;border-radius:18px;background:rgba(255,255,255,0.02);text-align:center;border:1px solid rgba(255,255,255,0.04)}h1{color:#f2d16b;margin:0 0 10px;font-size:3rem}</style></head><body>
+              <div class="card"><h1>Merry Christmas</h1><p>Warm wishes from SHANDO'Z CAFE & COFFEE BAR</p><p style="margin-top:16px;color:#fff">Kode Promo: <strong style="color:#d4af37">${promoCode}</strong></p></div>
+              <script>window.print()</script></body></html>`;
+          w.document.write(html); w.document.close();
+        });
+      }
 
-      if (closeBtn) closeBtn.addEventListener('click', () => { if (hideCheckbox && hideCheckbox.checked) dismissForToday(); hideModal(); });
+      if (closeBtn) closeBtn.addEventListener('click', () => {
+        if (hideCheckbox && hideCheckbox.checked) dismissForToday();
+        hideModal();
+      });
       modal.addEventListener('click', (e) => { if (e.target === modal) { if (hideCheckbox && hideCheckbox.checked) dismissForToday(); hideModal(); } });
 
       if (!isDismissedForToday()) setTimeout(showModal, 700);
 
-      // small decorative snow fallback if snow.js absent
+      // decorative snow fallback
       try {
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           if (snowLayer && !snowLayer.querySelector('canvas')) {
@@ -316,33 +356,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         }
-      } catch(e){/* ignore */}
+      } catch(e){}
     })();
 
-    /* Resize handler for canvases */
+    /* -----------------------
+       Resize fallback for canvases
+    ----------------------- */
     window.addEventListener('resize', () => {
       document.querySelectorAll('.hs-confetti').forEach(c => { if (c && c.getContext) { c.width = c.clientWidth; c.height = c.clientHeight; } });
     });
 
+    /* -----------------------
+       Repaint hack to reduce tiled seams on some mobile GPUs
+    ----------------------- */
+    window.addEventListener('load', () => {
+      try {
+        document.documentElement.style.transform = 'translateZ(0)';
+        requestAnimationFrame(() => {
+          setTimeout(() => { document.documentElement.style.transform = ''; }, 60);
+        });
+      } catch(e){}
+    });
+
+    // Re-initialize lightbox triggers if DOM is updated later (useful if you lazy-load gallery)
+    const mo = new MutationObserver(() => initLightboxTriggers());
+    mo.observe(document.body, { childList: true, subtree: true });
+
   } catch (err) {
-    console.error('Runtime error:', err);
+    console.error('Runtime error in main script:', err);
     try { document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view')); } catch(e){}
   }
-});
-
-// Small repaint hack to remove compositor seams on some mobile browsers.
-// This briefly toggles a 3D transform to force the renderer to repaint tiles.
-window.addEventListener('load', () => {
-  try {
-    // brief transform to nudge the compositor; removed shortly after
-    document.documentElement.style.transform = 'translateZ(0)';
-    window.requestAnimationFrame(() => {
-      setTimeout(() => {
-        document.documentElement.style.transform = '';
-      }, 60);
-    });
-  } catch (e) {
-    // ignore if not allowed
-    console.warn('repaint hack failed', e);
-  }
-});
+}); // DOMContentLoaded end
