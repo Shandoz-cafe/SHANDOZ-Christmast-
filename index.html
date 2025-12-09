@@ -11,6 +11,19 @@
 
   <link rel="stylesheet" href="styles.css" />
   <meta name="theme-color" content="#061f19" />
+
+  <!-- Fast fallback: jika JS error, agar .reveal terlihat dan halaman tidak blank -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      try {
+        document.querySelectorAll('.reveal').forEach(function (el) {
+          el.classList.add('in-view');
+        });
+      } catch (e) {
+        // ignore
+      }
+    });
+  </script>
 </head>
 <body>
   <!-- Special holiday modal (will be shown once per day unless dismissed) -->
@@ -54,16 +67,13 @@
         </svg>
       </div>
 
-      <!-- decorative canvas for confetti -->
       <canvas id="hs-confetti" class="hs-confetti" aria-hidden="true"></canvas>
-      <!-- subtle snow layer (canvas will be injected into this container by snow.js) -->
       <div id="hs-snow" class="hs-snow" aria-hidden="true"></div>
     </div>
   </div>
 
   <!-- Site-level audio loop (background ambience) -->
   <audio id="bg-audio" loop preload="auto">
-    <!-- encode space in filename to be safe in HTML -->
     <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
@@ -82,7 +92,6 @@
   <aside id="offcanvas" class="offcanvas" aria-hidden="true">
     <nav class="off-nav" aria-label="Site options">
       <ul>
-        <!-- contact now points to a separate page -->
         <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         <li><a href="#promo" class="nav-link">Promo</a></li>
         <li><a href="#menu" class="nav-link">Menu</a></li>
@@ -109,7 +118,6 @@
           <li><a href="#menu" class="nav-link">Menu</a></li>
           <li><a href="#promo" class="nav-link">Promo</a></li>
           <li><a href="#gallery" class="nav-link">Gallery</a></li>
-          <!-- contact now links to separate page -->
           <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
         </ul>
       </nav>
@@ -126,7 +134,7 @@
       <div class="container hero-inner">
         <div class="hero-content">
           <h1 class="hero-title">Selamat Natal &amp; Tahun Baru dari SHANDO'Z</h1>
-          <p class="hero-sub">Nikmati suasana hangat, secangkir kopi istimewa, dan promo eksklusif kami. Alamat: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
+          <p class="hero-sub">Nikmati suasana hangat, secangkir kopi istimewa, dan promo eksklusif kami.</p>
           <div class="hero-ctas">
             <a class="btn btn-gold play-audio" href="#menu">Lihat Menu</a>
             <a class="btn btn-ghost" href="#promo">Lihat Promo</a>
@@ -140,7 +148,7 @@
       </div>
     </section>
 
-    <!-- Promo section with video and promo cards -->
+    <!-- Promo -->
     <section id="promo" class="section promo reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -173,7 +181,7 @@
       </div>
     </section>
 
-    <!-- Menu (7 jpg: menu1 - menu7) -->
+    <!-- Menu -->
     <section id="menu" class="section menu reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -182,7 +190,6 @@
         </header>
 
         <div class="menu-grid">
-          <!-- intrinsic sizes and responsive class kept -->
           <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
           <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
           <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
@@ -194,7 +201,7 @@
       </div>
     </section>
 
-    <!-- Gallery (gal1 - gal4) -->
+    <!-- Gallery -->
     <section id="gallery" class="section gallery reveal" data-reveal>
       <div class="container">
         <header class="section-header">
@@ -218,7 +225,7 @@
           <h2>Tentang SHANDO'Z</h2>
         </header>
 
-        <p class="lead">SHANDO'Z CAFE &amp; COFFEE BAR: tempat ngopi nyaman dengan sentuhan mewah. Alamat lengkap: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
+        <p class="lead">SHANDO'Z CAFE &amp; COFFEE BAR: tempat ngopi nyaman dengan sentuhan mewah.</p>
       </div>
     </section>
 
@@ -236,15 +243,15 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-
-    <div class="footer-bottom">
-      <div class="container">
-        <small>© SHANDO'Z CAFE &amp; COFFEE BAR • Holiday Collection</small>
+      <div class="footer-bottom">
+        <div class="container">
+          <small>© SHANDO'Z CAFE &amp; COFFEE BAR • Holiday Collection</small>
+        </div>
       </div>
     </div>
   </footer>
 
-  <!-- Simple lightbox modal for images -->
+  <!-- Lightbox modal -->
   <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Gambar besar">
     <button id="lb-close" class="lb-close" aria-label="Tutup gambar">✕</button>
     <div class="lb-inner">
@@ -255,9 +262,7 @@
 
   <!-- Snow effect script (separate file snow.js) -->
   <script src="snow.js" defer></script>
-  <!-- Main site script (existing) -->
+  <!-- Main script -->
   <script src="script.js" defer></script>
-
-  <!-- NOTE: autoplay-on-link-click is handled in script.js now (plays when any <a> is clicked). -->
 </body>
 </html>
