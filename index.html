@@ -1,263 +1,455 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SHANDO'Z CAFE & COFFEE BAR • Holiday Special</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shando'z Café & Coffee Bar – Christmas Edition</title>
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap">
 
-  <link rel="stylesheet" href="styles.css" />
-  <meta name="theme-color" content="#061f19" />
+<style>
+/* ==========================
+   CHRISTMAS THEME BASE
+   ========================== */
+:root{
+  --bg:#1c1613;
+  --cream:#e6c899;
+  --muted:#b79e7d;
+  --card:#2a221e;
+  --glass:rgba(255,255,255,0.05);
+}
+
+body{
+  margin:0;
+  font-family:Inter, sans-serif;
+  background:var(--bg);
+  color:var(--cream);
+  overflow-x:hidden;
+}
+
+/* LOADING SCREEN (Mix 1+2+3 aesthetic) */
+#loading{
+  position:fixed;inset:0;background:#000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:99999;transition:0.6s;
+}
+#loading.fade{opacity:0;pointer-events:none;}
+#loading-logo{
+  font-size:32px;font-weight:800;color:var(--cream);
+  margin-bottom:22px;text-shadow:0 0 25px var(--cream);
+}
+.loader{
+  width:55px;height:55px;border:4px solid rgba(255,255,255,0.25);
+  border-top-color:var(--cream);
+  border-radius:50%;animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* NAVBAR */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:14px 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);
+}
+.navbar::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(255,220,150,0.15),rgba(255,255,255,0),rgba(255,220,150,0.1));
+  pointer-events:none;
+}
+.logo{font-weight:700;cursor:pointer;color:var(--cream);}
+.nav-links a{color:var(--cream);margin-left:18px;text-decoration:none;font-weight:600}
+
+/* HERO */
+.hero{position:relative;height:85vh;display:flex;align-items:center;justify-content:center;}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.5)}
+.hero-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.45)}
+.hero-inner{text-align:center;z-index:5}
+.hero-title{font-size:48px;font-weight:800;text-shadow:0 5px 25px #000}
+.hero-sub{opacity:0.9;margin-top:6px}
+.btn-cta{background:var(--cream);color:#2a221e;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700}
+
+/* SNOW EFFECT */
+#snow{
+  position:fixed;inset:0;pointer-events:none;z-index:9999;
+}
+
+/* PROMO */
+.section-title{font-size:28px;margin-bottom:18px;text-shadow:0 0 12px rgba(255,220,150,0.3)}
+.container{max-width:1100px;margin:auto;padding:0 18px}
+.promo-section{padding:80px 0 40px}
+.promo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.promo-card img{width:100%;height:220px;object-fit:cover;border-radius:12px;box-shadow:0 0 10px rgba(255,220,150,0.2)}
+
+/* MENU CAROUSEL */
+.menu-section{padding:60px 0}
+.menu-carousel{position:relative;max-width:720px;margin:auto;overflow:hidden}
+.carousel-track{display:flex;transition:0.4s}
+.carousel-slide{min-width:100%;display:flex;justify-content:center;padding:10px}
+.carousel-slide img{max-height:720px;width:100%;object-fit:contain;border-radius:12px}
+.carousel-btn{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(0,0,0,0.55);color:white;
+  border:none;padding:12px;border-radius:10px;cursor:pointer;
+}
+.carousel-btn.prev{left:10px}
+.carousel-btn.next{right:10px}
+.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.carousel-dot{width:10px;height:10px;border-radius:50%;background:#666}
+.carousel-dot.active{background:var(--cream)}
+
+/* GALLERY */
+.gallery-section{padding:60px 0}
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gallery-grid img{width:100%;height:150px;object-fit:cover;border-radius:8px;cursor:pointer;box-shadow:0 0 10px rgba(255,220,150,0.2)}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:0.2s;}
+.lightbox.open{opacity:1;pointer-events:auto}
+.lightbox img{max-width:90%;max-height:85%;border-radius:8px}
+.lightbox-close{position:absolute;top:22px;right:22px;font-size:28px;background:none;border:none;color:white;cursor:pointer}
+
+/* FOOTER */
+.site-footer{text-align:center;padding:30px 0;margin-top:60px;opacity:0.8;font-size:14px}
+
+/* MUSIC BTN */
+#music-toggle{
+  position:fixed;bottom:25px;right:25px;width:55px;height:55px;
+  background:#222;color:white;border-radius:50%;font-size:26px;
+  display:flex;align-items:center;justify-content:center;z-index:999;border:none;
+}
+
+/* SHARE BTN */
+.share-button{
+  position:fixed;bottom:25px;left:25px;width:55px;height:55px;
+  background:var(--cream);color:#1c1613;border-radius:50%;font-size:22px;font-weight:bold;
+  display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);z-index:999;
+}
+</style>
 </head>
 <body>
-  <!-- Special holiday modal (will be shown once per day unless dismissed) -->
-  <div id="holiday-special" class="holiday-special" aria-hidden="true" role="dialog" aria-label="Holiday greeting">
-    <div class="hs-panel" role="document">
-      <button class="hs-close" id="hs-close" aria-label="Tutup">✕</button>
 
-      <div class="hs-left">
-        <h2 class="hs-title">Merry Christmas &amp; Happy New Year</h2>
-        <p class="hs-sub">SHANDO'Z CAFE &amp; COFFEE BAR — Banceuy Permai C3 No. 88, Sumur Bandung</p>
+<!-- LOADING -->
+<div id="loading">
+  <div id="loading-logo">Shando'z Café</div>
+  <div class="loader"></div>
+</div>
 
-        <div class="hs-countdown" aria-live="polite">
-          <div class="hs-count-item"><span id="hs-days">00</span><small>Hari</small></div>
-          <div class="hs-count-item"><span id="hs-hours">00</span><small>Jam</small></div>
-          <div class="hs-count-item"><span id="hs-mins">00</span><small>Menit</small></div>
-          <div class="hs-count-item"><span id="hs-secs">00</span><small>Detik</small></div>
-        </div>
+<!-- SNOW CANVAS -->
+<canvas id="snow"></canvas>
 
-        <p class="hs-promo">Kode Promo: <strong id="hs-promo-code">HOLIDAY25</strong></p>
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
+  <nav class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#promo">Promo</a>
+    <a href="#menu">Menu</a>
+    <a href="#gallery">Gallery</a>
+    <a href="contact.html">Contact</a>
+    <a href="qponpromo.html">Qpon</a>
+  </nav>
+</header>
 
-        <div class="hs-ctas">
-          <a id="hs-use-wa" class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Gunakan Promo (WhatsApp)</a>
-          <button id="hs-card" class="btn btn-outline">Unduh Kartu Ucapan</button>
-        </div>
+<!-- HERO -->
+<section id="home" class="hero">
+  <video class="hero-video" autoplay muted loop playsinline>
+    <source src="qponpromo.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <h1 class="hero-title">Shando'z Café & Coffee Bar</h1>
+    <p class="hero-sub">Coffee · Comfort · Community</p>
+    <a class="btn-cta" href="#menu" id="exploreMenuBtn">Explore Menu</a>
+  </div>
+</section>
 
-        <label class="hs-hide-today">
-          <input type="checkbox" id="hs-hide-checkbox"> Jangan tampil lagi hari ini
-        </label>
-      </div>
-
-      <div class="hs-right" aria-hidden="true">
-        <svg class="hs-wreath" viewBox="0 0 200 200" aria-hidden="true">
-          <defs>
-            <linearGradient id="hsg1" x1="0" x2="1">
-              <stop offset="0" stop-color="#d4af37"/>
-              <stop offset="1" stop-color="#f2d16b"/>
-            </linearGradient>
-          </defs>
-          <circle cx="100" cy="100" r="70" fill="none" stroke="url(#hsg1)" stroke-width="10" stroke-linecap="round" stroke-dasharray="8 6"/>
-          <text x="50%" y="52%" text-anchor="middle" fill="#fff" font-size="16" font-family="Playfair Display, serif">SHANDO'Z</text>
-        </svg>
-      </div>
-
-      <!-- decorative canvas for confetti -->
-      <canvas id="hs-confetti" class="hs-confetti" aria-hidden="true"></canvas>
-      <!-- subtle snow layer (canvas will be injected into this container by snow.js) -->
-      <div id="hs-snow" class="hs-snow" aria-hidden="true"></div>
+<!-- PROMO -->
+<section id="promo" class="promo-section">
+  <div class="container">
+    <h2 class="section-title">Promo Spesial</h2>
+    <div class="promo-grid">
+      <div class="promo-card"><img src="promo1.jpg"></div>
+      <div class="promo-card"><img src="promo2.jpg"></div>
+      <div class="promo-card"><img src="promo3.jpg"></div>
+      <div class="promo-card"><img src="promo4.jpg"></div>
+      <div class="promo-card"><img src="promo5.jpg"></div>
     </div>
   </div>
+</section>
 
-  <!-- Site-level audio loop (background ambience) -->
-  <audio id="bg-audio" loop preload="auto">
-    <!-- encode space in filename to be safe in HTML -->
-    <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+<!-- MENU -->
+<section id="menu" class="menu-section">
+  <div class="container">
 
-  <!-- Floating audio control -->
-  <button id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play ambience">
-    ▶︎
-  </button>
+    <h2 class="section-title">Our Menu</h2>
 
-  <!-- Hamburger (three-line) action button -->
-  <button id="hamburger" class="hamburger" aria-label="Menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-
-  <!-- Offcanvas menu -->
-  <aside id="offcanvas" class="offcanvas" aria-hidden="true">
-    <nav class="off-nav" aria-label="Site options">
-      <ul>
-        <!-- contact now points to a separate page -->
-        <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
-        <li><a href="#promo" class="nav-link">Promo</a></li>
-        <li><a href="#menu" class="nav-link">Menu</a></li>
-        <li><a href="#gallery" class="nav-link">Gallery</a></li>
-        <li><a href="#about" class="nav-link">Tentang</a></li>
-        <li><a href="#order" class="nav-link play-audio">Order / WhatsApp</a></li>
-      </ul>
-    </nav>
-    <button id="off-close" class="off-close" aria-label="Tutup menu">✕</button>
-  </aside>
-
-  <!-- Overlay -->
-  <div id="overlay" class="overlay" hidden></div>
-
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="SHANDO'Z Home">
-        <div class="brand-mark" aria-hidden="true">S'</div>
-        <span class="brand-text">SHANDO'Z CAFE & COFFEE BAR</span>
-      </a>
-
-      <nav class="main-nav" aria-label="Main navigation">
-        <ul>
-          <li><a href="#menu" class="nav-link">Menu</a></li>
-          <li><a href="#promo" class="nav-link">Promo</a></li>
-          <li><a href="#gallery" class="nav-link">Gallery</a></li>
-          <!-- contact now links to separate page -->
-          <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <a class="btn btn-gold play-audio" href="#order">Order / WhatsApp</a>
+    <div class="menu-carousel">
+      <button class="carousel-btn prev">‹</button>
+      <div class="carousel-track">
+        <div class="carousel-slide"><img src="menu1.jpg"></div>
+        <div class="carousel-slide"><img src="menu2.jpg"></div>
+        <div class="carousel-slide"><img src="menu3.jpg"></div>
+        <div class="carousel-slide"><img src="menu4.jpg"></div>
+        <div class="carousel-slide"><img src="menu5.jpg"></div>
+        <div class="carousel-slide"><img src="menu6.jpg"></div>
+        <div class="carousel-slide"><img src="menu7.jpg"></div>
       </div>
+      <button class="carousel-btn next">›</button>
     </div>
-  </header>
 
-  <!-- Hero -->
-  <main>
-    <section class="hero reveal" id="hero" data-reveal>
-      <div class="container hero-inner">
-        <div class="hero-content">
-          <h1 class="hero-title">Selamat Natal &amp; Tahun Baru dari SHANDO'Z</h1>
-          <p class="hero-sub">Nikmati suasana hangat, secangkir kopi istimewa, dan promo eksklusif kami. Alamat: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
-          <div class="hero-ctas">
-            <a class="btn btn-gold play-audio" href="#menu">Lihat Menu</a>
-            <a class="btn btn-ghost" href="#promo">Lihat Promo</a>
-          </div>
-        </div>
+    <div class="carousel-dots"></div>
+  </div>
+</section>
 
-        <figure class="hero-image" aria-hidden="true">
-          <img src="promo1.jpg" alt="Hero decorative image">
-          <figcaption class="badge">Exclusive Holiday • SHANDO'Z</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Promo section with video and promo cards -->
-    <section id="promo" class="section promo reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Promo Eksklusif</h2>
-          <p>Gunakan kode saat pembayaran atau tunjukkan promo di toko.</p>
-        </header>
-
-        <div class="promo-grid">
-          <div class="promo-gallery">
-            <img src="promo1.jpg" alt="Promo 1" loading="lazy" class="lightbox-trigger">
-            <img src="promo2.jpg" alt="Promo 2" loading="lazy" class="lightbox-trigger">
-            <img src="promo3.jpg" alt="Promo 3" loading="lazy" class="lightbox-trigger">
-            <img src="promo4.jpg" alt="Promo 4" loading="lazy" class="lightbox-trigger">
-            <img src="promo5.jpg" alt="Promo 5" loading="lazy" class="lightbox-trigger">
-          </div>
-
-          <div class="promo-media">
-            <video controls preload="metadata" class="promo-video">
-              <source src="qponpromo.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-
-            <div class="promo-card">
-              <h3>Merry &amp; Happy New Year Offer</h3>
-              <p>Kode Promo: <strong>HOLIDAY25</strong> — diskon hingga 25% untuk paket kado spesial.</p>
-              <a class="btn btn-gold play-audio" href="#order" id="use-promo">Gunakan Promo</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Menu (7 jpg: menu1 - menu7) -->
-    <section id="menu" class="section menu reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Menu & Paket</h2>
-          <p>Menu unggulan kami — klik untuk perbesar dan bagikan.</p>
-        </header>
-
-        <div class="menu-grid">
-          <!-- intrinsic sizes and responsive class kept -->
-          <img src="menu1.jpg" alt="Menu 1" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu2.jpg" alt="Menu 2" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu3.jpg" alt="Menu 3" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu4.jpg" alt="Menu 4" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu5.jpg" alt="Menu 5" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu6.jpg" alt="Menu 6" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-          <img src="menu7.jpg" alt="Menu 7" class="menu-item lightbox-trigger responsive-img" loading="lazy" width="2482" height="3509">
-        </div>
-      </div>
-    </section>
-
-    <!-- Gallery (gal1 - gal4) -->
-    <section id="gallery" class="section gallery reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Gallery</h2>
-          <p>Suasana di SHANDO'Z CAFE &amp; COFFEE BAR.</p>
-        </header>
-
-        <div class="gallery-grid">
-          <img src="gal1.jpg" alt="Gal 1" class="lightbox-trigger" loading="lazy">
-          <img src="gal2.jpg" alt="Gal 2" class="lightbox-trigger" loading="lazy">
-          <img src="gal3.jpg" alt="Gal 3" class="lightbox-trigger" loading="lazy">
-          <img src="gal4.jpg" alt="Gal 4" class="lightbox-trigger" loading="lazy">
-        </div>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section id="about" class="section about reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Tentang SHANDO'Z</h2>
-        </header>
-
-        <p class="lead">SHANDO'Z CAFE &amp; COFFEE BAR: tempat ngopi nyaman dengan sentuhan mewah. Alamat lengkap: Banceuy Permai C3 No. 88 Sumur Bandung, ID.</p>
-      </div>
-    </section>
-
-    <section id="order" class="section order reveal" data-reveal>
-      <div class="container">
-        <header class="section-header">
-          <h2>Order Sekarang</h2>
-        </header>
-
-        <p>Klik tombol Order / WhatsApp untuk langsung menghubungi kami.</p>
-        <a class="btn btn-gold play-audio" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-
-    <div class="footer-bottom">
-      <div class="container">
-        <small>© SHANDO'Z CAFE &amp; COFFEE BAR • Holiday Collection</small>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Simple lightbox modal for images -->
-  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Gambar besar">
-    <button id="lb-close" class="lb-close" aria-label="Tutup gambar">✕</button>
-    <div class="lb-inner">
-      <img id="lb-img" src="" alt="">
-      <div class="lb-caption" id="lb-caption" aria-hidden="true"></div>
+<!-- GALLERY -->
+<section id="gallery" class="gallery-section">
+  <div class="container">
+    <h2 class="section-title">Gallery</h2>
+    <div class="gallery-grid">
+      <img class="lightbox-trigger" src="gal1.jpg" data-full="gal1.jpg">
+      <img class="lightbox-trigger" src="gal2.jpg" data-full="gal2.jpg">
+      <img class="lightbox-trigger" src="gal3.jpg" data-full="gal3.jpg">
+      <img class="lightbox-trigger" src="gal4.jpg" data-full="gal4.jpg">
     </div>
   </div>
+</section>
 
-  <!-- Snow effect script (separate file snow.js) -->
-  <script src="snow.js" defer></script>
-  <!-- Main site script (existing) -->
-  <script src="script.js" defer></script>
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <button id="lightbox-close" class="lightbox-close">✕</button>
+  <img id="lightbox-img" src="">
+</div>
 
-  <!-- NOTE: autoplay-on-link-click is handled in script.js now (plays when any <a> is clicked). -->
+<!-- MUSIC -->
+<audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
+<button id="music-toggle">🔇</button>
+
+<!-- SHARE BUTTON -->
+<button id="shareBtn" class="share-button">🔗</button>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">© 2025 Shando'z Café & Coffee Bar</div>
+</footer>
+
+<!-- SCRIPT -->
+<script>
+/* ============================
+   LOADING
+============================ */
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    document.getElementById("loading").classList.add("fade");
+  },800);
+});
+
+/* SNOW EFFECT (Soft Premium Gold) */
+const canvas = document.getElementById("snow");
+const ctx = canvas.getContext("2d");
+let W, H;
+function resize(){W = canvas.width = innerWidth;H = canvas.height = innerHeight;}
+resize();window.addEventListener("resize",resize);
+
+let flakes = Array.from({length:120},()=>({
+  x:Math.random()*W,
+  y:Math.random()*H,
+  r:Math.random()*3+1,
+  s:Math.random()*1+0.5
+}));
+
+function snow(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="rgba(255,230,180,0.9)";
+  flakes.forEach(f=>{
+    ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();
+    f.y+=f.s; f.x+=Math.sin(f.y*0.01)*0.6;
+    if(f.y>H) f.y = -10;
+  });
+  requestAnimationFrame(snow);
+}
+snow();
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const tgt=document.querySelector(a.getAttribute('href'));
+    if(tgt){e.preventDefault();tgt.scrollIntoView({behavior:'smooth'});}  
+  });
+});
+
+/* MUSIC */
+const bgm=document.querySelector('#bgm');
+const toggleBtn=document.querySelector('#music-toggle');
+let playing=false;
+
+function playMusic(){bgm.muted=false;bgm.play();toggleBtn.textContent="🔊";playing=true;}
+window.addEventListener('pointerdown',playMusic,{once:true});
+
+document.querySelector('#exploreMenuBtn').addEventListener('click',playMusic);
+
+toggleBtn.addEventListener('click',()=>{
+  if(!playing){playMusic();return;}
+  bgm.pause();playing=false;toggleBtn.textContent="🔇";
+});
+
+/* LIGHTBOX */
+const lb=document.querySelector('#lightbox');
+const lbImg=document.querySelector('#lightbox-img');
+document.querySelector('#lightbox-close').onclick=()=>{lb.classList.remove('open');lbImg.src=""};
+
+document.querySelectorAll('.lightbox-trigger').forEach(i=>{
+  i.onclick=()=>{lb.classList.add('open');lbImg.src=i.dataset.full;};
+});
+
+/* CAROUSEL */
+const track=document.querySelector('.carousel-track');
+const slides=[...document.querySelectorAll('.carousel-slide')];
+const dotsWrap=document.querySelector('.carousel-dots');
+let current=0;
+
+dotsWrap.innerHTML = slides.map((_,i)=>
+  `<span class='carousel-dot ${i==0?'active':''}' data-i='${i}'></span>`
+).join('');
+
+function update(){
+  track.style.transform=`translateX(-${current*100}%)`;
+  document.querySelectorAll('.carousel-dot').forEach((d,i)=>d.classList.toggle('active',i===current));
+}
+
+document.querySelector('.carousel-btn.next').onclick=()=>{current=(current+1)%slides.length;update();}
+document.querySelector('.carousel-btn.prev').onclick=()=>{current=(current-1+slides.length)%slides.length;update();}
+
+document.querySelectorAll('.carousel-dot').forEach(dot=>{
+  dot.onclick=()=>{current=Number(dot.dataset.i);update();};
+});
+
+/* SWIPE */
+let startX=0;
+document.querySelector('.menu-carousel').addEventListener('touchstart',e=>startX=e.touches[0].clientX);
+document.querySelector('.menu-carousel').addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-startX;
+  if(Math.abs(dx)>40){current=dx<0?(current+1)%slides.length:(current-1+slides.length)%slides.length;update();}
+});
+
+/* SHARE */
+const share=document.getElementById("shareBtn");
+if(navigator.share){
+  share.onclick=()=>{
+    navigator.share({title:"Shando'z Café & Coffee Bar",text:"Coffee · Comfort · Community",url:"https://shandozcafe.site"});
+  }
+} else share.onclick=()=>alert("Perangkat tidak mendukung fitur Share.");
+</script>
+
 </body>
 </html>
+Below is the **FULL FINAL CHRISTMAS VERSION** combining:
+❄ Efek salju
+⏳ Loading Screen aesthetic gold ambient
+🎄 Christmas theme (ornamen, warna, glow)
+— Tanpa QRIS (sudah dikeluarkan)
+
+=== FINAL FILES ===
+
+--------------------------------------
+🎄 **INDEX.HTML (Final Christmas Edition)**
+--------------------------------------
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shando'z Café — Christmas Edition</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loader" class="loader-screen">
+  <div class="loader-spinner"></div>
+  <p>Menghangatkan suasana...</p>
+</div>
+
+<!-- SALJU -->
+<canvas id="snow-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo" id="logo">Shando'z Café ❄️</div>
+  <div class="nav-links">
+    <a href="#promo">Promo</a>
+    <a href="#menu">Menu</a>
+    <a href="#gallery">Galeri</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <video class="hero-video" autoplay muted loop>
+    <source src="assets/hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <h1 class="hero-title">Christmas at Shando'z Café 🎄</h1>
+    <a href="#menu" id="exploreMenuBtn" class="btn-cta">Lihat Menu</a>
+  </div>
+</section>
+
+<!-- PROMO -->
+<section class="promo-section container" id="promo">
+  <h2 class="section-title">Promo Spesial Natal</h2>
+  <div class="promo-grid">
+    <div class="promo-card"><img src="assets/promo1.jpg"></div>
+    <div class="promo-card"><img src="assets/promo2.jpg"></div>
+  </div>
+</section>
+
+<!-- MENU CAROUSEL -->
+<section class="menu-section container" id="menu">
+  <h2 class="section-title">Menu Favorit</h2>
+
+  <div class="menu-carousel">
+    <button class="carousel-btn prev">❮</button>
+    <div class="carousel-track">
+      <div class="carousel-slide"><img src="assets/menu1.png"></div>
+      <div class="carousel-slide"><img src="assets/menu2.png"></div>
+      <div class="carousel-slide"><img src="assets/menu3.png"></div>
+    </div>
+    <button class="carousel-btn next">❯</button>
+  </div>
+  <div class="carousel-dots"></div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery-section container" id="gallery">
+  <h2 class="section-title">Galeri</h2>
+  <div class="gallery-grid">
+    <img src="assets/g1.jpg" class="lightbox-trigger" data-full="assets/g1.jpg">
+    <img src="assets/g2.jpg" class="lightbox-trigger" data-full="assets/g2.jpg">
+    <img src="assets/g3.jpg" class="lightbox-trigger" data-full="assets/g3.jpg">
+    <img src="assets/g4.jpg" class="lightbox-trigger" data-full="assets/g4.jpg">
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox">
+  <button id="lightbox-close" class="lightbox-close">✕</button>
+  <img id="lightbox-img">
+</div>
+
+<!-- MUSIC TOGGLE -->
+<button id="music-toggle" class="music-toggle">🔇</button>
+<audio id="bgm" loop src="assets/bgm.mp3"></audio>
+
+<!-- SHARE BUTTON -->
+<button id="shareBtn" class="share-button">↗</button>
+
+<!-- SCRIPT -->
+<script src="script.js"></script>
+</body>
+</html>
+```
+
