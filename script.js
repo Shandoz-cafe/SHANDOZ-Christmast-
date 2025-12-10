@@ -1,106 +1,219 @@
-```javascript
-/* HELPERS */
-const qs = s=>document.querySelector(s);
-const qsa = s=>document.querySelectorAll(s);
+/* ===== Helper ===== */
+const qs = sel => document.querySelector(sel);
+const qsa = sel => document.querySelectorAll(sel);
 
-/* SMOOTH SCROLL */
+/* ===== Smooth Scroll ===== */
 qsa('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click',e=>{
-    const t = qs(a.getAttribute('href'));
-    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  a.addEventListener('click', e=>{
+    const tgt = qs(a.getAttribute('href'));
+    if(tgt){
+      e.preventDefault();
+      tgt.scrollIntoView({behavior:'smooth'});
+    }
   });
 });
 
-/* LOGO CLICK */
-qs('#logo')?.addEventListener('click',()=> location.href="index.html");
+/* ===== Logo Click → Home ===== */
+qs('#logo')?.addEventListener('click', ()=> location.href="index.html");
 
-/* LOADING SCREEN */
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    qs('#loader').style.opacity="0";
-    setTimeout(()=> qs('#loader').style.display="none",300);
-  },800);
-});
-
-/* MUSIC */
+/* ===== Background Music ===== */
 const bgm = qs('#bgm');
 const toggle = qs('#music-toggle');
 let isPlaying = false;
-function playMusic(){ if(!bgm) return;
-  bgm.muted=false;
-  bgm.play().then(()=>{isPlaying=true;toggle.textContent="🔊";}).catch(()=>{});
-}
-window.addEventListener('pointerdown',playMusic,{once:true});
-qs('#exploreMenuBtn')?.addEventListener('click',()=>playMusic());
 
-toggle.addEventListener('click',()=>{
-  if(!isPlaying){ playMusic(); }
-  else { bgm.pause(); isPlaying=false; toggle.textContent="🔇"; }
+function playMusic(){
+  if(!bgm) return;
+  bgm.muted = false;
+  bgm.play().then(()=>{
+    isPlaying = true;
+    toggle.textContent = "🔊";
+  }).catch(()=>{});
+}
+
+window.addEventListener('pointerdown', playMusic, {once:true});
+
+const exploreBtn = qs('#exploreMenuBtn');
+if(exploreBtn){
+  exploreBtn.addEventListener('click', ()=> playMusic());
+}
+
+toggle.addEventListener('click', ()=>{
+  if(!isPlaying){
+    playMusic();
+  } else {
+    bgm.pause();
+    isPlaying = false;
+    toggle.textContent = "🔇";
+  }
 });
 
-/* LIGHTBOX */
+/* ===== Lightbox ===== */
 const lb = qs('#lightbox');
 const lbImg = qs('#lightbox-img');
-qs('#lightbox-close').addEventListener('click',()=> closeLB());
-function openLB(src){ lb.classList.add('open'); lbImg.src=src; }
-function closeLB(){ lb.classList.remove('open'); lbImg.src=""; }
-qsa('.lightbox-trigger').forEach(img=> img.addEventListener('click',()=> openLB(img.dataset.full)));
+qs('#lightbox-close').addEventListener('click', closeLB);
 
-/* CAROUSEL */
+function openLB(src){
+  lb.classList.add('open');
+  lbImg.src = src;
+}
+function closeLB(){
+  lb.classList.remove('open');
+  lbImg.src = "";
+}
+
+qsa('.lightbox-trigger').forEach(img=>{
+  img.addEventListener('click', ()=> openLB(img.dataset.full));
+});
+
+/* ===== Carousel ===== */
 const track = qs('.carousel-track');
 const slides = [...qsa('.carousel-slide')];
 const dotsWrap = qs('.carousel-dots');
-let current=0;
-dotsWrap.innerHTML = slides.map((_,i)=> `<span class="carousel-dot ${i==0?'active':''}" data-i="${i}"></span>`).join('');
+let current = 0;
+
+dotsWrap.innerHTML = slides.map((_,i)=>
+  `<span class="carousel-dot ${i==0?'active':''}" data-i="${i}"></span>`
+).join('');
+
 function update(){
-  track.style.transform=`translateX(-${current*100}%)`;
-  qsa('.carousel-dot').forEach((d,i)=> d.classList.toggle('active',i===current));
-}
-qs('.carousel-btn.next').addEventListener('click',()=>{ current=(current+1)%slides.length; update(); });
-qs('.carousel-btn.prev').addEventListener('click',()=>{ current=(current-1+slides.length)%slides.length; update(); });
-qsa('.carousel-dot').forEach(dot=> dot.addEventListener('click',()=>{ current=Number(dot.dataset.i); update(); }));
-
-/* SWIPE */
-let startX=0;
-qs('.menu-carousel').addEventListener('touchstart',e=> startX=e.touches[0].clientX);
-qs('.menu-carousel').addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX - startX;
-  if(Math.abs(dx)>40){ current = dx<0 ? (current+1)%slides.length : (current-1+slides.length)%slides.length; update(); }
-});
-
-/* SHARE */
-const shareBtn = qs('#shareBtn');
-if(navigator.share){ shareBtn.addEventListener('click',async()=>{
-  try{
-    await navigator.share({title:"Shando'z Café",text:"Christmas Vibes at Shando'z!",url:"https://shandozcafe.site"});
-  }catch(e){ console.log(e); }
-});
-}else{
-  shareBtn.addEventListener('click',()=> alert('Share tidak didukung.'));
+  track.style.transform = `translateX(-${current * 100}%)`;
+  qsa('.carousel-dot').forEach((d,i)=>
+    d.classList.toggle('active', i===current)
+  );
 }
 
-/* SNOW */
-const canvas = qs('#snow-canvas');
-const ctx = canvas.getContext('2d');
-let W,H; function resize(){ W=canvas.width=innerWidth; H=canvas.height=innerHeight; }
-resize(); window.addEventListener('resize',resize);
+qs('.carousel-btn.next').addEventListener('click', ()=>{
+  current = (current+1) % slides.length;
+  update();
+});
+qs('.carousel-btn.prev').addEventListener('click', ()=>{
+  current = (current-1+slides.length) % slides.length;
+  update();
+});
 
-let snow = Array.from({length:120}).map(()=>({
-  x:Math.random()*W,
-  y:Math.random()*H,
-  r:Math.random()*3+1,
-  s:Math.random()*1+0.5
-}));
-
-function snowDraw(){
-  ctx.clearRect(0,0,W,H);
-  ctx.fillStyle='white';
-  snow.forEach(f=>{
-    ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
-    f.y+=f.s; f.x+=Math.sin(f.y*0.01)*0.6;
-    if(f.y>H){f.y=-5;f.x=Math.random()*W;}
+qsa('.carousel-dot').forEach(dot=>{
+  dot.addEventListener('click', ()=>{
+    current = Number(dot.dataset.i);
+    update();
   });
-  requestAnimationFrame(snowDraw);
+});
+
+/* ===== Swipe ===== */
+let startX=0;
+qs('.menu-carousel').addEventListener('touchstart', e=> startX=e.touches[0].clientX);
+qs('.menu-carousel').addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - startX;
+  if(Math.abs(dx)>40){
+    current = dx<0 ? (current+1)%slides.length : (current-1+slides.length)%slides.length;
+    update();
+  }
+});
+
+/* ===== Share Button ===== */
+const shareBtn = qs("#shareBtn");
+
+if (navigator.share) {
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "Shando'z Café & Coffee Bar",
+        text: "Coffee · Comfort · Community",
+        url: "https://shandozcafe.site"
+      });
+    } catch (err) {
+      console.log("Share canceled", err);
+    }
+  });
+} else {
+  shareBtn.addEventListener("click", () => {
+    alert("Fitur share tidak didukung di perangkat ini.");
+  });
 }
-snowDraw();
-```
+
+/* ============================================================================
+   🎄 CHRISTMAS MODE FEATURES
+============================================================================ */
+
+/* ===== Snow Effect (real falling snow) ===== */
+function createSnow(){
+  for(let i=0;i<40;i++){
+    const s = document.createElement("div");
+    s.className = "snow";
+    s.style.left = Math.random()*100 + "vw";
+    s.style.animationDuration = 3 + Math.random()*4 + "s";
+    s.style.opacity = 0.4 + Math.random()*0.6;
+    s.style.transform = `scale(${0.6 + Math.random()*0.8})`;
+    document.body.appendChild(s);
+  }
+}
+createSnow();
+
+/* ===== Christmas Promo Popup ===== */
+const promoPopup = document.createElement("div");
+promoPopup.id = "xmas-popup";
+promoPopup.innerHTML = `
+  <div class="xmas-box">
+    <button class="xmas-close">✕</button>
+    <img src="christmaspromo.jpg" class="xmas-img">
+    <h2>🎄 Christmas Special Promo 🎁</h2>
+    <p>Nikmati suasana Natal dengan diskon spesial & menu edisi holiday!</p>
+    <a href="#promo" class="xmas-btn">Lihat Promo</a>
+  </div>
+`;
+document.body.appendChild(promoPopup);
+
+qs(".xmas-close").addEventListener("click", ()=>{
+  promoPopup.classList.remove("show");
+  localStorage.setItem("xmasSeen", "1");
+});
+
+// Muncul hanya 1x per hari
+if(!localStorage.getItem("xmasSeen")){
+  setTimeout(()=> promoPopup.classList.add("show"), 1000);
+}
+
+/* ===== Christmas Lights Effect (kelap-kelip) ===== */
+function startLights(){
+  setInterval(()=>{
+    document.body.classList.toggle("xmas-lights");
+  }, 900);
+}
+startLights();
+
+/* ============================================================================
+   ⏳ Loading Screen Aesthetic
+============================================================================ */
+const loader = document.createElement("div");
+loader.id = "loader";
+loader.innerHTML = `
+  <div class="loader-box">
+    <div class="loader-spin"></div>
+    <p>Loading Shando'z Café…</p>
+    <button id="forceCloseLoader">Skip</button>
+  </div>
+`;
+document.body.appendChild(loader);
+
+window.addEventListener("load", ()=>{
+  setTimeout(()=> loader.classList.add("hide"), 600);
+});
+
+qs("#forceCloseLoader").addEventListener("click", ()=> loader.classList.add("hide"));
+
+/* ============================================================================
+   🌙 Auto Dark/Light Theme (mengikuti sistem HP)
+============================================================================ */
+function applyTheme(){
+  if(window.matchMedia("(prefers-color-scheme:light)").matches){
+    document.body.classList.add("light-theme");
+  } else {
+    document.body.classList.remove("light-theme");
+  }
+}
+applyTheme();
+
+window.matchMedia("(prefers-color-scheme:light)").addEventListener("change", applyTheme);
+
+/* ============================================================================
+   DONE ✔️
+============================================================================ */
