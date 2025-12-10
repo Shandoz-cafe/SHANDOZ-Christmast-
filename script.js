@@ -1,219 +1,139 @@
-/* ===== Helper ===== */
-const qs = sel => document.querySelector(sel);
-const qsa = sel => document.querySelectorAll(sel);
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shando'z Café & Coffee Bar</title>
 
-/* ===== Smooth Scroll ===== */
-qsa('a[href^="#"]').forEach(a=>{
-  a.addEventListener('click', e=>{
-    const tgt = qs(a.getAttribute('href'));
-    if(tgt){
-      e.preventDefault();
-      tgt.scrollIntoView({behavior:'smooth'});
-    }
-  });
-});
+  <!-- ICON -->
+  <link rel="icon" type="image/png" href="logo.png">
 
-/* ===== Logo Click → Home ===== */
-qs('#logo')?.addEventListener('click', ()=> location.href="index.html");
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
 
-/* ===== Background Music ===== */
-const bgm = qs('#bgm');
-const toggle = qs('#music-toggle');
-let isPlaying = false;
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-function playMusic(){
-  if(!bgm) return;
-  bgm.muted = false;
-  bgm.play().then(()=>{
-    isPlaying = true;
-    toggle.textContent = "🔊";
-  }).catch(()=>{});
-}
+</head>
+<body>
 
-window.addEventListener('pointerdown', playMusic, {once:true});
-
-const exploreBtn = qs('#exploreMenuBtn');
-if(exploreBtn){
-  exploreBtn.addEventListener('click', ()=> playMusic());
-}
-
-toggle.addEventListener('click', ()=>{
-  if(!isPlaying){
-    playMusic();
-  } else {
-    bgm.pause();
-    isPlaying = false;
-    toggle.textContent = "🔇";
-  }
-});
-
-/* ===== Lightbox ===== */
-const lb = qs('#lightbox');
-const lbImg = qs('#lightbox-img');
-qs('#lightbox-close').addEventListener('click', closeLB);
-
-function openLB(src){
-  lb.classList.add('open');
-  lbImg.src = src;
-}
-function closeLB(){
-  lb.classList.remove('open');
-  lbImg.src = "";
-}
-
-qsa('.lightbox-trigger').forEach(img=>{
-  img.addEventListener('click', ()=> openLB(img.dataset.full));
-});
-
-/* ===== Carousel ===== */
-const track = qs('.carousel-track');
-const slides = [...qsa('.carousel-slide')];
-const dotsWrap = qs('.carousel-dots');
-let current = 0;
-
-dotsWrap.innerHTML = slides.map((_,i)=>
-  `<span class="carousel-dot ${i==0?'active':''}" data-i="${i}"></span>`
-).join('');
-
-function update(){
-  track.style.transform = `translateX(-${current * 100}%)`;
-  qsa('.carousel-dot').forEach((d,i)=>
-    d.classList.toggle('active', i===current)
-  );
-}
-
-qs('.carousel-btn.next').addEventListener('click', ()=>{
-  current = (current+1) % slides.length;
-  update();
-});
-qs('.carousel-btn.prev').addEventListener('click', ()=>{
-  current = (current-1+slides.length) % slides.length;
-  update();
-});
-
-qsa('.carousel-dot').forEach(dot=>{
-  dot.addEventListener('click', ()=>{
-    current = Number(dot.dataset.i);
-    update();
-  });
-});
-
-/* ===== Swipe ===== */
-let startX=0;
-qs('.menu-carousel').addEventListener('touchstart', e=> startX=e.touches[0].clientX);
-qs('.menu-carousel').addEventListener('touchend', e=>{
-  const dx = e.changedTouches[0].clientX - startX;
-  if(Math.abs(dx)>40){
-    current = dx<0 ? (current+1)%slides.length : (current-1+slides.length)%slides.length;
-    update();
-  }
-});
-
-/* ===== Share Button ===== */
-const shareBtn = qs("#shareBtn");
-
-if (navigator.share) {
-  shareBtn.addEventListener("click", async () => {
-    try {
-      await navigator.share({
-        title: "Shando'z Café & Coffee Bar",
-        text: "Coffee · Comfort · Community",
-        url: "https://shandozcafe.site"
-      });
-    } catch (err) {
-      console.log("Share canceled", err);
-    }
-  });
-} else {
-  shareBtn.addEventListener("click", () => {
-    alert("Fitur share tidak didukung di perangkat ini.");
-  });
-}
-
-/* ============================================================================
-   🎄 CHRISTMAS MODE FEATURES
-============================================================================ */
-
-/* ===== Snow Effect (real falling snow) ===== */
-function createSnow(){
-  for(let i=0;i<40;i++){
-    const s = document.createElement("div");
-    s.className = "snow";
-    s.style.left = Math.random()*100 + "vw";
-    s.style.animationDuration = 3 + Math.random()*4 + "s";
-    s.style.opacity = 0.4 + Math.random()*0.6;
-    s.style.transform = `scale(${0.6 + Math.random()*0.8})`;
-    document.body.appendChild(s);
-  }
-}
-createSnow();
-
-/* ===== Christmas Promo Popup ===== */
-const promoPopup = document.createElement("div");
-promoPopup.id = "xmas-popup";
-promoPopup.innerHTML = `
-  <div class="xmas-box">
-    <button class="xmas-close">✕</button>
-    <img src="christmaspromo.jpg" class="xmas-img">
-    <h2>🎄 Christmas Special Promo 🎁</h2>
-    <p>Nikmati suasana Natal dengan diskon spesial & menu edisi holiday!</p>
-    <a href="#promo" class="xmas-btn">Lihat Promo</a>
-  </div>
-`;
-document.body.appendChild(promoPopup);
-
-qs(".xmas-close").addEventListener("click", ()=>{
-  promoPopup.classList.remove("show");
-  localStorage.setItem("xmasSeen", "1");
-});
-
-// Muncul hanya 1x per hari
-if(!localStorage.getItem("xmasSeen")){
-  setTimeout(()=> promoPopup.classList.add("show"), 1000);
-}
-
-/* ===== Christmas Lights Effect (kelap-kelip) ===== */
-function startLights(){
-  setInterval(()=>{
-    document.body.classList.toggle("xmas-lights");
-  }, 900);
-}
-startLights();
-
-/* ============================================================================
-   ⏳ Loading Screen Aesthetic
-============================================================================ */
-const loader = document.createElement("div");
-loader.id = "loader";
-loader.innerHTML = `
+<!-- =========================================================
+     ⏳ LOADING SCREEN
+========================================================= -->
+<div id="loader">
   <div class="loader-box">
     <div class="loader-spin"></div>
     <p>Loading Shando'z Café…</p>
     <button id="forceCloseLoader">Skip</button>
   </div>
-`;
-document.body.appendChild(loader);
+</div>
 
-window.addEventListener("load", ()=>{
-  setTimeout(()=> loader.classList.add("hide"), 600);
-});
+<!-- =========================================================
+     🔼 MUSIC BUTTON
+========================================================= -->
+<button id="music-toggle">🔇</button>
+<audio id="bgm" loop muted>
+  <source src="bgm.mp3" type="audio/mp3">
+</audio>
 
-qs("#forceCloseLoader").addEventListener("click", ()=> loader.classList.add("hide"));
+<!-- =========================================================
+     🎄 CHRISTMAS POPUP (auto muncul)
+========================================================= -->
+<div id="xmas-popup">
+  <div class="xmas-box">
+    <button class="xmas-close">✕</button>
 
-/* ============================================================================
-   🌙 Auto Dark/Light Theme (mengikuti sistem HP)
-============================================================================ */
-function applyTheme(){
-  if(window.matchMedia("(prefers-color-scheme:light)").matches){
-    document.body.classList.add("light-theme");
-  } else {
-    document.body.classList.remove("light-theme");
-  }
-}
-applyTheme();
+    <!-- FOTO PROMO -->
+    <img src="christmaspromo.jpg" class="xmas-img">
 
-window.matchMedia("(prefers-color-scheme:light)").addEventListener("change", applyTheme);
+    <h2>🎄 Christmas Special Promo 🎁</h2>
+    <p>Nikmati suasana Natal dengan diskon spesial & menu edisi holiday!</p>
 
-/* ============================================================================
-   DONE ✔️
-============================================================================ */
+    <a href="#promo" class="xmas-btn">Lihat Promo</a>
+  </div>
+</div>
+
+<!-- =========================================================
+     🎅 SANTA SLIDE-IN
+========================================================= -->
+<div id="santa">
+  <img src="santa.png" alt="Santa">
+</div>
+
+<!-- =========================================================
+     ✨ SPARKLES
+========================================================= -->
+<div class="sparkle-container"></div>
+
+<!-- =========================================================
+     🎁 GIFT POP
+========================================================= -->
+<div id="gift-pop">
+  <img src="gift.png" alt="gift">
+</div>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+<header class="hero">
+  <img src="logo.png" id="logo" class="logo" alt="logo">
+  <h1>Shando'z Café & Coffee Bar</h1>
+  <p>Coffee · Comfort · Community</p>
+
+  <button id="exploreMenuBtn" class="cta-btn">Explore Menu</button>
+</header>
+
+<!-- =========================================================
+     CAROUSEL
+========================================================= -->
+<section class="menu-section">
+  <h2 class="section-title">Our Menu</h2>
+
+  <div class="menu-carousel">
+    <button class="carousel-btn prev">←</button>
+
+    <div class="carousel-track">
+      <div class="carousel-slide">
+        <img src="menu1.jpg" class="lightbox-trigger" data-full="menu1.jpg">
+      </div>
+      <div class="carousel-slide">
+        <img src="menu2.jpg" class="lightbox-trigger" data-full="menu2.jpg">
+      </div>
+      <div class="carousel-slide">
+        <img src="menu3.jpg" class="lightbox-trigger" data-full="menu3.jpg">
+      </div>
+    </div>
+
+    <button class="carousel-btn next">→</button>
+  </div>
+
+  <div class="carousel-dots"></div>
+</section>
+
+<!-- =========================================================
+     LIGHTBOX
+========================================================= -->
+<div id="lightbox">
+  <span id="lightbox-close">✕</span>
+  <img id="lightbox-img">
+</div>
+
+<!-- =========================================================
+     SHARE BUTTON
+========================================================= -->
+<button id="shareBtn" class="share-btn">Share Website</button>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<footer>
+  <p>© 2025 Shando'z Café & Coffee Bar</p>
+</footer>
+
+<!-- =========================================================
+     JS
+========================================================= -->
+<script src="script.js"></script>
+
+</body>
+</html>
