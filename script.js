@@ -167,64 +167,72 @@ function spawnSparkles(parent, count=6){
   update();
 })();
 
-/* -------------------------------------------------
-   PROMO TRIGGER: TRIPLE TAP (3x), ATAU HOLD 1 DETIK
--------------------------------------------------- */
-(function promoAdvancedTriggers(){
+/* ---------------------------
+   Music + Coupon Trigger (Guaranteed)
+   --------------------------- */
+(function musicInit(){
+  const bgm = qs('#bgm');
+  const toggle = qs('#music-toggle');
+  const coupon = qs('#promoModal');
 
-  const musicBtn = document.querySelector('#music-toggle');
-  const modal = document.querySelector('#promoModal');
+  if(!bgm || !toggle) return;
 
-  if(!musicBtn || !modal) return;
-
-  // BUKA POPUP
-  function openPromo(){
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden', 'false');
-  }
-
-  /* -------------------------
-     1) TRIPLE TAP (3x cepat)
-  ------------------------- */
+  let playing = false;
   let tapCount = 0;
   let tapTimer = null;
 
-  musicBtn.addEventListener('click', () => {
+  // play function – guaranteed works on Android + iOS
+  function startMusic(){
+    bgm.muted = false;
+    bgm.play().then(()=>{
+      playing = true;
+      toggle.textContent = "🔊";
+    }).catch(e=>{
+      console.log("Autoplay blocked:", e);
+    });
+  }
+
+  // SINGLE TAP → Play / Pause
+  toggle.addEventListener("click", () => {
 
     tapCount++;
 
-    if(tapCount === 1){
-      // reset jika tidak berturut
-      tapTimer = setTimeout(() => {
-        tapCount = 0;
-      }, 450); // max jeda antar tap
-    }
+    // triple tap detection
+    if(tapTimer) clearTimeout(tapTimer);
 
-    if(tapCount === 3){
-      clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => {
+      if(tapCount >= 3){
+        // OPEN COUPON ALWAYS
+        coupon.setAttribute("aria-hidden", "false");
+        coupon.classList.add("show");
+      } else {
+        // single click toggle music
+        if(!playing){
+          startMusic();
+        } else {
+          bgm.pause();
+          playing = false;
+          toggle.textContent = "🔇";
+        }
+      }
       tapCount = 0;
-      openPromo();
-    }
-
+    }, 250); // triple tap threshold
   });
 
+  // HOLDDOWN 1 second → Open coupon
+  let holdTimer = null;
 
-  /* -------------------------
-     2) HOLD (tahan 1 detik)
-  ------------------------- */
-  let holdTimer;
-
-  musicBtn.addEventListener('pointerdown', () => {
-    holdTimer = setTimeout(() => {
-      openPromo();
-    }, 1000); // hold 1 detik
+  toggle.addEventListener("pointerdown", () => {
+    holdTimer = setTimeout(()=>{
+      coupon.setAttribute("aria-hidden", "false");
+      coupon.classList.add("show");
+    }, 900);
   });
 
-  musicBtn.addEventListener('pointerup', () => {
+  toggle.addEventListener("pointerup", () => {
     clearTimeout(holdTimer);
   });
-
-  musicBtn.addEventListener('pointerleave', () => {
+  toggle.addEventListener("pointerleave", () => {
     clearTimeout(holdTimer);
   });
 
