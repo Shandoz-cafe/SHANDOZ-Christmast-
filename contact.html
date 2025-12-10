@@ -1,77 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kontak & Lokasi — SHANDO'Z CAFE & COFFEE BAR</title>
+  <title>Contact — Shando'z Café</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="SHANDO'Z Home">
-        <div class="brand-mark" aria-hidden="true">S'</div>
-        <span class="brand-text">SHANDO'Z CAFE & COFFEE BAR</span>
-      </a>
-      <nav class="main-nav" aria-label="Main navigation">
-        <ul>
-          <li><a href="index.html#menu" class="nav-link">Menu</a></li>
-          <li><a href="index.html#promo" class="nav-link">Promo</a></li>
-          <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
-          <li><a href="contact.html" class="nav-link">Kontak & Lokasi</a></li>
-        </ul>
-      </nav>
+  <header class="navbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div class="logo"><a href="index.html" style="color:var(--cream);text-decoration:none">Shando'z Café</a></div>
     </div>
   </header>
 
-  <main>
-    <section class="section contact">
+  <main style="padding-top:88px">
+    <section class="promo-section">
       <div class="container">
-        <header class="section-header">
-          <h2>Kontak & Lokasi</h2>
-          <p>Hubungi kami atau lihat lokasi di peta.</p>
-        </header>
-
-        <div class="contact-grid">
-          <div>
-            <h3>Alamat</h3>
-            <p>Banceuy Permai C3 No. 88, Sumur Bandung, Indonesia</p>
-            <h3>Telepon / WhatsApp</h3>
-            <p><a class="btn btn-gold" href="https://wa.me/6285706370841" target="_blank" rel="noopener">Chat WhatsApp</a></p>
-            <h3>Jam Operasional</h3>
-            <p>Senin–Minggu: 08:00 — 22:00 (waktu setempat)</p>
-          </div>
-
-          <div>
-            <h3>Peta Lokasi</h3>
-            <div class="map-card" style="height:360px;border-radius:12px;overflow:hidden;">
-              <!-- Embed using address query. If you have an embed url, replace src with it. -->
-              <iframe
-                src="https://maps.app.goo.gl/Fxp9rktu44VSbPv2A"
-                width="100%" height="100%" style="border:0;" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-          </div>
-        </div>
-
-        <p style="margin-top:20px;">Kembali ke <a href="index.html">halaman utama</a>.</p>
+        <h2 class="section-title">Contact</h2>
+        <p>Alamat: Jl. Banceuy Permai C3 No.88, Sumur Bandung</p>
+        <p>Jam: 10.00–23.00</p>
+        <p>WhatsApp: <a href="https://wa.me/6285706370841">+62 857-0637-0841</a></p>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-bottom">
-        <small>© SHANDO'Z CAFE &amp; COFFEE BAR</small>
-      </div>
-    </div>
-  </footer>
-
-  <audio id="bg-audio" loop preload="auto">
-    <source src="Valir%20Phoenix.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
-  <script src="script.js" defer></script>
+  <script src="script.js"></script>
 </body>
 </html>
