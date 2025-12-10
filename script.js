@@ -167,31 +167,56 @@ function spawnSparkles(parent, count=6){
   update();
 })();
 
-/* ----------------------------------
-   SECRET OWNER TRIGGER via HOME (tap 5x)
------------------------------------ */
-(function homeSecret(){
-  const home = document.querySelector('a[href="#home"]');
-  if(!home) return;
+/* ----------------------------------------
+   UNIVERSAL SECRET TRIGGER (Laptop + iOS + Android)
+   Trigger: Tekan & tahan tombol HOME selama 1.5 detik
+----------------------------------------- */
+(function secretPromoTrigger(){
 
-  let tapCount = 0;
+  // cari link HOME
+  const homeLink = Array.from(document.querySelectorAll('nav a'))
+        .find(a => a.textContent.trim().toLowerCase() === 'home');
+
+  if(!homeLink){
+    console.error("HOME link tidak ditemukan!");
+    return;
+  }
+
   let timer = null;
+  const holdTime = 1500; // 1.5 detik
 
-  home.addEventListener('click', () => {
-    tapCount++;
-
-    // reset jika lama
-    if(timer) clearTimeout(timer);
-    timer = setTimeout(() => { tapCount = 0; }, 700);
-
-    // klik 5x cepat → buka popup
-    if(tapCount >= 5) {
-      const modal = document.querySelector('#promoModal');
-      if(modal){
-        modal.setAttribute('aria-hidden','false');
-        modal.classList.add('show');
-      }
-      tapCount = 0;
+  function openPromoManually(){
+    const modal = document.querySelector('#promoModal');
+    if(modal){
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden','false');
     }
+  }
+
+  /* --- TOUCH DEVICES (Android + iPhone) --- */
+  homeLink.addEventListener('touchstart', () => {
+    timer = setTimeout(openPromoManually, holdTime);
   });
+
+  homeLink.addEventListener('touchend', () => {
+    clearTimeout(timer);
+  });
+
+  homeLink.addEventListener('touchmove', () => {
+    clearTimeout(timer);
+  });
+
+  /* --- MOUSE DEVICES (Laptop / PC) --- */
+  homeLink.addEventListener('mousedown', () => {
+    timer = setTimeout(openPromoManually, holdTime);
+  });
+
+  homeLink.addEventListener('mouseup', () => {
+    clearTimeout(timer);
+  });
+
+  homeLink.addEventListener('mouseleave', () => {
+    clearTimeout(timer);
+  });
+
 })();
