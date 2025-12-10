@@ -124,3 +124,7 @@ body{
   .hero-title{font-size:28px}
   .carousel-slide img{height:62vh; max-height:62vh}
 }
+
+/* small dot styles for carousel */
+.dot{width:10px;height:10px;background:rgba(255,255,255,0.12);border-radius:50%;border:none;cursor:pointer}
+.dot.active{background:var(--cream)}
