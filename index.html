@@ -5,28 +5,18 @@
   <!-- Fixed viewport to prevent mobile auto-zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
+  <meta name="description" content="Shando'z Café & Coffee Bar – Coffee · Comfort · Community">
 
-  <!-- Quick inline safety styles (prevents initial overflow) -->
-  <style>
-    html,body{width:100%;max-width:100%;margin:0;padding:0;overflow-x:hidden!important;-webkit-text-size-adjust:100%}
-    img{max-width:100%;height:auto;display:block}
-    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px;box-sizing:border-box}
-    .hero{position:relative;width:100%;overflow:hidden;box-sizing:border-box}
-    .hero-video{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:100%;object-fit:cover;max-height:85vh;display:block}
-    .promo-grid,.gallery-grid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr);box-sizing:border-box}
-    @media (max-width:640px){.promo-grid,.gallery-grid{grid-template-columns:1fr}.hero-video{max-height:65vh}}
-    @media (min-width:981px){.gallery-grid{grid-template-columns:repeat(4,1fr)} .promo-grid{grid-template-columns:repeat(3,1fr)}}
-  </style>
-
+  <!-- main stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NETFLIX-STYLE LOADER -->
+  <!-- NETFLIX-STYLE LOADER (no skip) -->
   <div id="netflixLoader" class="netflix-loader" aria-hidden="true">
     <div class="loader-inner" role="status" aria-live="polite">
       <div class="loader-text">SHANDO'Z</div>
-      <div class="loader-sub">Café & Coffee Bar</div>
+      <div class="loader-sub">Coffee · Comfort · Community</div>
     </div>
   </div>
 
@@ -36,7 +26,7 @@
   <!-- Optional Santa image (replace with your asset or remove) -->
   <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" style="display:none" />
 
-  <!-- PROMO POPUP -->
+  <!-- PROMO POPUP (shows once per day) -->
   <div id="promoModal" class="promo-modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="promo-card">
       <button class="promo-close" aria-label="Tutup popup">✕</button>
@@ -47,17 +37,14 @@
       <div class="promo-body">
         <h3>Special Holiday Promo</h3>
         <p>Dapatkan diskon spesial & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
-
         <div class="promo-timer">
           <div class="timer-label">Berakhir dalam</div>
           <div id="promoCountdown" class="timer-count">00d 00:00:00</div>
         </div>
-
         <div class="promo-actions">
           <button id="downloadCoupon" class="btn">Unduh Kupon</button>
           <a href="#promo" class="btn ghost">Lihat Detail Promo</a>
         </div>
-
         <p class="promo-small">Tampil sekali per hari untuk pengunjung yang sama.</p>
       </div>
     </div>
@@ -103,20 +90,29 @@
       </div>
     </section>
 
-    <!-- MENU CAROUSEL -->
+    <!-- MENU CAROUSEL (Full-screen swipe carousel as requested) -->
     <section id="menu" class="menu-section">
       <div class="container">
         <h2 class="section-title">Our Menu</h2>
-        <div class="menu-carousel">
-          <button class="carousel-btn prev" aria-label="Previous">‹</button>
-          <div class="carousel-track">
-            <div class="carousel-slide"><img src="menu1.jpg" alt="Menu 1"></div>
-            <div class="carousel-slide"><img src="menu2.jpg" alt="Menu 2"></div>
-            <div class="carousel-slide"><img src="menu3.jpg" alt="Menu 3"></div>
+
+        <div class="menu-carousel" aria-roledescription="carousel">
+          <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+
+          <div class="carousel-track" id="carouselTrack" role="list">
+            <!-- 7 slides - root images menu1.jpg .. menu7.jpg -->
+            <div class="carousel-slide" role="listitem"><img src="menu1.jpg" alt="Menu 1"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu2.jpg" alt="Menu 2"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu3.jpg" alt="Menu 3"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu4.jpg" alt="Menu 4"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu5.jpg" alt="Menu 5"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu6.jpg" alt="Menu 6"></div>
+            <div class="carousel-slide" role="listitem"><img src="menu7.jpg" alt="Menu 7"></div>
           </div>
-          <button class="carousel-btn next" aria-label="Next">›</button>
+
+          <button class="carousel-btn next" aria-label="Next slide">›</button>
         </div>
-        <div class="carousel-dots"></div>
+
+        <div class="carousel-dots" id="carouselDots" role="tablist"></div>
       </div>
     </section>
 
@@ -141,7 +137,7 @@
   </div>
 
   <!-- FLOATING UI -->
-  <audio id="bgm" src="christmas.mp3" loop preload="auto"></audio>
+  <audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
   <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
   <a href="https://wa.me/6285706370841" class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
   <button id="shareBtn" class="share-button" aria-label="Share">🔗</button>
