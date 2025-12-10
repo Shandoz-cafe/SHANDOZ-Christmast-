@@ -109,22 +109,80 @@ function spawnSparkles(parent, count=6){
   close?.addEventListener('click', ()=> { lb.classList.remove('open'); img.src=''; });
 })();
 
-/* Music controls (play after first gesture or Explore button) */
-(function music(){
-  const bgm = qs('#bgm'), toggle = qs('#music-toggle');
-  if(!bgm || !toggle) return;
-  let playing = false;
-  function play(){
-    bgm.muted = false;
-    bgm.play().then(()=>{ playing=true; toggle.textContent='🔊'; }).catch(()=>{});
-  }
-  window.addEventListener('pointerdown', play, { once: true });
-  qs('#exploreMenuBtn')?.addEventListener('click', play);
-  toggle.addEventListener('click', ()=>{
-    if(!playing){ play(); } else { bgm.pause(); playing=false; toggle.textContent='🔇'; }
-  });
-})();
+/* ---------------------------
+   Music + Coupon Trigger (Guaranteed + Close Popup Trigger)
+   --------------------------- */
+(function musicInit(){
+  const bgm = qs('#bgm');
+  const toggle = qs('#music-toggle');
+  const coupon = qs('#promoModal');
+  const closePopup = qs('.promo-close');  // tombol X popup
+  const exploreBtn = qs('#exploreMenuBtn');
 
+  if(!bgm || !toggle) return;
+
+  let playing = false;
+  let tapCount = 0;
+  let tapTimer = null;
+
+  // Function to play music (guaranteed)
+  function startMusic(){
+    bgm.muted = false;
+    bgm.play().then(()=>{
+      playing = true;
+      toggle.textContent = "🔊";
+    }).catch(e=>console.log("Audio blocked:", e));
+  }
+
+  /* ---------------------------
+      SINGLE / TRIPLE TAP
+     --------------------------- */
+  toggle.addEventListener("click", () => {
+    tapCount++;
+    if(tapTimer) clearTimeout(tapTimer);
+
+    tapTimer = setTimeout(() => {
+      if(tapCount >= 3){
+        // Open coupon modal
+        coupon.setAttribute("aria-hidden","false");
+        coupon.classList.add("show");
+      } else {
+        // normal toggle
+        if(!playing){ startMusic(); }
+        else { bgm.pause(); playing = false; toggle.textContent = "🔇"; }
+      }
+      tapCount = 0;
+    }, 250);
+  });
+
+  /* ---------------------------
+      HOLD 1 DETIK → buka kupon
+     --------------------------- */
+  let holdTimer = null;
+  toggle.addEventListener("pointerdown", () => {
+    holdTimer = setTimeout(()=>{
+      coupon.setAttribute("aria-hidden","false");
+      coupon.classList.add("show");
+    }, 900);
+  });
+  toggle.addEventListener("pointerup", ()=> clearTimeout(holdTimer));
+  toggle.addEventListener("pointerleave", ()=> clearTimeout(holdTimer));
+
+  /* ---------------------------
+      NEW: PLAY on popup CLOSE
+     --------------------------- */
+  closePopup?.addEventListener("click", () => {
+    startMusic(); // musik ON saat popup ditutup
+  });
+
+  /* ---------------------------
+      Play on explore button 
+     --------------------------- */
+  exploreBtn?.addEventListener("click", () => {
+    startMusic();
+  });
+
+})();
 /* Share button */
 (function share(){
   const btn = qs('#shareBtn'); if(!btn) return;
@@ -165,75 +223,4 @@ function spawnSparkles(parent, count=6){
   // keyboard
   window.addEventListener('keydown', e=> { if(e.key==='ArrowRight') next?.click(); if(e.key==='ArrowLeft') prev?.click(); });
   update();
-})();
-
-/* ---------------------------
-   Music + Coupon Trigger (Guaranteed)
-   --------------------------- */
-(function musicInit(){
-  const bgm = qs('#bgm');
-  const toggle = qs('#music-toggle');
-  const coupon = qs('#promoModal');
-
-  if(!bgm || !toggle) return;
-
-  let playing = false;
-  let tapCount = 0;
-  let tapTimer = null;
-
-  // play function – guaranteed works on Android + iOS
-  function startMusic(){
-    bgm.muted = false;
-    bgm.play().then(()=>{
-      playing = true;
-      toggle.textContent = "🔊";
-    }).catch(e=>{
-      console.log("Autoplay blocked:", e);
-    });
-  }
-
-  // SINGLE TAP → Play / Pause
-  toggle.addEventListener("click", () => {
-
-    tapCount++;
-
-    // triple tap detection
-    if(tapTimer) clearTimeout(tapTimer);
-
-    tapTimer = setTimeout(() => {
-      if(tapCount >= 3){
-        // OPEN COUPON ALWAYS
-        coupon.setAttribute("aria-hidden", "false");
-        coupon.classList.add("show");
-      } else {
-        // single click toggle music
-        if(!playing){
-          startMusic();
-        } else {
-          bgm.pause();
-          playing = false;
-          toggle.textContent = "🔇";
-        }
-      }
-      tapCount = 0;
-    }, 250); // triple tap threshold
-  });
-
-  // HOLDDOWN 1 second → Open coupon
-  let holdTimer = null;
-
-  toggle.addEventListener("pointerdown", () => {
-    holdTimer = setTimeout(()=>{
-      coupon.setAttribute("aria-hidden", "false");
-      coupon.classList.add("show");
-    }, 900);
-  });
-
-  toggle.addEventListener("pointerup", () => {
-    clearTimeout(holdTimer);
-  });
-  toggle.addEventListener("pointerleave", () => {
-    clearTimeout(holdTimer);
-  });
-
 })();
