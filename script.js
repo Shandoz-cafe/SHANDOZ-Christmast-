@@ -105,16 +105,13 @@ window.addEventListener('load', () => {
     el.style.opacity = 0.35 + Math.random()*0.6;
     const dur = 5 + Math.random()*6; el.style.animationDuration = dur + 's';
     el.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
-    // animate using transform via requestAnimationFrame fallback to CSS
     el.style.transition = `transform ${dur}s linear`;
     container.appendChild(el);
-    // simulate fall with CSS transform to keep perf good
     requestAnimationFrame(()=> {
       el.style.transform = `translateY(${window.innerHeight + 100}px) translateX(${ (Math.random()*160 - 80)}px)`;
     });
     setTimeout(()=> { el.remove(); }, (dur+0.5)*1000);
   }
-  // burst initial
   for(let i=0;i<COUNT;i++) setTimeout(createFlake, Math.random()*1200);
   setInterval(createFlake, 900);
 })();
@@ -165,7 +162,6 @@ function spawnSparkles(parent, count = 6){
   if(!bgm || !toggle) return;
   let playing = false;
   function play(){
-    // many browsers require user gesture; this plays after first pointerdown anywhere
     bgm.muted = false;
     bgm.play().then(()=> {
       playing = true; toggle.textContent = '🔊';
