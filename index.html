@@ -2,11 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
-  <meta name="description" content="Shando'z Café & Coffee Bar – Coffee · Comfort · Community">
-
-  <!-- main stylesheet -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>Shando'z Café & Coffee Bar — Christmas Edition</title>
+  <meta name="description" content="Shando'z Café & Coffee Bar — Coffee · Comfort · Community — Holiday Special" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,13 +17,13 @@
     </div>
   </div>
 
-  <!-- SNOW container (script injects flakes) -->
+  <!-- SNOW container -->
   <div id="snow-container" aria-hidden="true"></div>
 
-  <!-- Optional Santa image (replace with your asset or remove) -->
-  <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" style="display:none" />
+  <!-- Santa (flyby) -->
+  <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" class="santa" />
 
-  <!-- PROMO POPUP (shows once per day) -->
+  <!-- PROMO POPUP -->
   <div id="promoModal" class="promo-modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="promo-card">
       <button class="promo-close" aria-label="Tutup popup">✕</button>
@@ -35,15 +33,18 @@
       </div>
       <div class="promo-body">
         <h3>Special Holiday Promo</h3>
-        <p>Dapatkan diskon spesial & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
+        <p>Dapatkan diskon & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
+
         <div class="promo-timer">
           <div class="timer-label">Berakhir dalam</div>
           <div id="promoCountdown" class="timer-count">00d 00:00:00</div>
         </div>
+
         <div class="promo-actions">
           <button id="downloadCoupon" class="btn">Unduh Kupon</button>
           <a href="#promo" class="btn ghost">Lihat Detail Promo</a>
         </div>
+
         <p class="promo-small">Tampil sekali per hari untuk pengunjung yang sama.</p>
       </div>
     </div>
@@ -51,7 +52,7 @@
 
   <!-- NAVBAR -->
   <header class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+    <div class="container">
       <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#home">Home</a>
@@ -63,8 +64,9 @@
     </div>
   </header>
 
-  <!-- MAIN / HERO -->
+  <!-- MAIN -->
   <main>
+    <!-- HERO -->
     <section id="home" class="hero">
       <video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg">
         <source src="qponpromo.mp4" type="video/mp4">
@@ -82,14 +84,14 @@
       <div class="container">
         <h2 class="section-title">Promo Spesial</h2>
         <div class="promo-grid">
-          <div class="promo-card"><img src="promo1.jpg" alt="Promo 1"></div>
-          <div class="promo-card"><img src="promo2.jpg" alt="Promo 2"></div>
-          <div class="promo-card"><img src="promo3.jpg" alt="Promo 3"></div>
+          <div class="promo-card"><img src="promo1.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo2.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo3.jpg" alt=""></div>
         </div>
       </div>
     </section>
 
-    <!-- MENU CAROUSEL (Full-screen swipe carousel as requested) -->
+    <!-- MENU - FULLSCREEN CAROUSEL -->
     <section id="menu" class="menu-section">
       <div class="container">
         <h2 class="section-title">Our Menu</h2>
@@ -98,7 +100,6 @@
           <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
 
           <div class="carousel-track" id="carouselTrack" role="list">
-            <!-- 7 slides - images menu1.jpg .. menu7.jpg -->
             <div class="carousel-slide" role="listitem"><img src="menu1.jpg" alt="Menu 1"></div>
             <div class="carousel-slide" role="listitem"><img src="menu2.jpg" alt="Menu 2"></div>
             <div class="carousel-slide" role="listitem"><img src="menu3.jpg" alt="Menu 3"></div>
@@ -137,11 +138,10 @@
 
   <!-- FLOATING UI -->
   <audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
-  <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
+  <button id="music-toggle" aria-label="Toggle music" class="music-toggle">🔇</button>
   <a href="https://wa.me/6285706370841" class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
   <button id="shareBtn" class="share-button" aria-label="Share">🔗</button>
 
-  <!-- final script (single file) -->
   <script src="script.js"></script>
 </body>
 </html>
