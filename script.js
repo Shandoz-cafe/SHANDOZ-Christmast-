@@ -1,50 +1,49 @@
-/* helpers */
+/* Helpers */
 const qs = s => document.querySelector(s);
 const qsa = s => document.querySelectorAll(s);
 
 /* ---------------------------
-   LOADER (Netflix style) - no skip
+   NETFLIX LOADER (no skip) — remove after animation
    --------------------------- */
 window.addEventListener('load', () => {
   const loader = qs('#netflixLoader');
   if (!loader) return;
-  // remove after animation duration (2.2s in CSS)
-  setTimeout(() => {
-    loader.remove();
-  }, 2300);
+  // keep visible for animation effect, then remove
+  setTimeout(() => loader.remove(), 2300);
 });
 
 /* ---------------------------
    PROMO MODAL (show once per day)
    --------------------------- */
 (function promoModal(){
-  const key = 'shandoz_promo_seen_v1';
+  const key = 'shandoz_promo_seen_v2';
   const modal = qs('#promoModal');
   const promoCard = qs('.promo-card');
   const closeBtn = qs('.promo-close');
 
   function openModal(){
     if(!modal) return;
-    modal.setAttribute('aria-hidden','false');
     modal.classList.add('show');
-    spawnSparkles(promoCard, 8);
+    modal.setAttribute('aria-hidden','false');
+    spawnSparkles(promoCard, 10);
   }
   function closeModal(){
     if(!modal) return;
-    modal.setAttribute('aria-hidden','true');
     modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
     try{ localStorage.setItem(key, Date.now()); } catch(e){}
   }
 
   closeBtn?.addEventListener('click', closeModal);
 
-  try{
-    const seen = localStorage.getItem(key);
-    if(!seen || (Date.now() - Number(seen)) > 24*3600*1000){
-      setTimeout(openModal, 1400);
+  try {
+    const seen = Number(localStorage.getItem(key));
+    if(!seen || (Date.now() - seen) > 24*3600*1000){
+      // show after loader finishes
+      setTimeout(openModal, 1600);
     }
   } catch(e){
-    setTimeout(openModal, 1400);
+    setTimeout(openModal, 1600);
   }
 })();
 
@@ -52,96 +51,112 @@ window.addEventListener('load', () => {
    Promo countdown (Dec 31)
    --------------------------- */
 (function promoCountdown(){
-  const countdownEl = qs('#promoCountdown');
-  if(!countdownEl) return;
+  const el = qs('#promoCountdown');
+  if(!el) return;
   const now = new Date();
   const year = now.getFullYear();
   const promoEnd = new Date(year, 11, 31, 23, 59, 59);
   function update(){
     const diff = promoEnd - Date.now();
-    if(diff <= 0){ countdownEl.textContent = 'Promo telah berakhir'; return; }
+    if(diff <= 0){ el.textContent = 'Promo telah berakhir'; return; }
     const days = Math.floor(diff / (1000*60*60*24));
     const hours = Math.floor((diff / (1000*60*60)) % 24);
     const minutes = Math.floor((diff / (1000*60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
-    countdownEl.textContent = `${String(days).padStart(2,'0')}d ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    el.textContent = `${String(days).padStart(2,'0')}d ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
   }
-  update();
-  setInterval(update, 1000);
+  update(); setInterval(update, 1000);
 })();
 
 /* ---------------------------
-   Download coupon (canvas PNG)
+   Download coupon (canvas)
    --------------------------- */
 (function couponDownload(){
   const btn = qs('#downloadCoupon');
   if(!btn) return;
   btn.addEventListener('click', () => {
-    const w = 900, h = 500;
-    const c = document.createElement('canvas'); c.width=w; c.height=h;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#2a221e'; ctx.fillRect(0,0,w,h);
-    ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.06;
-    for(let i=0;i<80;i++){ ctx.beginPath(); ctx.arc(Math.random()*w, Math.random()*h, Math.random()*40, 0, Math.PI*2); ctx.fill(); }
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 34px sans-serif'; ctx.fillText("SHANDO'Z HOLIDAY COUPON", 40, 100);
-    ctx.font = '700 28px sans-serif'; ctx.fillStyle = '#f5d48b'; const code = 'SHANDOZ2025'; ctx.fillText("Kode: " + code, 40, 170);
-    ctx.font = '18px sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText("Tunjukkan kode ini untuk klaim promo di Shando'z Café.", 40, 220);
-    ctx.font = '16px sans-serif'; ctx.fillStyle = '#dcdcdc'; ctx.fillText('Berlaku sampai: 31 Dec ' + (new Date().getFullYear()), 40, 280);
-    const dataUrl = c.toDataURL('image/png'); const a = document.createElement('a'); a.href = dataUrl; a.download = 'shandoz_coupon.png'; a.click();
+    const w=1000,h=540;
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    const ctx=c.getContext('2d');
+    ctx.fillStyle='#241815'; ctx.fillRect(0,0,w,h);
+    ctx.globalAlpha=0.06; ctx.fillStyle='#fff';
+    for(let i=0;i<120;i++){ ctx.beginPath(); ctx.arc(Math.random()*w, Math.random()*h, Math.random()*40,0,Math.PI*2); ctx.fill(); }
+    ctx.globalAlpha=1; ctx.fillStyle='#fff';
+    ctx.font='bold 38px sans-serif'; ctx.fillText("SHANDO'Z HOLIDAY COUPON",40,110);
+    ctx.font='700 28px sans-serif'; ctx.fillStyle='#ffdf9a';
+    const code = 'SHANDOZ2025';
+    ctx.fillText("Kode: " + code,40,180);
+    ctx.font='16px sans-serif'; ctx.fillStyle='#ddd';
+    ctx.fillText('Tunjukkan kode untuk klaim promo di Shandoz Café',40,240);
+    ctx.fillText('Berlaku sampai: 31 Dec ' + (new Date().getFullYear()),40,300);
+    const a=document.createElement('a'); a.href=c.toDataURL('image/png'); a.download='shandoz_coupon.png'; a.click();
   });
 })();
 
 /* ---------------------------
-   Snow heavy (optimized) - injects into #snow-container
+   HEAVY SNOW (inject flakes into #snow-container)
    --------------------------- */
 (function heavySnow(){
   const container = qs('#snow-container'); if(!container) return;
   const COUNT = 110;
   function createFlake(){
-    const el = document.createElement('div'); el.className = 'snow';
-    const size = 6 + Math.random()*22; el.style.width = el.style.height = size + 'px';
-    el.style.left = Math.random()*100 + 'vw'; el.style.top = '-20px';
-    el.style.opacity = 0.35 + Math.random()*0.6;
-    const dur = 5 + Math.random()*6; el.style.animationDuration = dur + 's';
-    el.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
+    const el = document.createElement('div');
+    el.className = 'snow';
+    const size = 6 + Math.random()*26;
+    el.style.width = el.style.height = size + 'px';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.top = '-30px';
+    el.style.opacity = 0.25 + Math.random()*0.75;
+    const dur = 5 + Math.random()*7;
     el.style.transition = `transform ${dur}s linear`;
+    // small horizontal drift for variety
+    const drift = (Math.random()*220 - 110);
     container.appendChild(el);
     requestAnimationFrame(()=> {
-      el.style.transform = `translateY(${window.innerHeight + 100}px) translateX(${ (Math.random()*160 - 80)}px)`;
+      el.style.transform = `translateY(${window.innerHeight + 200}px) translateX(${drift}px)`;
     });
-    setTimeout(()=> { el.remove(); }, (dur+0.5)*1000);
+    setTimeout(()=> { el.remove(); }, (dur+0.6)*1000);
   }
+  // initial burst
   for(let i=0;i<COUNT;i++) setTimeout(createFlake, Math.random()*1200);
-  setInterval(createFlake, 900);
+  setInterval(createFlake, 780);
 })();
 
 /* ---------------------------
-   Sparkles spawn near promo
+   Sparkles utility
    --------------------------- */
-function spawnSparkles(parent, count = 6){
+function spawnSparkles(parent, count=6){
   if(!parent) return;
   for(let i=0;i<count;i++){
-    const s = document.createElement('div'); s.className = 'sparkle'; s.textContent = '✨';
-    s.style.left = (10 + Math.random()*80) + '%'; s.style.top = (10 + Math.random()*70) + '%';
-    s.style.animationDelay = (Math.random()*1.2) + 's'; parent.appendChild(s);
+    const s = document.createElement('div');
+    s.className = 'sparkle';
+    s.textContent = '✨';
+    s.style.position = 'absolute';
+    s.style.left = (6 + Math.random()*84) + '%';
+    s.style.top = (6 + Math.random()*78) + '%';
+    s.style.fontSize = (12 + Math.random()*18) + 'px';
+    s.style.opacity = 0;
+    parent.appendChild(s);
     setTimeout(()=> s.remove(), 1600 + Math.random()*800);
   }
 }
 
 /* ---------------------------
-   Santa slide-in
+   SANTA FLYBY (single) 
    --------------------------- */
 (function santaFlyby(){
   const s = qs('#santa'); if(!s) return;
-  s.style.display = 'block'; s.style.position = 'fixed'; s.style.left = '-360px'; s.style.bottom = '10vh';
-  s.style.zIndex = 13000; s.style.transition = 'left 1.1s ease-out';
-  setTimeout(()=> { s.style.left = '12px'; }, 1200);
-  setTimeout(()=> { s.style.left = '-360px'; setTimeout(()=> s.style.display = 'none', 900); }, 7000);
+  // if file missing, silently ignore
+  s.style.display = 'block';
+  s.style.left = '-520px';
+  s.style.bottom = '8vh';
+  s.style.transition = 'left 1.2s ease-out';
+  setTimeout(()=> { s.style.left = '14px'; }, 1400);
+  setTimeout(()=> { s.style.left = '-520px'; setTimeout(()=> s.style.display = 'none', 900); }, 7600);
 })();
 
 /* ---------------------------
-   Lightbox (basic)
+   LIGHTBOX
    --------------------------- */
 (function lightbox(){
   const lb = qs('#lightbox'), img = qs('#lightbox-img'), close = qs('#lightbox-close');
@@ -155,7 +170,7 @@ function spawnSparkles(parent, count = 6){
 })();
 
 /* ---------------------------
-   Music autoplay after first tap (and Explore button triggers)
+   MUSIC (autoplay after first gesture + explore button)
    --------------------------- */
 (function musicInit(){
   const bgm = qs('#bgm'), toggle = qs('#music-toggle');
@@ -165,33 +180,34 @@ function spawnSparkles(parent, count = 6){
     bgm.muted = false;
     bgm.play().then(()=> {
       playing = true; toggle.textContent = '🔊';
-    }).catch(()=>{});
+    }).catch(()=>{ /* autoplay blocked */ });
   }
-  // play after first user tap anywhere (one-shot)
+  // play after first pointerdown anywhere (mobile friendly)
   window.addEventListener('pointerdown', play, { once: true });
-  // also play when user clicks Explore Menu
+  // also when clicking Explore Menu
   qs('#exploreMenuBtn')?.addEventListener('click', play);
-  // toggle button
+  // toggle
   toggle.addEventListener('click', ()=> {
-    if(!playing){ play(); } else { bgm.pause(); playing = false; toggle.textContent = '🔇'; }
+    if(!playing){ play(); } else { bgm.pause(); playing=false; toggle.textContent='🔇'; }
   });
 })();
 
 /* ---------------------------
-   Share button (Web Share API)
+   SHARE button
    --------------------------- */
 (function shareBtn(){
   const btn = qs('#shareBtn'); if(!btn) return;
   if(navigator.share){
     btn.addEventListener('click', async ()=> {
-      try{ await navigator.share({ title: "Shando'z Café & Coffee Bar", text: "Coffee · Comfort · Community", url: location.href }); }
-      catch(e){}
+      try{ await navigator.share({ title: "Shando'z Café & Coffee Bar", text: "Coffee · Comfort · Community", url: location.href }); }catch(e){}
     });
-  } else { btn.addEventListener('click', ()=> { prompt('Salin link ini untuk dibagikan:', location.href); }); }
+  } else {
+    btn.addEventListener('click', ()=> { prompt('Salin link ini untuk dibagikan:', location.href); });
+  }
 })();
 
 /* ---------------------------
-   Carousel logic (7 slides, swipe, dots)
+   CAROUSEL (7 slides) - swipe, dots, keyboard
    --------------------------- */
 (function carousel(){
   const track = qs('.carousel-track');
@@ -199,44 +215,40 @@ function spawnSparkles(parent, count = 6){
   const prevBtn = qs('.carousel-btn.prev');
   const nextBtn = qs('.carousel-btn.next');
   const dotsWrap = qs('#carouselDots');
+  if(!track || slides.length === 0) return;
   let current = 0;
-  if(!track || slides.length===0) return;
 
   // build dots
-  dotsWrap.innerHTML = slides.map((_,i)=> `<button class="dot" data-i="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
+  dotsWrap.innerHTML = slides.map((_,i)=> `<button class="dot" data-i="${i}" aria-label="Slide ${i+1}"></button>`).join('');
   const dots = [...qsa('.dot')];
+
   function update(){
     track.style.transform = `translateX(-${current * 100}%)`;
     dots.forEach((d,i)=> d.classList.toggle('active', i===current));
   }
-  prevBtn?.addEventListener('click', ()=> {
-    current = (current-1+slides.length) % slides.length; update();
-  });
-  nextBtn?.addEventListener('click', ()=> {
-    current = (current+1) % slides.length; update();
-  });
-  dots.forEach(dot => dot.addEventListener('click', ()=> {
-    current = Number(dot.dataset.i); update();
-  }));
 
-  // swipe support
+  prevBtn?.addEventListener('click', ()=> { current = (current - 1 + slides.length) % slides.length; update(); });
+  nextBtn?.addEventListener('click', ()=> { current = (current + 1) % slides.length; update(); });
+  dots.forEach(dot => dot.addEventListener('click', ()=> { current = Number(dot.dataset.i); update(); }));
+
+  // swipe
   let startX = 0;
   const carouselElem = qs('.menu-carousel');
   carouselElem?.addEventListener('touchstart', e => startX = e.touches[0].clientX);
   carouselElem?.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - startX;
-    if(Math.abs(dx) > 40){
-      current = dx < 0 ? (current+1) % slides.length : (current-1+slides.length) % slides.length;
+    if(Math.abs(dx) > 50){
+      current = dx < 0 ? (current+1) % slides.length : (current-1 + slides.length) % slides.length;
       update();
     }
   });
 
   // keyboard
-  window.addEventListener('keydown', (e)=> {
+  window.addEventListener('keydown', e => {
     if(e.key === 'ArrowRight') nextBtn?.click();
     if(e.key === 'ArrowLeft') prevBtn?.click();
   });
 
-  // initial render
+  // initial
   update();
 })();
