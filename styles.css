@@ -60,7 +60,23 @@ body{
 /* SNOW container */
 #snow-container{position:fixed;inset:0;pointer-events:none;z-index:8000}
 /* snow flake style (used by script) */
-.snow{position:absolute;background:white;border-radius:50%;opacity:.85;pointer-events:none;will-change:transform;}
+.snow{
+  position:absolute;
+  background:white;
+  border-radius:50%;
+  opacity:.85;
+  pointer-events:none;
+  will-change:transform;
+  animation-name: snowFall;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+/* snow animation */
+@keyframes snowFall {
+  0% { transform: translateY(0) translateX(0); opacity:1; }
+  100% { transform: translateY(100vh) translateX(var(--drift)); opacity:0; }
+}
 
 /* PROMO MODAL */
 .promo-modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:11000;pointer-events:none;opacity:0;transition:all .28s}
@@ -86,8 +102,15 @@ body{
 
 /* carousel / gallery */
 .menu-section{padding:56px 0}
-.carousel-track{display:flex;transition:0.4s;will-change:transform}
-.carousel-slide img{max-height:520px;width:100%;object-fit:cover;border-radius:10px}
+.carousel-track{display:flex;transition:0.4s;will-change:transform;overflow:hidden}
+.carousel-slide{flex:0 0 100%;display:flex;justify-content:center;align-items:center;padding:8px}
+.carousel-slide img{
+  width:100%;
+  height:auto;
+  max-height:88vh;      /* tampil besar di HP, Tablet, Desktop */
+  object-fit:contain;   /* tidak terpotong */
+  border-radius:14px;
+}
 .carousel-btn{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);color:white;border:none;padding:10px;border-radius:8px;cursor:pointer}
 .carousel-dots{display:flex;gap:8px;justify-content:center;margin-top:12px}
 
