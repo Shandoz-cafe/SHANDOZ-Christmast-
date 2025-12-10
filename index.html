@@ -2,38 +2,51 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- Fixed viewport to prevent mobile auto-zoom -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
 
-  <!-- separate stylesheet -->
+  <!-- Critical inline fixes to avoid initial overflow (kept minimal) -->
+  <style>
+    html,body{width:100%;max-width:100%;margin:0;padding:0;overflow-x:hidden!important;-webkit-text-size-adjust:100%}
+    img{max-width:100%;height:auto;display:block}
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px;box-sizing:border-box}
+    /* ensure hero never pushes viewport horizontally */
+    .hero{position:relative;width:100%;overflow:hidden;box-sizing:border-box}
+    .hero-video{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:100%;object-fit:cover;max-height:85vh;display:block}
+    /* responsive grid defaults before styles.css loads */
+    .promo-grid,.gallery-grid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr);box-sizing:border-box}
+    @media (max-width:640px){.promo-grid,.gallery-grid{grid-template-columns:1fr}.hero-video{max-height:65vh}}
+    @media (min-width:981px){.gallery-grid{grid-template-columns:repeat(4,1fr)} .promo-grid{grid-template-columns:repeat(3,1fr)}}
+  </style>
+
+  <!-- Full stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <!-- NETFLIX-STYLE LOADER (no skip) -->
+  <!-- NETFLIX-STYLE LOADER -->
   <div id="netflixLoader" class="netflix-loader" aria-hidden="true">
-    <div class="loader-inner">
+    <div class="loader-inner" role="status" aria-live="polite">
       <div class="loader-text">SHANDO'Z</div>
       <div class="loader-sub">Coffee · Comfort · Community</div>
     </div>
   </div>
 
-  <!-- SNOW container -->
+  <!-- SNOW container (script injects flakes) -->
   <div id="snow-container" aria-hidden="true"></div>
 
-  <!-- SANTA image (optional - replace with real file) -->
+  <!-- Optional Santa image (replace with your asset or remove) -->
   <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" style="display:none" />
 
-  <!-- PROMO POPUP (Christmas + New Year) -->
+  <!-- PROMO POPUP -->
   <div id="promoModal" class="promo-modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="promo-card">
       <button class="promo-close" aria-label="Tutup popup">✕</button>
-
       <div class="promo-hero">
         <img src="christmaspromo.jpg" alt="Promo" class="promo-img" />
         <div class="promo-label">🎄 Happy Merry Christmas & Happy New Year 🎉</div>
       </div>
-
       <div class="promo-body">
         <h3>Special Holiday Promo</h3>
         <p>Dapatkan diskon spesial & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
@@ -50,29 +63,30 @@
 
         <p class="promo-small">Tampil sekali per hari untuk pengunjung yang sama.</p>
       </div>
-
     </div>
   </div>
 
-  <!-- Header / Nav -->
+  <!-- NAVBAR -->
   <header class="navbar">
-    <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
-    <nav class="nav-links">
-      <a href="#home">Home</a>
-      <a href="#promo">Promo</a>
-      <a href="#menu">Menu</a>
-      <a href="#gallery">Gallery</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#promo">Promo</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
   </header>
 
-  <!-- HERO -->
+  <!-- MAIN / HERO -->
   <main>
     <section id="home" class="hero">
-      <video class="hero-video" autoplay muted loop playsinline>
+      <video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg">
         <source src="qponpromo.mp4" type="video/mp4">
       </video>
-      <div class="hero-overlay"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
       <div class="hero-inner">
         <h1 class="hero-title">Shando'z Café & Coffee Bar</h1>
         <p class="hero-sub">Coffee · Comfort · Community</p>
@@ -80,27 +94,28 @@
       </div>
     </section>
 
-    <!-- Promo / Menu / Gallery sections (your existing markup) -->
+    <!-- PROMO -->
     <section id="promo" class="promo-section">
       <div class="container">
         <h2 class="section-title">Promo Spesial</h2>
         <div class="promo-grid">
-          <div class="promo-card"><img src="promo1.jpg" alt=""></div>
-          <div class="promo-card"><img src="promo2.jpg" alt=""></div>
-          <div class="promo-card"><img src="promo3.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo1.jpg" alt="Promo 1"></div>
+          <div class="promo-card"><img src="promo2.jpg" alt="Promo 2"></div>
+          <div class="promo-card"><img src="promo3.jpg" alt="Promo 3"></div>
         </div>
       </div>
     </section>
 
+    <!-- MENU CAROUSEL -->
     <section id="menu" class="menu-section">
       <div class="container">
         <h2 class="section-title">Our Menu</h2>
         <div class="menu-carousel">
           <button class="carousel-btn prev" aria-label="Previous">‹</button>
           <div class="carousel-track">
-            <div class="carousel-slide"><img src="menu1.jpg" alt=""></div>
-            <div class="carousel-slide"><img src="menu2.jpg" alt=""></div>
-            <div class="carousel-slide"><img src="menu3.jpg" alt=""></div>
+            <div class="carousel-slide"><img src="menu1.jpg" alt="Menu 1"></div>
+            <div class="carousel-slide"><img src="menu2.jpg" alt="Menu 2"></div>
+            <div class="carousel-slide"><img src="menu3.jpg" alt="Menu 3"></div>
           </div>
           <button class="carousel-btn next" aria-label="Next">›</button>
         </div>
@@ -108,32 +123,33 @@
       </div>
     </section>
 
+    <!-- GALLERY -->
     <section id="gallery" class="gallery-section">
       <div class="container">
         <h2 class="section-title">Gallery</h2>
         <div class="gallery-grid">
-          <img class="lightbox-trigger" src="gal1.jpg" data-full="gal1.jpg" alt="">
-          <img class="lightbox-trigger" src="gal2.jpg" data-full="gal2.jpg" alt="">
-          <img class="lightbox-trigger" src="gal3.jpg" data-full="gal3.jpg" alt="">
-          <img class="lightbox-trigger" src="gal4.jpg" data-full="gal4.jpg" alt="">
+          <img class="lightbox-trigger" src="gal1.jpg" data-full="gal1.jpg" alt="Gallery 1">
+          <img class="lightbox-trigger" src="gal2.jpg" data-full="gal2.jpg" alt="Gallery 2">
+          <img class="lightbox-trigger" src="gal3.jpg" data-full="gal3.jpg" alt="Gallery 3">
+          <img class="lightbox-trigger" src="gal4.jpg" data-full="gal4.jpg" alt="Gallery 4">
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Lightbox -->
+  <!-- LIGHTBOX -->
   <div id="lightbox" class="lightbox" aria-hidden="true">
     <button id="lightbox-close" class="lightbox-close" aria-label="Close">✕</button>
     <img id="lightbox-img" src="" alt="">
   </div>
 
-  <!-- Floating UI -->
+  <!-- FLOATING UI -->
   <audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
-  <button id="music-toggle" class="wa-btn">🔇</button>
+  <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
   <a href="https://wa.me/6285706370841" class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
   <button id="shareBtn" class="share-button" aria-label="Share">🔗</button>
 
-  <!-- main script -->
+  <!-- final script -->
   <script src="script.js"></script>
 </body>
 </html>
