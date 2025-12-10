@@ -105,3 +105,75 @@ body{
   .loader-text{font-size:36px}
   .promo-card{padding:12px}
 }
+
+/* === MOBILE OVERFLOW FIX PATCH === */
+
+/* cegah semua elemen bikin overflow */
+html, body {
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+}
+
+/* hero video tidak boleh lebih lebar dari layar */
+.hero-video {
+  width:100vw !important;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* container auto shrink di mobile supaya tidak nabrak */
+.container {
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+
+/* prevent carousel meluber */
+.carousel-track {
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+
+/* image fix – tidak boleh melebihi parent */
+img {
+  max-width:100%;
+  height:auto;
+  display:block;
+}
+
+/* gallery grid responsive */
+.gallery-grid, .promo-grid {
+  display:grid;
+  gap:12px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+@media (max-width:640px) {
+  .gallery-grid, .promo-grid {
+    grid-template-columns:1fr;
+  }
+}
+
+@media (min-width:641px) and (max-width:980px) {
+  .gallery-grid, .promo-grid {
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media (min-width:981px) {
+  .gallery-grid {
+    grid-template-columns:repeat(4,1fr);
+  }
+  .promo-grid {
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+/* promo-modal shrink supaya ga overflow */
+.promo-card {
+  max-width:94vw !important;
+  overflow:hidden;
+}
