@@ -1,139 +1,191 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shando'z Café & Coffee Bar</title>
+/* Helpers */
+const qs = sel => document.querySelector(sel);
+const qsa = sel => document.querySelectorAll(sel);
 
-  <!-- ICON -->
-  <link rel="icon" type="image/png" href="logo.png">
+/* Smooth scroll */
+qsa('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const tgt = qs(a.getAttribute('href'));
+    if(tgt){
+      e.preventDefault();
+      tgt.scrollIntoView({behavior:'smooth'});
+    }
+  });
+});
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="styles.css">
+/* Logo click → home */
+qs('#logo')?.addEventListener('click', ()=> location.href="index.html");
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+/* Music */
+const bgm = qs('#bgm');
+const toggle = qs('#music-toggle');
+let isPlaying = false;
 
-</head>
-<body>
+function playMusic(){
+  if(!bgm) return;
+  bgm.muted = false;
+  bgm.play().then(()=>{
+    isPlaying = true;
+    toggle.textContent = "🔊";
+  }).catch(()=>{});
+}
 
-<!-- =========================================================
-     ⏳ LOADING SCREEN
-========================================================= -->
-<div id="loader">
-  <div class="loader-box">
-    <div class="loader-spin"></div>
-    <p>Loading Shando'z Café…</p>
-    <button id="forceCloseLoader">Skip</button>
-  </div>
-</div>
+window.addEventListener('pointerdown', playMusic, {once:true});
 
-<!-- =========================================================
-     🔼 MUSIC BUTTON
-========================================================= -->
-<button id="music-toggle">🔇</button>
-<audio id="bgm" loop muted>
-  <source src="bgm.mp3" type="audio/mp3">
-</audio>
+const exploreBtn = qs('#exploreMenuBtn');
+if(exploreBtn){
+  exploreBtn.addEventListener('click', ()=> playMusic());
+}
 
-<!-- =========================================================
-     🎄 CHRISTMAS POPUP (auto muncul)
-========================================================= -->
-<div id="xmas-popup">
-  <div class="xmas-box">
-    <button class="xmas-close">✕</button>
+toggle.addEventListener('click', ()=>{
+  if(!isPlaying){
+    playMusic();
+  } else {
+    bgm.pause();
+    isPlaying = false;
+    toggle.textContent = "🔇";
+  }
+});
 
-    <!-- FOTO PROMO -->
-    <img src="christmaspromo.jpg" class="xmas-img">
+/* Lightbox */
+const lb = qs('#lightbox');
+const lbImg = qs('#lightbox-img');
+qs('#lightbox-close').addEventListener('click', ()=> closeLB());
 
-    <h2>🎄 Christmas Special Promo 🎁</h2>
-    <p>Nikmati suasana Natal dengan diskon spesial & menu edisi holiday!</p>
+function openLB(src){
+  lb.classList.add('open');
+  lbImg.src = src;
+}
+function closeLB(){
+  lb.classList.remove('open');
+  lbImg.src = "";
+}
 
-    <a href="#promo" class="xmas-btn">Lihat Promo</a>
-  </div>
-</div>
+qsa('.lightbox-trigger').forEach(img=>{
+  img.addEventListener('click', ()=> openLB(img.dataset.full));
+});
 
-<!-- =========================================================
-     🎅 SANTA SLIDE-IN
-========================================================= -->
-<div id="santa">
-  <img src="santa.png" alt="Santa">
-</div>
+/* Carousel */
+const track = qs('.carousel-track');
+const slides = [...qsa('.carousel-slide')];
+const dotsWrap = qs('.carousel-dots');
+let current = 0;
 
-<!-- =========================================================
-     ✨ SPARKLES
-========================================================= -->
-<div class="sparkle-container"></div>
+dotsWrap.innerHTML = slides.map((_,i)=>
+  `<span class="carousel-dot ${i==0?'active':''}" data-i="${i}"></span>`
+).join('');
 
-<!-- =========================================================
-     🎁 GIFT POP
-========================================================= -->
-<div id="gift-pop">
-  <img src="gift.png" alt="gift">
-</div>
+function update(){
+  track.style.transform = `translateX(-${current * 100}%)`;
+  qsa('.carousel-dot').forEach((d,i)=>
+    d.classList.toggle('active', i===current)
+  );
+}
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
-<header class="hero">
-  <img src="logo.png" id="logo" class="logo" alt="logo">
-  <h1>Shando'z Café & Coffee Bar</h1>
-  <p>Coffee · Comfort · Community</p>
+qs('.carousel-btn.next').addEventListener('click', ()=>{
+  current = (current+1) % slides.length;
+  update();
+});
+qs('.carousel-btn.prev').addEventListener('click', ()=>{
+  current = (current-1+slides.length) % slides.length;
+  update();
+});
 
-  <button id="exploreMenuBtn" class="cta-btn">Explore Menu</button>
-</header>
+qsa('.carousel-dot').forEach(dot=>{
+  dot.addEventListener('click', ()=>{
+    current = Number(dot.dataset.i);
+    update();
+  });
+});
 
-<!-- =========================================================
-     CAROUSEL
-========================================================= -->
-<section class="menu-section">
-  <h2 class="section-title">Our Menu</h2>
+/* Swipe */
+let startX=0;
+qs('.menu-carousel').addEventListener('touchstart', e=> startX=e.touches[0].clientX);
+qs('.menu-carousel').addEventListener('touchend', e=>{
+  const dx = e.changedTouches[0].clientX - startX;
+  if(Math.abs(dx)>40){
+    current = dx<0 ? (current+1)%slides.length : (current-1+slides.length)%slides.length;
+    update();
+  }
+});
 
-  <div class="menu-carousel">
-    <button class="carousel-btn prev">←</button>
+/* SHARE BUTTON */
+const shareBtn = qs("#shareBtn");
 
-    <div class="carousel-track">
-      <div class="carousel-slide">
-        <img src="menu1.jpg" class="lightbox-trigger" data-full="menu1.jpg">
-      </div>
-      <div class="carousel-slide">
-        <img src="menu2.jpg" class="lightbox-trigger" data-full="menu2.jpg">
-      </div>
-      <div class="carousel-slide">
-        <img src="menu3.jpg" class="lightbox-trigger" data-full="menu3.jpg">
-      </div>
-    </div>
+if (navigator.share) {
+  shareBtn.addEventListener("click", async () => {
+    try {
+      await navigator.share({
+        title: "Shando'z Café & Coffee Bar",
+        text: "Coffee · Comfort · Community",
+        url: "https://shandozcafe.site"
+      });
+    } catch (err) {
+      console.log("Share canceled", err);
+    }
+  });
+} else {
+  shareBtn.addEventListener("click", () => {
+    alert("Fitur share tidak didukung di perangkat ini.");
+  });
+}
 
-    <button class="carousel-btn next">→</button>
-  </div>
+/* =========================================================
+   🎄 POPUP PROMO CHRISTMAS
+   ========================================================= */
 
-  <div class="carousel-dots"></div>
-</section>
+const popup = qs("#xmasPopup");
+const popupClose = qs("#xmasClose");
 
-<!-- =========================================================
-     LIGHTBOX
-========================================================= -->
-<div id="lightbox">
-  <span id="lightbox-close">✕</span>
-  <img id="lightbox-img">
-</div>
+setTimeout(()=> popup.classList.add("show"), 1200);
 
-<!-- =========================================================
-     SHARE BUTTON
-========================================================= -->
-<button id="shareBtn" class="share-btn">Share Website</button>
+popupClose.addEventListener("click", ()=>{
+  popup.classList.remove("show");
+});
 
-<!-- =========================================================
-     FOOTER
-========================================================= -->
-<footer>
-  <p>© 2025 Shando'z Café & Coffee Bar</p>
-</footer>
+/* Jaga-jaga tombol close backup */
+qs("#popupForceClose")?.addEventListener("click", ()=>{
+  popup.classList.remove("show");
+});
 
-<!-- =========================================================
-     JS
-========================================================= -->
-<script src="script.js"></script>
+/* =========================================================
+   ❄️ SALJU TEBAL
+   ========================================================= */
+function createSnow(){
+  const snow = document.createElement("div");
+  snow.className = "snowflake";
+  snow.style.left = Math.random()*100 + "%";
+  snow.style.animationDuration = (3 + Math.random()*4) + "s";
+  snow.style.opacity = Math.random();
+  document.body.appendChild(snow);
+  setTimeout(()=> snow.remove(), 7000);
+}
+setInterval(createSnow, 120);
 
-</body>
-</html>
+/* =========================================================
+   ✨ SPARKLES
+   ========================================================= */
+function sparkles(){
+  const s = document.createElement("div");
+  s.className = "spark";
+  s.style.left = Math.random()*100 + "%";
+  s.style.top = Math.random()*100 + "%";
+  document.body.appendChild(s);
+  setTimeout(()=> s.remove(), 1200);
+}
+setInterval(sparkles, 350);
+
+/* =========================================================
+   🎅 SANTA SLIDE IN
+   ========================================================= */
+const santa = qs("#santa");
+setTimeout(()=> santa.classList.add("show"), 2000);
+
+/* =========================================================
+   🎁 GIFT POP ANIMATION
+   ========================================================= */
+const gift = qs("#giftBox");
+gift.addEventListener("click", ()=>{
+  gift.classList.add("open");
+  setTimeout(()=> gift.classList.remove("open"), 1300);
+});
