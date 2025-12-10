@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-  <title>Shando'z Café & Coffee Bar — Christmas Edition</title>
-  <meta name="description" content="Shando'z Café & Coffee Bar — Coffee · Comfort · Community — Holiday Special" />
+  <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
+  <meta name="description" content="Shando'z Café & Coffee Bar – Coffee · Comfort · Community">
+
+  <!-- main stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -17,34 +19,32 @@
     </div>
   </div>
 
-  <!-- SNOW container -->
+  <!-- SNOW container (script injects flakes) -->
   <div id="snow-container" aria-hidden="true"></div>
 
-  <!-- Santa (flyby) -->
-  <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" class="santa" />
+  <!-- Optional Santa image (replace with your asset) -->
+  <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" style="display:none" />
 
-  <!-- PROMO POPUP -->
+  <!-- PROMO POPUP (shows once per day) -->
   <div id="promoModal" class="promo-modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="promo-card">
       <button class="promo-close" aria-label="Tutup popup">✕</button>
       <div class="promo-hero">
-        <img src="christmaspromo.jpg" alt="Promo" class="promo-img" />
+        <!-- Promo image must be promo1.jpg..promo5.jpg (1600x1600) -->
+        <img src="promo1.jpg" alt="Promo" class="promo-img" />
         <div class="promo-label">🎄 Happy Merry Christmas & Happy New Year 🎉</div>
       </div>
       <div class="promo-body">
         <h3>Special Holiday Promo</h3>
-        <p>Dapatkan diskon & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
-
+        <p>Dapatkan diskon spesial & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
         <div class="promo-timer">
           <div class="timer-label">Berakhir dalam</div>
           <div id="promoCountdown" class="timer-count">00d 00:00:00</div>
         </div>
-
         <div class="promo-actions">
           <button id="downloadCoupon" class="btn">Unduh Kupon</button>
           <a href="#promo" class="btn ghost">Lihat Detail Promo</a>
         </div>
-
         <p class="promo-small">Tampil sekali per hari untuk pengunjung yang sama.</p>
       </div>
     </div>
@@ -52,7 +52,7 @@
 
   <!-- NAVBAR -->
   <header class="navbar">
-    <div class="container">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
       <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#home">Home</a>
@@ -64,9 +64,8 @@
     </div>
   </header>
 
-  <!-- MAIN -->
+  <!-- MAIN / HERO -->
   <main>
-    <!-- HERO -->
     <section id="home" class="hero">
       <video class="hero-video" autoplay muted loop playsinline poster="hero-poster.jpg">
         <source src="qponpromo.mp4" type="video/mp4">
@@ -84,14 +83,16 @@
       <div class="container">
         <h2 class="section-title">Promo Spesial</h2>
         <div class="promo-grid">
-          <div class="promo-card"><img src="promo1.jpg" alt=""></div>
-          <div class="promo-card"><img src="promo2.jpg" alt=""></div>
-          <div class="promo-card"><img src="promo3.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo1.jpg" alt="Promo 1"></div>
+          <div class="promo-card"><img src="promo2.jpg" alt="Promo 2"></div>
+          <div class="promo-card"><img src="promo3.jpg" alt="Promo 3"></div>
+          <div class="promo-card"><img src="promo4.jpg" alt="Promo 4"></div>
+          <div class="promo-card"><img src="promo5.jpg" alt="Promo 5"></div>
         </div>
       </div>
     </section>
 
-    <!-- MENU - FULLSCREEN CAROUSEL -->
+    <!-- MENU CAROUSEL (7 slides) -->
     <section id="menu" class="menu-section">
       <div class="container">
         <h2 class="section-title">Our Menu</h2>
@@ -121,6 +122,7 @@
       <div class="container">
         <h2 class="section-title">Gallery</h2>
         <div class="gallery-grid">
+          <!-- use object-fit:contain so images don't get cut -->
           <img class="lightbox-trigger" src="gal1.jpg" data-full="gal1.jpg" alt="Gallery 1">
           <img class="lightbox-trigger" src="gal2.jpg" data-full="gal2.jpg" alt="Gallery 2">
           <img class="lightbox-trigger" src="gal3.jpg" data-full="gal3.jpg" alt="Gallery 3">
@@ -138,10 +140,12 @@
 
   <!-- FLOATING UI -->
   <audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
-  <button id="music-toggle" aria-label="Toggle music" class="music-toggle">🔇</button>
+  <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
   <a href="https://wa.me/6285706370841" class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
   <button id="shareBtn" class="share-button" aria-label="Share">🔗</button>
 
+  <!-- scripts -->
+  <script src="snow.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
