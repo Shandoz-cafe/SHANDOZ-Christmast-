@@ -168,23 +168,23 @@ function spawnSparkles(parent, count=6){
 })();
 
 /* ----------------------------------
-   SECRET OWNER TRIGGER via LOGO (tap 5x)
+   SECRET OWNER TRIGGER via HOME (tap 5x)
 ----------------------------------- */
-(function logoSecret(){
-  const logo = document.querySelector('#logo');
-  if(!logo) return;
+(function homeSecret(){
+  const home = document.querySelector('a[href="#home"]');
+  if(!home) return;
 
   let tapCount = 0;
   let timer = null;
 
-  logo.addEventListener('click', () => {
+  home.addEventListener('click', () => {
     tapCount++;
 
-    // reset if waktu terlalu lama
+    // reset jika lama
     if(timer) clearTimeout(timer);
     timer = setTimeout(() => { tapCount = 0; }, 700);
 
-    // kalau klik 5x cepat → buka promo
+    // klik 5x cepat → buka popup
     if(tapCount >= 5) {
       const modal = document.querySelector('#promoModal');
       if(modal){
