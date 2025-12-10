@@ -166,3 +166,32 @@ function spawnSparkles(parent, count=6){
   window.addEventListener('keydown', e=> { if(e.key==='ArrowRight') next?.click(); if(e.key==='ArrowLeft') prev?.click(); });
   update();
 })();
+
+/* ----------------------------------
+   SECRET OWNER TRIGGER via LOGO (tap 5x)
+----------------------------------- */
+(function logoSecret(){
+  const logo = document.querySelector('#logo');
+  if(!logo) return;
+
+  let tapCount = 0;
+  let timer = null;
+
+  logo.addEventListener('click', () => {
+    tapCount++;
+
+    // reset if waktu terlalu lama
+    if(timer) clearTimeout(timer);
+    timer = setTimeout(() => { tapCount = 0; }, 700);
+
+    // kalau klik 5x cepat → buka promo
+    if(tapCount >= 5) {
+      const modal = document.querySelector('#promoModal');
+      if(modal){
+        modal.setAttribute('aria-hidden','false');
+        modal.classList.add('show');
+      }
+      tapCount = 0;
+    }
+  });
+})();
