@@ -8,10 +8,10 @@ const qsa = s => document.querySelectorAll(s);
 window.addEventListener('load', () => {
   const loader = qs('#netflixLoader');
   if (!loader) return;
-  // remove after animation duration
+  // remove after animation duration (2.2s in CSS)
   setTimeout(() => {
     loader.remove();
-  }, 2300); // keep in sync with CSS animation (2.2s)
+  }, 2300);
 });
 
 /* ---------------------------
@@ -27,7 +27,6 @@ window.addEventListener('load', () => {
     if(!modal) return;
     modal.setAttribute('aria-hidden','false');
     modal.classList.add('show');
-    // sparkles inside popup
     spawnSparkles(promoCard, 8);
   }
   function closeModal(){
@@ -60,10 +59,7 @@ window.addEventListener('load', () => {
   const promoEnd = new Date(year, 11, 31, 23, 59, 59);
   function update(){
     const diff = promoEnd - Date.now();
-    if(diff <= 0){
-      countdownEl.textContent = 'Promo telah berakhir';
-      return;
-    }
+    if(diff <= 0){ countdownEl.textContent = 'Promo telah berakhir'; return; }
     const days = Math.floor(diff / (1000*60*60*24));
     const hours = Math.floor((diff / (1000*60*60)) % 24);
     const minutes = Math.floor((diff / (1000*60)) % 60);
@@ -88,16 +84,16 @@ window.addEventListener('load', () => {
     ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.06;
     for(let i=0;i<80;i++){ ctx.beginPath(); ctx.arc(Math.random()*w, Math.random()*h, Math.random()*40, 0, Math.PI*2); ctx.fill(); }
     ctx.globalAlpha = 1;
-    ctx.fillStyle = '#fff'; ctx.font = 'bold 44px sans-serif'; ctx.fillText("SHANDO'Z HOLIDAY COUPON", 50, 120);
-    ctx.font = '700 36px sans-serif'; ctx.fillStyle = '#f5d48b'; const code = 'SHANDOZ2025'; ctx.fillText("Kode: " + code, 50, 200);
-    ctx.font = '20px sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText("Tunjukkan kode ini untuk klaim promo di Shando'z Café.", 50, 260);
-    ctx.font = '18px sans-serif'; ctx.fillStyle = '#dcdcdc'; ctx.fillText('Berlaku sampai: 31 Dec ' + (new Date().getFullYear()), 50, 320);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 34px sans-serif'; ctx.fillText("SHANDO'Z HOLIDAY COUPON", 40, 100);
+    ctx.font = '700 28px sans-serif'; ctx.fillStyle = '#f5d48b'; const code = 'SHANDOZ2025'; ctx.fillText("Kode: " + code, 40, 170);
+    ctx.font = '18px sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText("Tunjukkan kode ini untuk klaim promo di Shando'z Café.", 40, 220);
+    ctx.font = '16px sans-serif'; ctx.fillStyle = '#dcdcdc'; ctx.fillText('Berlaku sampai: 31 Dec ' + (new Date().getFullYear()), 40, 280);
     const dataUrl = c.toDataURL('image/png'); const a = document.createElement('a'); a.href = dataUrl; a.download = 'shandoz_coupon.png'; a.click();
   });
 })();
 
 /* ---------------------------
-   Snow heavy (optimized)
+   Snow heavy (optimized) - injects into #snow-container
    --------------------------- */
 (function heavySnow(){
   const container = qs('#snow-container'); if(!container) return;
@@ -106,11 +102,19 @@ window.addEventListener('load', () => {
     const el = document.createElement('div'); el.className = 'snow';
     const size = 6 + Math.random()*22; el.style.width = el.style.height = size + 'px';
     el.style.left = Math.random()*100 + 'vw'; el.style.top = '-20px';
-    el.style.opacity = 0.4 + Math.random()*0.6;
+    el.style.opacity = 0.35 + Math.random()*0.6;
     const dur = 5 + Math.random()*6; el.style.animationDuration = dur + 's';
     el.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
-    container.appendChild(el); setTimeout(()=> el.remove(), (dur+0.4)*1000);
+    // animate using transform via requestAnimationFrame fallback to CSS
+    el.style.transition = `transform ${dur}s linear`;
+    container.appendChild(el);
+    // simulate fall with CSS transform to keep perf good
+    requestAnimationFrame(()=> {
+      el.style.transform = `translateY(${window.innerHeight + 100}px) translateX(${ (Math.random()*160 - 80)}px)`;
+    });
+    setTimeout(()=> { el.remove(); }, (dur+0.5)*1000);
   }
+  // burst initial
   for(let i=0;i<COUNT;i++) setTimeout(createFlake, Math.random()*1200);
   setInterval(createFlake, 900);
 })();
@@ -134,33 +138,47 @@ function spawnSparkles(parent, count = 6){
 (function santaFlyby(){
   const s = qs('#santa'); if(!s) return;
   s.style.display = 'block'; s.style.position = 'fixed'; s.style.left = '-360px'; s.style.bottom = '10vh';
-  s.style.zIndex = 13000; s.style.transition = 'transform 1.1s ease-out, left 1.1s ease-out';
-  setTimeout(()=> { s.style.left = '12px'; s.style.transform = 'translateX(0)'; }, 1200);
+  s.style.zIndex = 13000; s.style.transition = 'left 1.1s ease-out';
+  setTimeout(()=> { s.style.left = '12px'; }, 1200);
   setTimeout(()=> { s.style.left = '-360px'; setTimeout(()=> s.style.display = 'none', 900); }, 7000);
 })();
 
 /* ---------------------------
-   Lightbox
+   Lightbox (basic)
    --------------------------- */
 (function lightbox(){
   const lb = qs('#lightbox'), img = qs('#lightbox-img'), close = qs('#lightbox-close');
   qsa('.lightbox-trigger').forEach(el => {
-    el.addEventListener('click', () => { img.src = el.dataset.full || el.getAttribute('src'); lb.classList.add('open'); });
+    el.addEventListener('click', () => {
+      img.src = el.dataset.full || el.getAttribute('src');
+      lb.classList.add('open');
+    });
   });
   close?.addEventListener('click', ()=> { lb.classList.remove('open'); img.src = ''; });
 })();
 
 /* ---------------------------
-   Music autoplay after first tap
+   Music autoplay after first tap (and Explore button triggers)
    --------------------------- */
 (function musicInit(){
-  const bgm = qs('#bgm'), toggle = qs('#music-toggle'); if(!bgm || !toggle) return;
+  const bgm = qs('#bgm'), toggle = qs('#music-toggle');
+  if(!bgm || !toggle) return;
   let playing = false;
   function play(){
-    bgm.muted = false; bgm.play().then(()=> { playing = true; toggle.textContent = '🔊'; }).catch(()=>{});
+    // many browsers require user gesture; this plays after first pointerdown anywhere
+    bgm.muted = false;
+    bgm.play().then(()=> {
+      playing = true; toggle.textContent = '🔊';
+    }).catch(()=>{});
   }
+  // play after first user tap anywhere (one-shot)
   window.addEventListener('pointerdown', play, { once: true });
-  toggle.addEventListener('click', ()=> { if(!playing){ play(); } else { bgm.pause(); playing = false; toggle.textContent = '🔇'; } });
+  // also play when user clicks Explore Menu
+  qs('#exploreMenuBtn')?.addEventListener('click', play);
+  // toggle button
+  toggle.addEventListener('click', ()=> {
+    if(!playing){ play(); } else { bgm.pause(); playing = false; toggle.textContent = '🔇'; }
+  });
 })();
 
 /* ---------------------------
@@ -168,6 +186,61 @@ function spawnSparkles(parent, count = 6){
    --------------------------- */
 (function shareBtn(){
   const btn = qs('#shareBtn'); if(!btn) return;
-  if(navigator.share){ btn.addEventListener('click', async ()=> { try{ await navigator.share({ title: "Shando'z Café & Coffee Bar", text: "Coffee · Comfort · Community", url: location.href }); } catch(e){} }); }
-  else { btn.addEventListener('click', ()=> { prompt('Salin link ini untuk dibagikan:', location.href); }); }
+  if(navigator.share){
+    btn.addEventListener('click', async ()=> {
+      try{ await navigator.share({ title: "Shando'z Café & Coffee Bar", text: "Coffee · Comfort · Community", url: location.href }); }
+      catch(e){}
+    });
+  } else { btn.addEventListener('click', ()=> { prompt('Salin link ini untuk dibagikan:', location.href); }); }
+})();
+
+/* ---------------------------
+   Carousel logic (7 slides, swipe, dots)
+   --------------------------- */
+(function carousel(){
+  const track = qs('.carousel-track');
+  const slides = [...qsa('.carousel-slide')];
+  const prevBtn = qs('.carousel-btn.prev');
+  const nextBtn = qs('.carousel-btn.next');
+  const dotsWrap = qs('#carouselDots');
+  let current = 0;
+  if(!track || slides.length===0) return;
+
+  // build dots
+  dotsWrap.innerHTML = slides.map((_,i)=> `<button class="dot" data-i="${i}" aria-label="Go to slide ${i+1}"></button>`).join('');
+  const dots = [...qsa('.dot')];
+  function update(){
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((d,i)=> d.classList.toggle('active', i===current));
+  }
+  prevBtn?.addEventListener('click', ()=> {
+    current = (current-1+slides.length) % slides.length; update();
+  });
+  nextBtn?.addEventListener('click', ()=> {
+    current = (current+1) % slides.length; update();
+  });
+  dots.forEach(dot => dot.addEventListener('click', ()=> {
+    current = Number(dot.dataset.i); update();
+  }));
+
+  // swipe support
+  let startX = 0;
+  const carouselElem = qs('.menu-carousel');
+  carouselElem?.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  carouselElem?.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 40){
+      current = dx < 0 ? (current+1) % slides.length : (current-1+slides.length) % slides.length;
+      update();
+    }
+  });
+
+  // keyboard
+  window.addEventListener('keydown', (e)=> {
+    if(e.key === 'ArrowRight') nextBtn?.click();
+    if(e.key === 'ArrowLeft') prevBtn?.click();
+  });
+
+  // initial render
+  update();
 })();
