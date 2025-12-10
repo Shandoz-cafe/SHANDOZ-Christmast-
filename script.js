@@ -1,253 +1,201 @@
-/* helpers */
-const qs = s => document.querySelector(s);
-const qsa = s => document.querySelectorAll(s);
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <!-- FIXED VIEWPORT (prevents mobile auto-zoom) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-/* ---------------------------
-   LOADER (Netflix style) - no skip
-   --------------------------- */
-window.addEventListener('load', () => {
-  // Ensure loader shows at least a short time for effect
-  const loader = qs('#netflixLoader');
-  if (!loader) return;
-  // remove after animation duration
-  setTimeout(() => {
-    loader.remove();
-  }, 2300); // keep in sync with CSS animation (2.2s)
-});
+  <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
 
-/* ---------------------------
-   PROMO MODAL (show once per day)
-   --------------------------- */
-(function promoModal(){
-  const modal = qs('#promoModal') || qs('#promoModal') /* support both ids */;
-  const promo = qs('#promoModal') || qs('#promoModal') || qs('#promoModal') /* fallback */;
-  const promoCard = qs('.promo-card');
-  const closeBtn = qs('.promo-close');
-  const key = 'shandoz_promo_seen_v1';
-
-  function openModal(){
-    const m = qs('#promoModal') || qs('#promoModal');
-    if(!m) return;
-    m.setAttribute('aria-hidden','false');
-    // spawn sparkles inside card
-    spawnSparkles(promoCard, 8);
-  }
-  function closeModal(){
-    const m = qs('#promoModal') || qs('#promoModal');
-    if(!m) return;
-    m.setAttribute('aria-hidden','true');
-    try{ localStorage.setItem(key, Date.now()); }catch(e){}
-  }
-
-  // close handler
-  closeBtn?.addEventListener('click', closeModal);
-
-  try {
-    const seen = localStorage.getItem(key);
-    if(!seen || (Date.now() - Number(seen)) > 24*3600*1000){
-      // show after small delay (after loader)
-      setTimeout(openModal, 1400);
+  <!-- CRITICAL INLINE CSS (prevent horizontal overflow & make hero/gallery responsive immediately) -->
+  <style>
+    /* Critical layout fixes - minimal and safe */
+    html,body{
+      width:100%;
+      max-width:100%;
+      margin:0;
+      padding:0;
+      overflow-x:hidden !important;
+      -webkit-text-size-adjust:100%;
+      -ms-text-size-adjust:100%;
     }
-  } catch(e){
-    setTimeout(openModal, 1400);
-  }
-})();
 
-/* ---------------------------
-   Promo countdown (example: promo end date)
-   --------------------------- */
-(function promoCountdown(){
-  const countdownEl = qs('#promoCountdown');
-  if(!countdownEl) return;
-  // set promo end date (adjust as needed)
-  // I'll set it to Dec 31, current year 23:59:59
-  const now = new Date();
-  const year = now.getFullYear();
-  const promoEnd = new Date(year, 11, 31, 23, 59, 59); // Dec 31
-  function update(){
-    const diff = promoEnd - Date.now();
-    if(diff <= 0){
-      countdownEl.textContent = 'Promo telah berakhir';
-      return;
+    /* Ensure hero container never overflows */
+    .hero { position:relative; width:100%; max-width:100%; overflow:hidden; box-sizing:border-box; }
+    .hero-video {
+      position:absolute;
+      top:0; left:50%;
+      transform:translateX(-50%);
+      width:100vw;   /* limit to viewport width */
+      height:100%;
+      max-height:85vh;
+      object-fit:cover;
+      display:block;
     }
-    const days = Math.floor(diff / (1000*60*60*24));
-    const hours = Math.floor((diff / (1000*60*60)) % 24);
-    const minutes = Math.floor((diff / (1000*60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-    countdownEl.textContent = `${String(days).padStart(2,'0')}d ${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-  }
-  update();
-  setInterval(update, 1000);
-})();
 
-/* ---------------------------
-   Download coupon (generate PNG via canvas)
-   --------------------------- */
-(function couponDownload(){
-  const btn = qs('#downloadCoupon') || qs('#downloadCoupon');
-  if(!btn) return;
-  btn.addEventListener('click', async () => {
-    // create canvas
-    const w = 900, h = 500;
-    const c = document.createElement('canvas');
-    c.width = w; c.height = h;
-    const ctx = c.getContext('2d');
-
-    // background
-    ctx.fillStyle = '#2a221e';
-    ctx.fillRect(0,0,w,h);
-
-    // decorative
-    ctx.fillStyle = '#fff';
-    ctx.globalAlpha = 0.06;
-    for(let i=0;i<80;i++){
-      ctx.beginPath();
-      ctx.arc(Math.random()*w, Math.random()*h, Math.random()*40,0,Math.PI*2);
-      ctx.fill();
+    /* Make images and grid responsive by default */
+    img{max-width:100%;height:auto;display:block}
+    .container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px;box-sizing:border-box}
+    .promo-grid, .gallery-grid { width:100%; box-sizing:border-box; display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
+    /* smaller screens: 1 column */
+    @media (max-width:640px){
+      .promo-grid, .gallery-grid { grid-template-columns: 1fr; }
+      .hero-video { max-height:65vh; }
     }
-    ctx.globalAlpha = 1;
+    /* medium screens: 2 columns */
+    @media (min-width:641px) and (max-width:980px){
+      .promo-grid, .gallery-grid { grid-template-columns: repeat(2,1fr); }
+    }
+    /* desktop: 3 or 4 columns for gallery only (styles.css can override) */
+    @media (min-width:981px){
+      .gallery-grid { grid-template-columns: repeat(4,1fr); }
+      .promo-grid { grid-template-columns: repeat(3,1fr); }
+    }
 
-    // text
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 44px sans-serif';
-    ctx.fillText("SHANDO'Z HOLIDAY COUPON", 50, 120);
+    /* Promo modal safe sizing */
+    #promoModal { width:100%; height:100%; }
+    .promo-card { max-width:94vw; box-sizing:border-box; margin:0 12px; }
 
-    ctx.font = '700 36px sans-serif';
-    ctx.fillStyle = '#f5d48b';
-    const code = 'SHANDOZ2025';
-    ctx.fillText("Kode: " + code, 50, 200);
+    /* Lightbox safe */
+    .lightbox { max-width:100vw; overflow:hidden; box-sizing:border-box; }
 
-    ctx.font = '20px sans-serif';
-    ctx.fillStyle = '#fff';
-    ctx.fillText("Tunjukkan kode ini untuk klaim promo di Shando'z Café.", 50, 260);
+    /* Ensure floating UI doesn't force width */
+    .wa-floating, .share-button, #music-toggle { max-width:100%; box-sizing:border-box; }
 
-    // footer
-    ctx.font = '18px sans-serif';
-    ctx.fillStyle = '#dcdcdc';
-    ctx.fillText('Berlaku sampai: 31 Dec ' + (new Date().getFullYear()), 50, 320);
+  </style>
 
-    // create link
-    const dataUrl = c.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'shandoz_coupon.png';
-    a.click();
-  });
-})();
+  <!-- link to main stylesheet (will override lightweight inline rules) -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
 
-/* ---------------------------
-   Snow heavy (optimized)
-   --------------------------- */
-(function heavySnow(){
-  const container = qs('#snow-container');
-  if(!container) return;
-  const COUNT = 110;
-  function createFlake(){
-    const el = document.createElement('div');
-    el.className = 'snow';
-    const size = 6 + Math.random()*22;
-    el.style.width = el.style.height = size + 'px';
-    el.style.left = Math.random()*100 + 'vw';
-    el.style.top = '-20px';
-    el.style.opacity = 0.4 + Math.random()*0.6;
-    const dur = 5 + Math.random()*6;
-    el.style.animationDuration = dur + 's';
-    el.style.setProperty('--drift', (Math.random()*160 - 80) + 'px');
-    container.appendChild(el);
-    setTimeout(()=> { el.remove(); }, (dur+0.4)*1000);
-  }
-  for(let i=0;i<COUNT;i++){
-    setTimeout(createFlake, Math.random()*1200);
-  }
-  setInterval(createFlake, 900);
-})();
+  <!-- NETFLIX-STYLE LOADER (no skip) -->
+  <div id="netflixLoader" class="netflix-loader" aria-hidden="true">
+    <div class="loader-inner" role="status" aria-live="polite">
+      <div class="loader-text">SHANDO'Z</div>
+      <div class="loader-sub">Coffee · Comfort · Community</div>
+    </div>
+  </div>
 
-/* ---------------------------
-   Sparkles spawn near promo when shown
-   --------------------------- */
-function spawnSparkles(parent, count = 6){
-  if(!parent) return;
-  for(let i=0;i<count;i++){
-    const s = document.createElement('div');
-    s.className = 'sparkle';
-    s.textContent = '✨';
-    s.style.left = (10 + Math.random()*80) + '%';
-    s.style.top = (10 + Math.random()*70) + '%';
-    s.style.animationDelay = (Math.random()*1.2) + 's';
-    parent.appendChild(s);
-    setTimeout(()=> s.remove(), 1600 + Math.random()*800);
-  }
-}
+  <!-- SNOW container -->
+  <div id="snow-container" aria-hidden="true"></div>
 
-/* ---------------------------
-   Santa slide-in (one early flyby)
-   --------------------------- */
-(function santaFlyby(){
-  const s = qs('#santa');
-  if(!s) return;
-  s.style.display = 'block';
-  s.style.position = 'fixed';
-  s.style.left = '-360px';
-  s.style.bottom = '10vh';
-  s.style.zIndex = 13000;
-  s.style.transition = 'transform 1.1s ease-out, left 1.1s ease-out';
-  // slide in
-  setTimeout(()=> {
-    s.style.left = '12px';
-    s.style.transform = 'translateX(0)';
-  }, 1200);
-  // slide out
-  setTimeout(()=> {
-    s.style.left = '-360px';
-    setTimeout(()=> s.style.display = 'none', 900);
-  }, 7000);
-})();
+  <!-- SANTA image (optional - replace with real file) -->
+  <img id="santa" src="santa.png" alt="Santa" aria-hidden="true" style="display:none" />
 
-/* ---------------------------
-   Lightbox (basic)
-   --------------------------- */
-(function lightbox(){
-  const lb = qs('#lightbox'), img = qs('#lightbox-img'), close = qs('#lightbox-close');
-  qsa('.lightbox-trigger').forEach(el => {
-    el.addEventListener('click', () => {
-      img.src = el.dataset.full || el.getAttribute('src');
-      lb.classList.add('open');
-    });
-  });
-  close?.addEventListener('click', ()=> { lb.classList.remove('open'); img.src = ''; });
-})();
+  <!-- PROMO POPUP (Christmas + New Year) -->
+  <div id="promoModal" class="promo-modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="promo-card">
+      <button class="promo-close" aria-label="Tutup popup">✕</button>
 
-/* ---------------------------
-   Music autoplay after first tap
-   --------------------------- */
-(function musicInit(){
-  const bgm = qs('#bgm'), toggle = qs('#music-toggle');
-  if(!bgm || !toggle) return;
-  let playing = false;
-  function play(){
-    bgm.muted = false;
-    bgm.play().then(()=> {
-      playing = true; toggle.textContent = '🔊';
-    }).catch(()=>{});
-  }
-  window.addEventListener('pointerdown', play, { once: true });
-  toggle.addEventListener('click', ()=> {
-    if(!playing){ play(); } else { bgm.pause(); playing = false; toggle.textContent = '🔇'; }
-  });
-})();
+      <div class="promo-hero">
+        <img src="christmaspromo.jpg" alt="Promo" class="promo-img" />
+        <div class="promo-label">🎄 Happy Merry Christmas & Happy New Year 🎉</div>
+      </div>
 
-/* ---------------------------
-   Share button (Web Share API)
-   --------------------------- */
-(function shareBtn(){
-  const btn = qs('#shareBtn');
-  if(!btn) return;
-  if(navigator.share){
-    btn.addEventListener('click', async ()=> {
-      try{ await navigator.share({ title: "Shando'z Café & Coffee Bar", text: "Coffee · Comfort · Community", url: location.href }); }
-      catch(e){}
-    });
-  } else {
-    btn.addEventListener('click', ()=> { prompt('Salin link ini untuk dibagikan:', location.href); });
-  }
-})();
+      <div class="promo-body">
+        <h3>Special Holiday Promo</h3>
+        <p>Dapatkan diskon spesial & free dessert untuk pembelian tertentu. Berlaku sampai akhir masa promo.</p>
+
+        <div class="promo-timer">
+          <div class="timer-label">Berakhir dalam</div>
+          <div id="promoCountdown" class="timer-count">00d 00:00:00</div>
+        </div>
+
+        <div class="promo-actions">
+          <button id="downloadCoupon" class="btn">Unduh Kupon</button>
+          <a href="#promo" class="btn ghost">Lihat Detail Promo</a>
+        </div>
+
+        <p class="promo-small">Tampil sekali per hari untuk pengunjung yang sama.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Header / Nav -->
+  <header class="navbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <div class="logo" id="logo">Shando'z Café & Coffee Bar</div>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#promo">Promo</a>
+        <a href="#menu">Menu</a>
+        <a href="#gallery">Gallery</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <section id="home" class="hero">
+      <video class="hero-video" autoplay muted loop playsinline>
+        <source src="qponpromo.mp4" type="video/mp4">
+        <!-- fallback poster -->
+      </video>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <h1 class="hero-title">Shando'z Café & Coffee Bar</h1>
+        <p class="hero-sub">Coffee · Comfort · Community</p>
+        <a class="btn-cta" href="#menu" id="exploreMenuBtn">Explore Menu</a>
+      </div>
+    </section>
+
+    <!-- Promo / Menu / Gallery sections -->
+    <section id="promo" class="promo-section">
+      <div class="container">
+        <h2 class="section-title">Promo Spesial</h2>
+        <div class="promo-grid">
+          <div class="promo-card"><img src="promo1.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo2.jpg" alt=""></div>
+          <div class="promo-card"><img src="promo3.jpg" alt=""></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu" class="menu-section">
+      <div class="container">
+        <h2 class="section-title">Our Menu</h2>
+        <div class="menu-carousel">
+          <button class="carousel-btn prev" aria-label="Previous">‹</button>
+          <div class="carousel-track">
+            <div class="carousel-slide"><img src="menu1.jpg" alt=""></div>
+            <div class="carousel-slide"><img src="menu2.jpg" alt=""></div>
+            <div class="carousel-slide"><img src="menu3.jpg" alt=""></div>
+          </div>
+          <button class="carousel-btn next" aria-label="Next">›</button>
+        </div>
+        <div class="carousel-dots"></div>
+      </div>
+    </section>
+
+    <section id="gallery" class="gallery-section">
+      <div class="container">
+        <h2 class="section-title">Gallery</h2>
+        <div class="gallery-grid">
+          <img class="lightbox-trigger" src="gal1.jpg" data-full="gal1.jpg" alt="">
+          <img class="lightbox-trigger" src="gal2.jpg" data-full="gal2.jpg" alt="">
+          <img class="lightbox-trigger" src="gal3.jpg" data-full="gal3.jpg" alt="">
+          <img class="lightbox-trigger" src="gal4.jpg" data-full="gal4.jpg" alt="">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Close">✕</button>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <!-- Floating UI -->
+  <audio id="bgm" src="Valir Phoenix.mp3" loop preload="auto"></audio>
+  <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
+  <a href="https://wa.me/6285706370841" class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
+  <button id="shareBtn" class="share-button" aria-label="Share">🔗</button>
+
+  <!-- main script -->
+  <script src="script.js"></script>
+</body>
+</html>
