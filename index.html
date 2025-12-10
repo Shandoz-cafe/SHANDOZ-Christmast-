@@ -6,21 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>Shando'z Café & Coffee Bar — Christmas & New Year</title>
 
-  <!-- Critical inline fixes to avoid initial overflow (kept minimal) -->
+  <!-- Quick inline safety styles (prevents initial overflow) -->
   <style>
     html,body{width:100%;max-width:100%;margin:0;padding:0;overflow-x:hidden!important;-webkit-text-size-adjust:100%}
     img{max-width:100%;height:auto;display:block}
     .container{width:100%;max-width:1100px;margin:0 auto;padding:0 16px;box-sizing:border-box}
-    /* ensure hero never pushes viewport horizontally */
     .hero{position:relative;width:100%;overflow:hidden;box-sizing:border-box}
     .hero-video{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100vw;height:100%;object-fit:cover;max-height:85vh;display:block}
-    /* responsive grid defaults before styles.css loads */
     .promo-grid,.gallery-grid{display:grid;gap:12px;grid-template-columns:repeat(2,1fr);box-sizing:border-box}
     @media (max-width:640px){.promo-grid,.gallery-grid{grid-template-columns:1fr}.hero-video{max-height:65vh}}
     @media (min-width:981px){.gallery-grid{grid-template-columns:repeat(4,1fr)} .promo-grid{grid-template-columns:repeat(3,1fr)}}
   </style>
 
-  <!-- Full stylesheet -->
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
