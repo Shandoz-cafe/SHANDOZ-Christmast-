@@ -5,6 +5,54 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Shando'z Café & Coffee Bar — Christmas Edition</title>
 
+  <!-- Special holiday modal (will be shown once per day unless dismissed) -->
+  <div id="holiday-special" class="holiday-special" aria-hidden="true" role="dialog" aria-label="Holiday greeting">
+    <div class="hs-panel" role="document">
+      <button class="hs-close" id="hs-close" aria-label="Tutup">✕</button>
+
+      <div class="hs-left">
+        <h2 class="hs-title">Merry Christmas &amp; Happy New Year</h2>
+        <p class="hs-sub">SHANDO'Z CAFE &amp; COFFEE BAR — Banceuy Permai C3 No. 88, Sumur Bandung</p>
+
+        <div class="hs-countdown" aria-live="polite">
+          <div class="hs-count-item"><span id="hs-days">00</span><small>Hari</small></div>
+          <div class="hs-count-item"><span id="hs-hours">00</span><small>Jam</small></div>
+          <div class="hs-count-item"><span id="hs-mins">00</span><small>Menit</small></div>
+          <div class="hs-count-item"><span id="hs-secs">00</span><small>Detik</small></div>
+        </div>
+
+        <p class="hs-promo">Kode Promo: <strong id="hs-promo-code">HOLIDAY25</strong></p>
+
+        <div class="hs-ctas">
+          <a id="hs-use-wa" class="btn btn-gold" href="#" target="_blank" rel="noopener">Gunakan Promo (WhatsApp)</a>
+          <button id="hs-card" class="btn btn-outline">Unduh Kartu Ucapan</button>
+        </div>
+
+        <label class="hs-hide-today">
+          <input type="checkbox" id="hs-hide-checkbox"> Jangan tampil lagi hari ini
+        </label>
+      </div>
+
+      <div class="hs-right" aria-hidden="true">
+        <svg class="hs-wreath" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="hsg1" x1="0" x2="1">
+              <stop offset="0" stop-color="#d4af37"/>
+              <stop offset="1" stop-color="#f2d16b"/>
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="url(#hsg1)" stroke-width="10" stroke-linecap="round" stroke-dasharray="8 6"/>
+          <text x="50%" y="52%" text-anchor="middle" fill="#fff" font-size="16" font-family="Playfair Display, serif">SHANDO'Z</text>
+        </svg>
+      </div>
+
+      <!-- decorative canvas for confetti -->
+      <canvas id="hs-confetti" class="hs-confetti" aria-hidden="true"></canvas>
+      <!-- subtle snow layer (canvas will be injected into this container by snow.js) -->
+      <div id="hs-snow" class="hs-snow" aria-hidden="true"></div>
+    </div>
+  </div>
+  
 <meta name="description" content="Shando'z Café & Coffee Bar – Coffee · Comfort · Community">
 <link rel="stylesheet" href="styles.css" />
 <style>
@@ -39,7 +87,7 @@ body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--crea
 <!-- LOADING SCREEN -->
 <div id="loadingScreen">
   <div class="spin"></div>
-  <p>Loading Christmas Magic…</p>
+  <p>SHANDO'Z</p>
   <button onclick="document.getElementById('loadingScreen').style.opacity='0';setTimeout(()=>loadingScreen.remove(),700)">Skip</button>
 </div>
 
