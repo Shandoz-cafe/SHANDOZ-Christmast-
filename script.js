@@ -167,56 +167,65 @@ function spawnSparkles(parent, count=6){
   update();
 })();
 
-/* ----------------------------------------
-   UNIVERSAL SECRET TRIGGER (Laptop + iOS + Android)
-   Trigger: Tekan & tahan tombol HOME selama 1.5 detik
------------------------------------------ */
-(function secretPromoTrigger(){
+/* -------------------------------------------------
+   PROMO TRIGGER: TRIPLE TAP (3x), ATAU HOLD 1 DETIK
+-------------------------------------------------- */
+(function promoAdvancedTriggers(){
 
-  // cari link HOME
-  const homeLink = Array.from(document.querySelectorAll('nav a'))
-        .find(a => a.textContent.trim().toLowerCase() === 'home');
+  const musicBtn = document.querySelector('#music-toggle');
+  const modal = document.querySelector('#promoModal');
 
-  if(!homeLink){
-    console.error("HOME link tidak ditemukan!");
-    return;
+  if(!musicBtn || !modal) return;
+
+  // BUKA POPUP
+  function openPromo(){
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden', 'false');
   }
 
-  let timer = null;
-  const holdTime = 1500; // 1.5 detik
+  /* -------------------------
+     1) TRIPLE TAP (3x cepat)
+  ------------------------- */
+  let tapCount = 0;
+  let tapTimer = null;
 
-  function openPromoManually(){
-    const modal = document.querySelector('#promoModal');
-    if(modal){
-      modal.classList.add('show');
-      modal.setAttribute('aria-hidden','false');
+  musicBtn.addEventListener('click', () => {
+
+    tapCount++;
+
+    if(tapCount === 1){
+      // reset jika tidak berturut
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+      }, 450); // max jeda antar tap
     }
-  }
 
-  /* --- TOUCH DEVICES (Android + iPhone) --- */
-  homeLink.addEventListener('touchstart', () => {
-    timer = setTimeout(openPromoManually, holdTime);
+    if(tapCount === 3){
+      clearTimeout(tapTimer);
+      tapCount = 0;
+      openPromo();
+    }
+
   });
 
-  homeLink.addEventListener('touchend', () => {
-    clearTimeout(timer);
+
+  /* -------------------------
+     2) HOLD (tahan 1 detik)
+  ------------------------- */
+  let holdTimer;
+
+  musicBtn.addEventListener('pointerdown', () => {
+    holdTimer = setTimeout(() => {
+      openPromo();
+    }, 1000); // hold 1 detik
   });
 
-  homeLink.addEventListener('touchmove', () => {
-    clearTimeout(timer);
+  musicBtn.addEventListener('pointerup', () => {
+    clearTimeout(holdTimer);
   });
 
-  /* --- MOUSE DEVICES (Laptop / PC) --- */
-  homeLink.addEventListener('mousedown', () => {
-    timer = setTimeout(openPromoManually, holdTime);
-  });
-
-  homeLink.addEventListener('mouseup', () => {
-    clearTimeout(timer);
-  });
-
-  homeLink.addEventListener('mouseleave', () => {
-    clearTimeout(timer);
+  musicBtn.addEventListener('pointerleave', () => {
+    clearTimeout(holdTimer);
   });
 
 })();
