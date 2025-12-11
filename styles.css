@@ -147,3 +147,68 @@ body{
 /* small dot styles for carousel */
 .dot{width:10px;height:10px;background:rgba(255,255,255,0.12);border-radius:50%;border:none;cursor:pointer}
 .dot.active{background:var(--cream)}
+
+
+/* ============================================================
+   🎄🎅 CHRISTMAS DECORATIONS (ADDED)
+   ============================================================ */
+
+/* Floating Trees */
+.tree {
+  position: fixed;
+  width: 120px;
+  z-index: 5000;
+  animation: treeFloat 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.tree-left { left: 10px; top: 30%; }
+.tree-right { right: 10px; top: 30%; }
+
+@keyframes treeFloat {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(12px); }
+}
+
+/* Lampu natal kedip */
+.lamp-top {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  z-index: 6000;
+  animation: lampBlink 1.4s infinite;
+  pointer-events: none;
+}
+
+@keyframes lampBlink {
+  0% { opacity: 1; }
+  50% { opacity: 0.45; }
+  100% { opacity: 1; }
+}
+
+/* Kado bawah (hide on scroll) */
+.kado-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  z-index: 5000;
+  transition: opacity .3s ease, transform .3s ease;
+}
+
+.kado-hidden {
+  opacity: 0;
+  transform: translate(-50%, 40px);
+}
+
+/* Snowflake PNG */
+.snowflake-img {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.45));
+}
