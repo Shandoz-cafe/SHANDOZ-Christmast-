@@ -224,3 +224,26 @@ function spawnSparkles(parent, count=6){
   window.addEventListener('keydown', e=> { if(e.key==='ArrowRight') next?.click(); if(e.key==='ArrowLeft') prev?.click(); });
   update();
 })();
+
+/* -------------------------
+   CHRISTMAS DECOR BEHAVIOR
+--------------------------- */
+
+(function christmasDecor(){
+  const gift = document.getElementById("gift-bottom");
+  let lastY = window.scrollY;
+
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+
+    if (y > lastY) {
+      // scroll down → sembunyikan kado
+      gift.classList.add("hide");
+    } else {
+      // scroll up → tampil
+      gift.classList.remove("hide");
+    }
+
+    lastY = y;
+  });
+})();
