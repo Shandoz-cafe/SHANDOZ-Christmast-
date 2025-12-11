@@ -167,31 +167,40 @@ body{
   100% { transform: translateY(0) }
 }
 
+/* Kado full-width di bagian bawah */
 .gift {
   position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;
+  bottom: 0;
+  left: 0;
+  width: 100vw;       /* membentang penuh */
+  height: auto;
+  pointer-events: none;
   z-index: 9000;
   transition: opacity .4s ease, transform .4s ease;
 }
 
 .gift.hide {
   opacity: 0;
-  transform: translate(-50%, 50px);
+  transform: translateY(40px);
 }
 
-/* LAMPU KECIL DI BAWAH LOGO */
+/* Lampu panjang 100% di bawah logo */
 .lamp {
   position: fixed;
-  top: 58px;          /* berada tepat di bawah logo navbar */
-  left: 18px;         /* pojok kiri dekat logo */
-  width: 110px;       /* DIPERKECIL */
+  top: 58px;           /* tepat di bawah logo navbar */
+  left: 0;
+  width: 100vw;        /* full dari ujung ke ujung */
+  height: auto;
   pointer-events: none;
   z-index: 9000;
-  opacity: 1;
+  opacity: 0.95;
   animation: blinkLamp 1.4s infinite;
+}
+
+@keyframes blinkLamp {
+  0% { opacity: .6 }
+  50% { opacity: 1 }
+  100% { opacity: .6 }
 }
 
 @keyframes blinkLamp {
