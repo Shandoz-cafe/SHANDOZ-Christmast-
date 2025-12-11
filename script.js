@@ -95,8 +95,6 @@ function spawnSparkles(parent, count=6){
   }
 }
 
-/* Santa fly-in is handled in snow.js (optional image). */
-
 /* Lightbox */
 (function lightbox(){
   const lb = qs('#lightbox'), img = qs('#lightbox-img'), close = qs('#lightbox-close');
@@ -109,14 +107,12 @@ function spawnSparkles(parent, count=6){
   close?.addEventListener('click', ()=> { lb.classList.remove('open'); img.src=''; });
 })();
 
-/* ---------------------------
-   Music + Coupon Trigger (Guaranteed + Close Popup Trigger)
-   --------------------------- */
+/* Music + Coupon Trigger */
 (function musicInit(){
   const bgm = qs('#bgm');
   const toggle = qs('#music-toggle');
   const coupon = qs('#promoModal');
-  const closePopup = qs('.promo-close');  // tombol X popup
+  const closePopup = qs('.promo-close');
   const exploreBtn = qs('#exploreMenuBtn');
 
   if(!bgm || !toggle) return;
@@ -125,7 +121,6 @@ function spawnSparkles(parent, count=6){
   let tapCount = 0;
   let tapTimer = null;
 
-  // Function to play music (guaranteed)
   function startMusic(){
     bgm.muted = false;
     bgm.play().then(()=>{
@@ -134,20 +129,15 @@ function spawnSparkles(parent, count=6){
     }).catch(e=>console.log("Audio blocked:", e));
   }
 
-  /* ---------------------------
-      SINGLE / TRIPLE TAP
-     --------------------------- */
   toggle.addEventListener("click", () => {
     tapCount++;
     if(tapTimer) clearTimeout(tapTimer);
 
     tapTimer = setTimeout(() => {
       if(tapCount >= 3){
-        // Open coupon modal
         coupon.setAttribute("aria-hidden","false");
         coupon.classList.add("show");
       } else {
-        // normal toggle
         if(!playing){ startMusic(); }
         else { bgm.pause(); playing = false; toggle.textContent = "🔇"; }
       }
@@ -155,9 +145,6 @@ function spawnSparkles(parent, count=6){
     }, 250);
   });
 
-  /* ---------------------------
-      HOLD 1 DETIK → buka kupon
-     --------------------------- */
   let holdTimer = null;
   toggle.addEventListener("pointerdown", () => {
     holdTimer = setTimeout(()=>{
@@ -168,21 +155,16 @@ function spawnSparkles(parent, count=6){
   toggle.addEventListener("pointerup", ()=> clearTimeout(holdTimer));
   toggle.addEventListener("pointerleave", ()=> clearTimeout(holdTimer));
 
-  /* ---------------------------
-      NEW: PLAY on popup CLOSE
-     --------------------------- */
   closePopup?.addEventListener("click", () => {
-    startMusic(); // musik ON saat popup ditutup
+    startMusic();
   });
 
-  /* ---------------------------
-      Play on explore button 
-     --------------------------- */
   exploreBtn?.addEventListener("click", () => {
     startMusic();
   });
 
 })();
+
 /* Share button */
 (function share(){
   const btn = qs('#shareBtn'); if(!btn) return;
@@ -200,7 +182,7 @@ function spawnSparkles(parent, count=6){
   const track = qs('.carousel-track'); const slides = [...qsa('.carousel-slide')];
   const prev = qs('.carousel-btn.prev'); const next = qs('.carousel-btn.next'); const dotsWrap = qs('#carouselDots');
   if(!track || slides.length===0) return;
-  // build dots
+
   dotsWrap.innerHTML = slides.map((_,i)=> `<button class="dot" data-i="${i}" aria-label="Slide ${i+1}"></button>`).join('');
   const dots = [...qsa('.dot')];
   let current = 0;
@@ -211,7 +193,7 @@ function spawnSparkles(parent, count=6){
   prev?.addEventListener('click', ()=> { current = (current-1+slides.length)%slides.length; update(); });
   next?.addEventListener('click', ()=> { current = (current+1)%slides.length; update(); });
   dots.forEach(d=> d.addEventListener('click', ()=> { current = Number(d.dataset.i); update(); }));
-  // swipe
+
   let startX=0; const carouselEl = qs('.menu-carousel');
   carouselEl?.addEventListener('touchstart', e=> startX = e.touches[0].clientX);
   carouselEl?.addEventListener('touchend', e=>{
@@ -220,7 +202,32 @@ function spawnSparkles(parent, count=6){
       current = dx < 0 ? (current+1)%slides.length : (current-1+slides.length)%slides.length; update();
     }
   });
-  // keyboard
-  window.addEventListener('keydown', e=> { if(e.key==='ArrowRight') next?.click(); if(e.key==='ArrowLeft') prev?.click(); });
+
+  window.addEventListener('keydown', e=> { 
+    if(e.key==='ArrowRight') next?.click(); 
+    if(e.key==='ArrowLeft') prev?.click(); 
+  });
+
   update();
+})();
+
+/* ======================================================
+   🎁 SCROLL-HIDE GIFTS (ADDED)
+   ====================================================== */
+(function giftScroll(){
+  let lastScroll = 0;
+  const kado = document.querySelector(".kado-bottom");
+  if(!kado) return;
+
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+
+    if (y > lastScroll) {
+      kado.classList.add("kado-hidden");     // hide when scrolling down
+    } else {
+      kado.classList.remove("kado-hidden");  // show when scrolling up
+    }
+
+    lastScroll = y;
+  });
 })();
