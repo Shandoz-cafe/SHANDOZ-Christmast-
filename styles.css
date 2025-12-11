@@ -147,3 +147,59 @@ body{
 /* small dot styles for carousel */
 .dot{width:10px;height:10px;background:rgba(255,255,255,0.12);border-radius:50%;border:none;cursor:pointer}
 .dot.active{background:var(--cream)}
+
+/* CHRISTMAS DECOR */
+.tree {
+  position: fixed;
+  width: 110px;
+  z-index: 9000;
+  animation: floatTree 4s ease-in-out infinite;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,.6));
+  pointer-events: none;
+}
+
+#tree-left { left: 12px; top: 120px; animation-delay: .2s; }
+#tree-right { right: 12px; top: 120px; animation-delay: .6s; }
+
+@keyframes floatTree {
+  0% { transform: translateY(0) }
+  50% { transform: translateY(-16px) }
+  100% { transform: translateY(0) }
+}
+
+.gift {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  z-index: 9000;
+  transition: opacity .4s ease, transform .4s ease;
+}
+
+.gift.hide {
+  opacity: 0;
+  transform: translate(-50%, 50px);
+}
+
+.lamp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 9000;
+  animation: blinkLamp 1.4s infinite;
+  opacity: .92;
+}
+
+@keyframes blinkLamp {
+  0% { opacity: .7 }
+  50% { opacity: 1 }
+  100% { opacity: .7 }
+}
+
+/* Make snow use PNG file */
+.snow {
+  background: url("salju.png") center/cover no-repeat !important;
+}
