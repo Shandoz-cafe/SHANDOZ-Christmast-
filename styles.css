@@ -182,15 +182,22 @@ body{
   transform: translate(-50%, 50px);
 }
 
+/* LAMPU KECIL DI BAWAH LOGO */
 .lamp {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 58px;          /* berada tepat di bawah logo navbar */
+  left: 18px;         /* pojok kiri dekat logo */
+  width: 110px;       /* DIPERKECIL */
   pointer-events: none;
   z-index: 9000;
+  opacity: 1;
   animation: blinkLamp 1.4s infinite;
-  opacity: .92;
+}
+
+@keyframes blinkLamp {
+  0% { opacity: .6 }
+  50% { opacity: 1 }
+  100% { opacity: .6 }
 }
 
 @keyframes blinkLamp {
