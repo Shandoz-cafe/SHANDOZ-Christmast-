@@ -29,14 +29,7 @@ window.addEventListener('load', () => {
     try{ localStorage.setItem(key, Date.now()); } catch(e){}
   }
   closeBtn?.addEventListener('click', closeModal);
-  try {
-    const seen = localStorage.getItem(key);
-    if(!seen || (Date.now() - Number(seen)) > 24*3600*1000){
-      setTimeout(openModal, 1400);
-    }
-  } catch(e){
-    setTimeout(openModal, 1400);
-  }
+  setTimeout(openModal, 1400);
 })();
 
 /* Promo countdown */
