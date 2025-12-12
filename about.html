@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About – Shando’z Café & Coffee Bar</title>
+
+<link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">Shando’z</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</div>
+
+<!-- Snow -->
+<div id="snow-container"></div>
+
+<!-- HERO -->
+<section class="about-hero">
+  <h1>Tentang Shando’z Café</h1>
+  <div class="gold-dust" id="goldDust"></div>
+</section>
+
+<!-- CONTENT -->
+<section class="about-section">
+  <div class="about-card">
+
+    <div class="separator"></div>
+
+    <h2>Coffee • Comfort • Community</h2>
+
+    <p>
+      Shando’z Café & Coffee Bar hadir sebagai ruang nyaman dengan konsep hangat dan elegan,
+      menghadirkan pengalaman menikmati kopi yang terasa lebih personal dan premium.
+    </p>
+
+    <img src="about-interior.jpg" class="about-img" alt="Interior Shando’z">
+
+    <p>
+      Kami menggunakan bahan baku premium, roasted fresh coffee, serta mengkombinasikan atmosfer
+      estetis dengan pelayanan ramah untuk menciptakan pengalaman terbaik bagi setiap pengunjung.
+    </p>
+
+    <p>
+      Setiap sudut, detail pencahayaan, aroma, hingga musik ambient dipilih untuk menghadirkan
+      suasana layaknya lounge hotel premium namun tetap nyaman untuk semua kalangan.
+    </p>
+
+    <div class="about-icons">
+      <div>☕</div>
+      <div>✨</div>
+      <div>🍰</div>
+    </div>
+
+  </div>
+</section>
+
+<script src="snow.js"></script>
+
+<script>
+// GENERATE GOLD DUST
+(function goldDust(){
+  const box = document.getElementById("goldDust");
+  for(let i=0;i<22;i++){
+    const d=document.createElement("div");
+    d.className="gold-dot";
+    d.style.left = Math.random()*100 + "vw";
+    d.style.top  = 20 + Math.random()*60 + "vh";
+    d.style.animationDelay = (Math.random()*6) + "s";
+    d.style.transform = `scale(${0.7 + Math.random()*1.2})`;
+    box.appendChild(d);
+  }
+})();
+</script>
+
+</body>
+</html>
