@@ -21,64 +21,80 @@ body{
 /* container */
 .container{max-width:1100px;margin:0 auto;padding:0 18px}
 
-/* NAVBAR PREMIUM */
+/* ========================================
+   NAVBAR PREMIUM – FIXED + MOBILE COLLAPSE
+======================================== */
 .navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1200;
-  padding: 14px 18px;
+  z-index: 99999;
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-/* NAVBAR MOBILE COLLAPSE */
-.nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  padding: 12px 18px;
 }
 
-/* HAMBURGER BUTTON (mobile only) */
-.hamburger {
-  display: none;
-  font-size: 28px;
-  background: transparent;
-  border: none;
+.nav-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* LOGO */
+.logo {
   color: #fff;
-  cursor: pointer;
+  font-size: 20px;
+  font-weight: 800;
 }
 
 /* DESKTOP NAV */
 .nav-links {
   display: flex;
-  gap: 16px;
+  gap: 18px;
+}
+
+.nav-links a {
+  color: #f5e0c2;
+  text-decoration: none;
+  font-weight: 600;
+  transition: .2s;
+}
+
+.nav-links a:hover {
+  color: #fff;
+}
+
+/* HAMBURGER MENU */
+.hamburger {
+  display: none;
+  color: #fff;
+  font-size: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 /* MOBILE MODE */
 @media (max-width: 720px) {
-
-  /* show hamburger */
   .hamburger {
     display: block;
   }
 
-  /* hide normal nav, replace with dropdown */
   .nav-links {
     position: absolute;
     top: 64px;
     left: 0;
     right: 0;
     background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(14px);
-    padding: 18px 0;
-    display: none;
+    backdrop-filter: blur(10px);
     flex-direction: column;
-    gap: 14px;
     text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    animation: menuFade 0.25s ease;
+    padding: 18px 0;
+    gap: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    display: none;
   }
 
   .nav-links.show {
@@ -86,41 +102,12 @@ body{
   }
 
   .nav-links a {
+    margin-left: 0 !important;
     font-size: 18px;
     padding: 8px 0;
   }
 }
 
-@keyframes menuFade {
-  from { opacity: 0; transform: translateY(-10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* LOGO PUTIH */
-.navbar .logo {
-  color: #ffffff !important;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-/* NAV LINKS */
-.nav-links a {
-  color: #f5e0c2;
-  text-decoration: none;
-  margin-left: 18px;
-  font-weight: 600;
-  transition: 0.2s;
-}
-
-.nav-links a:hover {
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
-.nav-links a.active {
-  color: var(--cream);
-  font-weight: 800;
-}
 /* HERO */
 .hero{position:relative;height:78vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.45)}
@@ -292,18 +279,6 @@ body{
   0% { opacity: .6 }
   50% { opacity: 1 }
   100% { opacity: .6 }
-}
-
-@keyframes blinkLamp {
-  0% { opacity: .6 }
-  50% { opacity: 1 }
-  100% { opacity: .6 }
-}
-
-@keyframes blinkLamp {
-  0% { opacity: .7 }
-  50% { opacity: 1 }
-  100% { opacity: .7 }
 }
 
 /* Make snow use PNG file */
@@ -513,7 +488,7 @@ body{
   gap: 30px;
 }
 
-.about-icons div {
+about-icons div {
   font-size: 44px;
   animation: float 3s infinite ease-in-out;
   opacity: 0.75;
@@ -526,15 +501,8 @@ body{
 }
 
 /* SEPARATOR */
-.separator {
-  width: 150px;
-  height: 3px;
-  margin: 25px auto 35px;
-  background: linear-gradient(90deg, transparent, #f0d6a5, transparent);
-  opacity: 0;
-  animation: sepFade 1.7s ease forwards;
-}
+The styles.css file is long — but user pasted it. They asked earlier to send final fix. Now they pasted styles.css and expect perhaps to finish. They previously asked "Kirim final fix semua" and I delivered files. Now they posted styles.css; likely they want me to integrate final scripts? But last user message included styles.css and nothing else — they might be asking me to check or fix errors. I should respond: point out small issues in CSS: there's a missing dot before about-icons (they wrote about-icons div missing dot), duplicated blocks, stray `/* TITLE */ .about-card h2 { font-size: 32px; text-align: center;` truncated, and extra unmatched braces earlier (I saw an extra `}` after .promo-card?). Need to provide corrected styles.css final and instructions to paste. Also ensure hamburger CSS present. The user likely expects final combined file. So produce cleaned, merged styles.css (complete) and tell them to replace file. Must not be too verbose.
 
-@keyframes sepFade {
-  to { opacity:1; }
-}
+I'll produce corrected full styles.css (cleaned duplicates, fixed .about-icons selector, remove stray duplicates and duplicate @keyframes blinkLamp). Keep necessary styles. Provide downloadable? No. Provide content.
+
+Let's craft cleaned styles.css content (not too huge but include all essential). I'll produce a consolidated stylesheet including all parts used earlier. Ensure no syntax errors. Provide as code block and instruct to replace.
