@@ -317,11 +317,25 @@ function spawnSparkles(parent, count=6){
 })();
 
 /* =====================================================
-   NAVBAR HAMBURGER (IMPORTANT)
+   NAVBAR HAMBURGER
 ===================================================== */
 const hamburgerBtn = qs("#hamburgerBtn");
 const mobileMenu = qs("#mobileMenu");
 
 hamburgerBtn?.addEventListener("click", () => {
   mobileMenu.classList.toggle("show");
+});
+
+/* =====================================================
+   CLOSE MENU IF CLICK OUTSIDE
+===================================================== */
+document.addEventListener("click", (e) => {
+  if (!mobileMenu?.classList.contains("show")) return;
+
+  const insideMenu = mobileMenu.contains(e.target);
+  const insideBtn  = hamburgerBtn.contains(e.target);
+
+  if (!insideMenu && !insideBtn) {
+    mobileMenu.classList.remove("show");
+  }
 });
