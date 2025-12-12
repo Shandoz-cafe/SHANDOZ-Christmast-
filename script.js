@@ -240,3 +240,10 @@ function spawnSparkles(parent, count=6){
     lastY = y;
   });
 })();
+
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const mobileMenu = document.getElementById("mobileMenu");
+
+hamburgerBtn?.addEventListener("click", () => {
+  mobileMenu.classList.toggle("show");
+});
