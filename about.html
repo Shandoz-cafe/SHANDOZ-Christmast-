@@ -7,124 +7,6 @@
 
 <link rel="stylesheet" href="styles.css">
 
-<style>
-/* ------------------------------------------
-   PREMIUM ABOUT STYLING
--------------------------------------------*/
-.about-hero {
-  height: 75vh;
-  position: relative;
-  background: url('about-hero.jpg') center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.about-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.3), #1c1613 75%);
-}
-
-.about-hero h1 {
-  z-index: 5;
-  font-size: 58px;
-  font-weight: 900;
-  text-align: center;
-  background: linear-gradient(90deg, #e7d2a1, #f2e3c2, #d1b98a);
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shimmer 6s infinite linear;
-}
-
-@keyframes shimmer {
-  0% { filter: brightness(0.85); }
-  50% { filter: brightness(1.25); }
-  100% { filter: brightness(0.85); }
-}
-
-.about-section {
-  padding: 80px 20px 90px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.about-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
-  padding: 32px;
-  border-radius: 18px;
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.09);
-  box-shadow: 0 8px 60px rgba(0,0,0,0.4);
-  animation: fadeUp 1.2s ease;
-}
-
-@keyframes fadeUp {
-  0% { opacity:0; transform:translateY(45px); }
-  100% { opacity:1; transform:translateY(0); }
-}
-
-.about-card h2 {
-  font-size: 32px;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 18px;
-  color: var(--cream);
-}
-
-.about-card p {
-  color: #e3d4bd;
-  font-size: 18px;
-  line-height: 1.7;
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.about-img {
-  width: 100%;
-  border-radius: 14px;
-  box-shadow: 0 6px 25px rgba(0,0,0,0.55);
-  margin: 28px 0;
-}
-
-/* ICON STRIP GOLD */
-.about-icons {
-  margin-top: 32px;
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  filter: drop-shadow(0 0 8px rgba(255,214,150,0.3));
-}
-
-.about-icons div {
-  font-size: 44px;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% { transform:translateY(0); }
-  50% { transform:translateY(-10px); }
-  100% { transform:translateY(0); }
-}
-
-/* PARALLAX SMALL LINE */
-.separator {
-  width: 140px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #e7c78f, transparent);
-  margin: 20px auto 35px;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: sepFade 1.6s ease 0.5s forwards;
-}
-
-@keyframes sepFade {
-  to { opacity:1; transform:translateY(0); }
-}
-
-</style>
 </head>
 
 <body>
@@ -140,11 +22,13 @@
   </div>
 </div>
 
+<!-- Snow -->
 <div id="snow-container"></div>
 
-<!-- HERO PREMIUM -->
+<!-- HERO -->
 <section class="about-hero">
   <h1>Tentang Shando’z Café</h1>
+  <div class="gold-dust" id="goldDust"></div>
 </section>
 
 <!-- CONTENT -->
@@ -156,21 +40,20 @@
     <h2>Coffee • Comfort • Community</h2>
 
     <p>
-      Shando’z Café & Coffee Bar adalah ruang nyaman yang dibangun dari passion terhadap kopi,
-      estetika interior hangat, dan keinginan untuk menghadirkan tempat berkumpul yang
-      terasa seperti rumah kedua.
+      Shando’z Café & Coffee Bar hadir sebagai ruang nyaman dengan konsep hangat dan elegan,
+      menghadirkan pengalaman menikmati kopi yang terasa lebih personal dan premium.
     </p>
 
-    <img src="about-interior.jpg" alt="" class="about-img">
+    <img src="about-interior.jpg" class="about-img" alt="Interior Shando’z">
 
     <p>
-      Kami memilih bahan baku premium, kopi pilihan roasted fresh, dan menghadirkan menu
-      signature yang terus berkembang seiring kreativitas barista kami.
+      Kami menggunakan bahan baku premium, roasted fresh coffee, serta mengkombinasikan atmosfer
+      estetis dengan pelayanan ramah untuk menciptakan pengalaman terbaik bagi setiap pengunjung.
     </p>
 
     <p>
-      Setiap detail — dari aroma kopi, pencahayaan hangat, sampai musik ambient —
-      dirancang untuk memberikan pengalaman terbaik bagi setiap pengunjung.
+      Setiap sudut, detail pencahayaan, aroma, hingga musik ambient dipilih untuk menghadirkan
+      suasana layaknya lounge hotel premium namun tetap nyaman untuk semua kalangan.
     </p>
 
     <div class="about-icons">
@@ -183,6 +66,22 @@
 </section>
 
 <script src="snow.js"></script>
+
+<script>
+// GENERATE GOLD DUST
+(function goldDust(){
+  const box = document.getElementById("goldDust");
+  for(let i=0;i<22;i++){
+    const d=document.createElement("div");
+    d.className="gold-dot";
+    d.style.left = Math.random()*100 + "vw";
+    d.style.top  = 20 + Math.random()*60 + "vh";
+    d.style.animationDelay = (Math.random()*6) + "s";
+    d.style.transform = `scale(${0.7 + Math.random()*1.2})`;
+    box.appendChild(d);
+  }
+})();
+</script>
 
 </body>
 </html>
