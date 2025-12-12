@@ -291,66 +291,159 @@ body{
 .about-card h2 {
   font-size: 32px;
   text-align: center;
-  color: var(--cream);
-  font-weight: 800;
-  margin-bottom: 14px;
+/* --------------------------------------------------
+   ABOUT PAGE – PREMIUM LEVEL 3 (GOLD ELITE)
+   SUPER CLEAN LUXURY EDITION
+---------------------------------------------------*/
+
+/* HERO PARALLAX */
+.about-hero {
+  height: 78vh;
+  position: relative;
+  background: url('about-hero.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
-/* PARAGRAPH */
-.about-card p {
-  color: #e7dec9;
-  font-size: 18px;
-  line-height: 1.65;
+.about-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.25), #1c1613 80%);
+  pointer-events: none;
+}
+
+.about-hero h1 {
+  z-index: 5;
+  font-size: 60px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-align: center;
+  background: linear-gradient(90deg, #fff3d1, #e6d4a4, #f2e7c4);
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 6px rgba(255,230,170,0.35));
+  animation: eliteGlow 5.5s infinite ease-in-out;
+}
+
+@keyframes eliteGlow {
+  0% { opacity: .88; }
+  50% { opacity: 1; }
+  100% { opacity: .88; }
+}
+
+/* CONTENT SECTION */
+.about-section {
+  padding: 85px 22px 110px;
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+/* PREMIUM GLASS CARD */
+.about-card {
+  background: rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 38px 32px;
+  border: 1px solid rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.45);
+  animation: fadeUpElite 1.2s ease;
+}
+
+@keyframes fadeUpElite {
+  0% { opacity:0; transform:translateY(50px); }
+  100% { opacity:1; transform:translateY(0); }
+}
+
+/* TITLE */
+.about-card h2 {
+  font-size: 34px;
+  font-weight: 800;
   text-align: center;
   margin-bottom: 18px;
+  background: linear-gradient(90deg, #f7e8c7, #dcc8a0);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* TEXT */
+.about-card p {
+  font-size: 18px;
+  line-height: 1.75;
+  color: #eadcc8;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 /* IMAGE PREMIUM */
 .about-img {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 14px;
   margin: 32px 0;
-  box-shadow: 0 8px 35px rgba(0,0,0,0.55);
-}
-
-/* GOLD SEPARATOR */
-.separator {
-  width: 150px;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #e0c58f, transparent);
-  margin: 10px auto 35px;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.55);
   opacity: 0;
-  transform: translateY(15px);
-  animation: sepFade 1.2s ease 0.4s forwards;
+  animation: fadeImg 1.4s ease forwards;
 }
 
-@keyframes sepFade {
-  to { opacity: 1; transform: translateY(0); }
+@keyframes fadeImg {
+  to { opacity:1; }
 }
 
-/* FLOATING ICONS */
+/* GOLD DUST */
+.gold-dust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.gold-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, #ffeec5 0%, transparent 70%);
+  opacity: 0.45;
+  border-radius: 50%;
+  animation: dustFloat 6s infinite linear;
+}
+
+@keyframes dustFloat {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-120px) scale(0.6); opacity:0; }
+}
+
+/* ICONS */
 .about-icons {
   margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 35px;
-  filter: drop-shadow(0 0 10px rgba(255,225,170,0.25));
+  gap: 30px;
 }
 
 .about-icons div {
-  font-size: 48px;
-  animation: float 3.5s ease-in-out infinite;
+  font-size: 44px;
+  animation: float 3s infinite ease-in-out;
+  opacity: 0.75;
 }
 
 @keyframes float {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+  0% { transform:translateY(0); }
+  50% { transform:translateY(-9px); }
+  100% { transform:translateY(0); }
 }
 
-/* MOBILE ADJUST */
-@media(max-width:640px){
-  .about-hero h1 { font-size: 40px; }
-  .about-card { padding: 26px; }
-  .about-card p { font-size: 16px; }
+/* SEPARATOR */
+.separator {
+  width: 150px;
+  height: 3px;
+  margin: 25px auto 35px;
+  background: linear-gradient(90deg, transparent, #f0d6a5, transparent);
+  opacity: 0;
+  animation: sepFade 1.7s ease forwards;
+}
+
+@keyframes sepFade {
+  to { opacity:1; }
 }
