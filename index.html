@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1c1613">
+    <title>Shando'z Café & Coffee Bar - Coffee · Comfort · Community</title>
+    <meta name="description" content="Shando'z Café & Coffee Bar - Ruang nyaman dengan kopi premium, atmosfer elegan, dan pelayanan ramah.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23e6c899'>☕</text></svg>">
+    <style>
+        :root {
+            --bg: #1c1613;
+            --cream: #e6c899;
+            --muted: #b79e7d;
+            --card: #2a221e;
+            --glass: rgba(255,255,255,0.05);
+            --accent: #f05a5a;
+            --safe-top: env(safe-area-inset-top);
+            --safe-bottom: env(safe-area-inset-bottom);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--cream);
+            -webkit-font-smoothing: antialiased;
+            -webkit-touch-callout: none;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 12px 16px;
+            padding-top: calc(12px + var(--safe-top));
+        }
+
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 900;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #f5e0c2;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .nav-links a:active, .nav-links a:hover {
+            color: #fff;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            padding: 8px;
+            line-height: 1;
+            width: 44px;
+            height: 44px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hamburger.active span {
+            display: none;
+        }
+
+        .hamburger.active::before {
+            content: '✕';
+            font-size: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(12px);
+                flex-direction: column;
+                text-align: center;
+                padding: 20px 0;
+                gap: 12px;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                display: none;
+                width: 100vw;
+                max-width: 100vw;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 16px;
+                padding: 12px 0;
+            }
+        }
+
+        /* ========== NETFLIX LOADER ========== */
+        .netflix-loader {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            z-index: 100000;
+            pointer-events: auto;
+        }
+
+        .loader-inner {
+            text-align: center;
+        }
+
+        .loader-text {
+            font-weight: 900;
+            font-size: clamp(32px, 12vw, 64px);
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+            text-shadow: 0 0 24px rgba(255,80,80,0.95), 0 0 40px rgba(255,140,100,0.6);
+            animation: loader-fade 2.2s forwards;
+        }
+
+        .loader-sub {
+            margin-top: 6px;
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        @keyframes loader-fade {
+            0% { opacity: 0; transform: scale(0.9); }
+            40% { opacity: 1; transform: scale(1); }
+            80% { opacity: 1; }
+            100% { opacity: 0; transform: scale(1.05); visibility: hidden; }
+        }
+
+        /* ========== SNOW ========== */
+        #snow-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 8000;
+        }
+
+        .snow {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            border-radius: 50%;
+            opacity: 0.85;
+            pointer-events: none;
+            will-change: transform;
+            filter: blur(0.2px);
+        }
+
+        /* ========== HERO ========== */
+        .hero {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 58px;
+        }
+
+        .hero-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: brightness(0.45);
+        }
+
+        .hero-inner {
+            z-index: 5;
+            text-align: center;
+            padding: 20px;
+            animation: heroFade 0.8s ease;
+        }
+
+        @keyframes heroFade {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-title {
+            font-size: clamp(28px, 8vw, 48px);
+            margin-bottom: 12px;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(14px, 4vw, 18px);
+            color: #f5e0c2;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+
+        .btn-cta {
+            background: var(--cream);
+            color: #231812;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(230,200,153,0.3);
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .btn-cta:active, .btn-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(230,200,153,0.4);
+        }
+
+        /* ========== PROMO SECTION ========== */
+        .promo-section {
+            padding: 60px 0 40px;
+        }
+
+        .section-title {
+            font-size: clamp(24px, 6vw, 36px);
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .promo-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .promo-grid img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            object-fit: contain;
+            background: #1a1411;
+            padding: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .promo-grid img:active, .promo-grid img:hover {
+            transform: scale(1.05);
+        }
+
+        /* ========== PROMO MODAL ========== */
+        .promo-modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 11000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.28s ease;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            padding: 20px;
+            padding-bottom: calc(20px + var(--safe-bottom));
+        }
+
+        .promo-modal[aria-hidden="false"],
+        .promo-modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .promo-card {
+            width: 100%;
+            max-width: 500px;
+            background: linear-gradient(180deg, #2a221e, #241b18);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            color: var(--cream);
+            position: relative;
+            overflow: hidden;
+            z-index: 10000;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .promo-close {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            z-index: 99999;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 700;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .promo-close:active, .promo-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        .promo-img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+            object-fit: contain;
+            background: #111;
+            padding: 8px;
+        }
+
+        .promo-body {
+            padding-top: 16px;
+        }
+
+        .promo-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .promo-desc {
+            font-size: 14px;
+            color: #dcc8a0;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .promo-timer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        .timer-count {
+            font-weight: 800;
+            font-size: 16px;
+            background: rgba(255,255,255,0.06);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .promo-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: var(--cream);
+            color: #231812;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            flex: 1;
+            min-height: 44px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--cream);
+        }
+
+        .btn:active, .btn:hover {
+            background: #f5e0c2;
+            transform: scale(1.02);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            color: var(--cream);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn.ghost:active, .btn.ghost:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        /* ========== SPARKLES ========== */
+        .sparkle {
+            position: absolute;
+            font-size: 20px;
+            pointer-events: none;
+            animation: spark 1.6s ease-in-out forwards;
+            z-index: 10001;
+        }
+
+        @keyframes spark {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.15); }
+            100% { opacity: 0; transform: scale(0.8) translateY(-30px); }
+        }
+
+        /* ========== MENU CAROUSEL ========== */
+        .menu-section {
+            padding: 60px 0;
+        }
+
+        .menu-carousel {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 12px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 5;
+            font-size: 20px;
+            min-width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .carousel-btn:active, .carousel-btn:hover {
+            background: rgba(0,0,0,0.7);
+        }
+
+        .carousel-btn.prev {
+            left: 12px;
+        }
+
+        .carousel-btn.next {
+            right: 12px;
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot:active, .dot:hover {
+            background: rgba(255,255,255,0.4);
+        }
+
+        .dot.active {
+            background: var(--cream);
+            width: 24px;
+            border-radius: 5px;
+        }
+
+        /* ========== GALLERY ========== */
+        .gallery-section {
+            padding: 60px 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #111;
+            padding: 6px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-grid img:active, .gallery-grid img:hover {
+            transform: scale(1.08);
+        }
+
+        /* ========== LIGHTBOX ========== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 12000;
+            padding: 16px;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .lightbox.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            top: calc(16px + var(--safe-top));
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 8px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 12001;
+            transition: background 0.2s ease;
+        }
+
+        .lightbox-close:active, .lightbox-close:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* ========== FOOTER ========== */
+        footer {
+            background: rgba(0,0,0,0.4);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 40px 0;
+            padding-bottom: calc(40px + var(--safe-bottom));
+            text-align: center;
+            font-size: 14px;
+            color: #b79e7d;
+        }
+
+        footer a {
+            color: var(--cream);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        /* ========== FLOATING BUTTONS ========== */
+        .float-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+            bottom: calc(20px + var(--safe-bottom));
+            right: calc(20px + var(--safe-right, 0));
+        }
+
+        .float-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--cream);
+            color: #231812;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            z-index: 9999;
+        }
+
+        .float-btn:active, .float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+
+        .float-btn.music {
+            background: #25D366;
+        }
+
+        /* ========== CHRISTMAS DECOR ========== */
+        .tree {
+            position: fixed;
+            width: 100px;
+            z-index: 9000;
+            animation: floatTree 4s ease-in-out infinite;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+            pointer-events: none;
+        }
+
+        #tree-left {
+            left: 12px;
+            top: 120px;
+            animation-delay: 0.2s;
+        }
+
+        #tree-right {
+            right: 12px;
+            top: 120px;
+            animation-delay: 0.6s;
+        }
+
+        @keyframes floatTree {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-16px); }
+        }
+
+        .gift {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vw;
+            height: auto;
+            pointer-events: none;
+            z-index: 9000;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            bottom: var(--safe-bottom, 0);
+        }
+
+        .gift.hide {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .lamp {
+            position: fixed;
+            top: 58px;
+            top: calc(58px + var(--safe-top));
+            left: 0;
+            width: 100vw;
+            height: auto;
+            pointer-events: none;
+            z-index: 9000;
+            opacity: 0.9;
+            animation: blinkLamp 1.4s infinite;
+        }
+
+        @keyframes blinkLamp {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* ========== MUSIC TOGGLE ========== */
+        #music-toggle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(240,90,90,0.3);
+            transition: all 0.3s ease;
+            position: fixed;
+            bottom: calc(90px + var(--safe-bottom));
+            right: calc(20px + var(--safe-right, 0));
+            z-index: 9999;
+        }
+
+        #music-toggle:active, #music-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        #shareBtn {
+            background: var(--cream);
+            color: #231812;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 12px;
+            }
+
+            .section-title {
+                margin-bottom: 30px;
+            }
+
+            .promo-grid {
+                gap: 12px;
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            .gallery-grid {
+                gap: 8px;
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 8px 12px;
+            }
+
+            .logo {
+                font-size: 16px;
+            }
+
+            .hero {
+                min-height: 60vh;
+            }
+
+            .carousel-slide img {
+                max-height: 50vh;
+            }
+
+            .promo-card {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            .btn-cta {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+
+        /* ========== ACCESSIBILITY ========== */
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid var(--cream);
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NETFLIX LOADER -->
+    <div id="netflixLoader" class="netflix-loader">
+        <div class="loader-inner">
+            <div class="loader-text">SHANDO'Z</div>
+            <div class="loader-sub">Coffee · Comfort · Community</div>
+        </div>
+    </div>
+
+    <!-- SNOW CONTAINER -->
+    <div id="snow-container"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-inner container">
+            <div class="logo">☕ SHANDO'Z</div>
+            <button id="hamburgerBtn" class="hamburger" aria-label="Menu Toggle"><span>☰</span></button>
+            <ul id="mobileMenu" class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="hero-video.mp4" type="video/mp4">
+        </video>
+        <div class="hero-inner">
+            <h1 class="hero-title">SHANDO'Z CAFÉ</h1>
+            <p class="hero-subtitle">Coffee · Comfort · Community</p>
+            <button id="exploreMenuBtn" class="btn-cta">Explore Menu</button>
+        </div>
+    </section>
+
+    <!-- TREE DECOR -->
+    <img id="tree-left" class="tree" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'><path d='M50 10 L70 40 L75 40 L50 65 L75 65 L50 95 L80 95 L50 120 L20 120 L50 95 L20 95 L50 65 L25 65 L50 40 L25 40 Z' fill='%23228B22' opacity='0.9'/></svg>" alt="">
+    <img id="tree-right" class="tree" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'><path d='M50 10 L70 40 L75 40 L50 65 L75 65 L50 95 L80 95 L50 120 L20 120 L50 95 L20 95 L50 65 L25 65 L50 40 L25 40 Z' fill='%23228B22' opacity='0.9'/></svg>" alt="">
+
+    <!-- LAMP DECOR -->
+    <img class="lamp" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 30'><circle cx='20' cy='15' r='6' fill='%23FFD700'/><circle cx='60' cy='15' r='6' fill='%23FF6B6B'/><circle cx='100' cy='15' r='6' fill='%23FFD700'/><circle cx='140' cy='15' r='6' fill='%23FF6B6B'/><circle cx='180' cy='15' r='6' fill='%23FFD700'/></svg>" alt="">
+
+    <!-- PROMO SECTION -->
+    <section class="promo-section">
+        <div class="container">
+            <h2 class="section-title">🎄 Special Promo 🎄</h2>
+            <div class="promo-grid">
+                <img class="lightbox-trigger" src="promo1.jpg" alt="Promo 1" loading="lazy">
+                <img class="lightbox-trigger" src="promo2.jpg" alt="Promo 2" loading="lazy">
+                <img class="lightbox-trigger" src="promo3.jpg" alt="Promo 3" loading="lazy">
+                <img class="lightbox-trigger" src="promo4.jpg" alt="Promo 4" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- PROMO MODAL -->
+    <div id="promoModal" class="promo-modal" aria-hidden="true">
+        <div class="promo-card">
+            <button class="promo-close" aria-label="Close Promo">&times;</button>
+            <div class="promo-hero">
+                <img class="promo-img" src="promo-main.jpg" alt="Promo Utama">
+            </div>
+            <div class="promo-body">
+                <h3 class="promo-title">🎉 Paket Kenyang</h3>
+                <p class="promo-desc">Dapatkan diskon spesial & Promo Paket Kenyang. Gunakan Promo Paket Kenyang ini Segera!</p>
+                <div class="promo-timer">
+                    <span>Waktu Tersisa:</span>
+                    <span class="timer-count" id="promoCountdown">00d 00:00:00</span>
+                </div>
+                <div class="promo-actions">
+                    <button id="downloadCoupon" class="btn">Download Coupon</button>
+                    <button class="btn ghost" onclick="this.closest('.promo-modal').classList.remove('show')">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU CAROUSEL SECTION -->
+    <section id="menu" class="menu-section">
+        <div class="container">
+            <h2 class="section-title">📋 Menu Kami</h2>
+            <div class="menu-carousel">
+                <div class="carousel-track">
+                    <div class="carousel-slide"><img src="menu1.jpg" alt="Menu 1" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="menu2.jpg" alt="Menu 2" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="menu3.jpg" alt="Menu 3" loading="lazy"></div>
+                </div>
+                <button class="carousel-btn prev" aria-label="Previous Menu">←</button>
+                <button class="carousel-btn next" aria-label="Next Menu">→</button>
+            </div>
+            <div id="carouselDots" class="carousel-dots"></div>
+        </div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="gallery-section">
+        <div class="container">
+            <h2 class="section-title">📸 Gallery</h2>
+            <div class="gallery-grid">
+                <img class="lightbox-trigger" src="gallery1.jpg" alt="Gallery 1" loading="lazy">
+                <img class="lightbox-trigger" src="gallery2.jpg" alt="Gallery 2" loading="lazy">
+                <img class="lightbox-trigger" src="gallery3.jpg" alt="Gallery 3" loading="lazy">
+                <img class="lightbox-trigger" src="gallery4.jpg" alt="Gallery 4" loading="lazy">
+                <img class="lightbox-trigger" src="gallery5.jpg" alt="Gallery 5" loading="lazy">
+                <img class="lightbox-trigger" src="gallery6.jpg" alt="Gallery 6" loading="lazy">
+            </div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox" class="lightbox" aria-hidden="true">
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Full Size Image">
+        <button id="lightbox-close" class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+    </div>
+
+    <!-- GIFT DECOR -->
+    <img id="gift-bottom" class="gift" src="gift.svg" alt="">
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Shando'z Café & Coffee Bar. All rights reserved.</p>
+            <p>📍 Jakarta Pusat | 📱 <a href="tel:+621234567890">+62 123 456 7890</a></p>
+        </div>
+    </footer>
+
+    <!-- AUDIO -->
+    <audio id="bgm" src="bgm.mp3" loop preload="none"></audio>
+
+    <!-- FLOATING BUTTONS -->
+    <div class="float-buttons">
+        <button id="music-toggle" aria-label="Toggle Music">🔇</button>
+    </div>
+    <button id="shareBtn" class="float-btn" aria-label="Share">📤</button>
+
+    <!-- SCRIPTS -->
+    <script src="script.js"></script>
+    <script src="snow.js"></script>
+</body>
+</html>
