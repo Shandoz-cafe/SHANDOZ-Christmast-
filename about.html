@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About – Shando’z Café & Coffee Bar</title>
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+/* ------------------------------------------
+   PREMIUM ABOUT STYLING
+-------------------------------------------*/
+.about-hero {
+  height: 75vh;
+  position: relative;
+  background: url('about-hero.jpg') center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.about-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), #1c1613 75%);
+}
+
+.about-hero h1 {
+  z-index: 5;
+  font-size: 58px;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(90deg, #e7d2a1, #f2e3c2, #d1b98a);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmer 6s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { filter: brightness(0.85); }
+  50% { filter: brightness(1.25); }
+  100% { filter: brightness(0.85); }
+}
+
+.about-section {
+  padding: 80px 20px 90px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.about-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+  padding: 32px;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 8px 60px rgba(0,0,0,0.4);
+  animation: fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp {
+  0% { opacity:0; transform:translateY(45px); }
+  100% { opacity:1; transform:translateY(0); }
+}
+
+.about-card h2 {
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 18px;
+  color: var(--cream);
+}
+
+.about-card p {
+  color: #e3d4bd;
+  font-size: 18px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.about-img {
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.55);
+  margin: 28px 0;
+}
+
+/* ICON STRIP GOLD */
+.about-icons {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  filter: drop-shadow(0 0 8px rgba(255,214,150,0.3));
+}
+
+.about-icons div {
+  font-size: 44px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform:translateY(0); }
+  50% { transform:translateY(-10px); }
+  100% { transform:translateY(0); }
+}
+
+/* PARALLAX SMALL LINE */
+.separator {
+  width: 140px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e7c78f, transparent);
+  margin: 20px auto 35px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: sepFade 1.6s ease 0.5s forwards;
+}
+
+@keyframes sepFade {
+  to { opacity:1; transform:translateY(0); }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">Shando’z</div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="about.html" class="active">About</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</div>
+
+<div id="snow-container"></div>
+
+<!-- HERO PREMIUM -->
+<section class="about-hero">
+  <h1>Tentang Shando’z Café</h1>
+</section>
+
+<!-- CONTENT -->
+<section class="about-section">
+  <div class="about-card">
+
+    <div class="separator"></div>
+
+    <h2>Coffee • Comfort • Community</h2>
+
+    <p>
+      Shando’z Café & Coffee Bar adalah ruang nyaman yang dibangun dari passion terhadap kopi,
+      estetika interior hangat, dan keinginan untuk menghadirkan tempat berkumpul yang
+      terasa seperti rumah kedua.
+    </p>
+
+    <img src="about-interior.jpg" alt="" class="about-img">
+
+    <p>
+      Kami memilih bahan baku premium, kopi pilihan roasted fresh, dan menghadirkan menu
+      signature yang terus berkembang seiring kreativitas barista kami.
+    </p>
+
+    <p>
+      Setiap detail — dari aroma kopi, pencahayaan hangat, sampai musik ambient —
+      dirancang untuk memberikan pengalaman terbaik bagi setiap pengunjung.
+    </p>
+
+    <div class="about-icons">
+      <div>☕</div>
+      <div>✨</div>
+      <div>🍰</div>
+    </div>
+
+  </div>
+</section>
+
+<script src="snow.js"></script>
+
+</body>
+</html>
