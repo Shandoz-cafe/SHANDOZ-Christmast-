@@ -40,6 +40,7 @@ body{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
 }
 
 /* LOGO */
@@ -74,6 +75,7 @@ body{
   background: none;
   border: none;
   cursor: pointer;
+  line-height: 1;
 }
 
 /* MOBILE MODE */
@@ -138,7 +140,7 @@ body{
   100%{opacity:0;transform:scale(1.05);visibility:hidden}
 }
 
-/* SNOW */
+/* SNOW (default dot fallback) */
 #snow-container{position:fixed;inset:0;pointer-events:none;z-index:8000}
 .snow{position:absolute;background:rgba(255,255,255,0.95);border-radius:50%;opacity:.85;pointer-events:none;will-change:transform;filter:blur(.2px);}
 
@@ -154,9 +156,7 @@ body{
   width:92%;max-width:520px;background:linear-gradient(180deg,#2a221e,#241b18);border-radius:14px;padding:16px;box-shadow:0 10px 48px rgba(0,0,0,.6);
   color:var(--cream);position:relative;overflow:hidden;
   z-index:10000;
-  }
 }
-
 .promo-close{
   position:absolute;
   right:10px;
@@ -250,7 +250,7 @@ body{
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100vw;       /* membentang penuh */
+  width: 100vw;
   height: auto;
   pointer-events: none;
   z-index: 9000;
@@ -262,12 +262,12 @@ body{
   transform: translateY(40px);
 }
 
-/* Lampu panjang 100% di bawah logo */
+/* Lampu full-width di bawah logo (small opacity) */
 .lamp {
   position: fixed;
-  top: 58px;           /* tepat di bawah logo navbar */
+  top: 58px;
   left: 0;
-  width: 100vw;        /* full dari ujung ke ujung */
+  width: 100vw;
   height: auto;
   pointer-events: none;
   z-index: 9000;
@@ -276,12 +276,12 @@ body{
 }
 
 @keyframes blinkLamp {
-  0% { opacity: .6 }
+  0% { opacity: .7 }
   50% { opacity: 1 }
-  100% { opacity: .6 }
+  100% { opacity: .7 }
 }
 
-/* Make snow use PNG file */
+/* Make snow use PNG file (snow.js places images) */
 .snow {
   background: url("salju.png") center/cover no-repeat !important;
 }
@@ -290,79 +290,7 @@ body{
    ABOUT PAGE – PREMIUM STYLE
    ============================ */
 
-/* HERO */
-.about-hero {
-  height: 75vh;
-  position: relative;
-  background: url("about-hero.jpg") center/cover no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.about-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.25), #1c1613 80%);
-}
-
-.about-hero h1 {
-  z-index: 5;
-  font-size: 60px;
-  font-weight: 900;
-  text-align: center;
-  background: linear-gradient(90deg, #e3cda3, #fff4d4, #d6bc86);
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shimmerGold 6s linear infinite;
-  letter-spacing: 2px;
-}
-
-@keyframes shimmerGold {
-  0% { filter: brightness(0.75); }
-  50% { filter: brightness(1.25); }
-  100% { filter: brightness(0.75); }
-}
-
-/* CONTENT WRAPPER */
-.about-section {
-  padding: 90px 20px;
-  max-width: 980px;
-  margin: auto;
-}
-
-/* GLASS CARD PREMIUM */
-.about-card {
-  background: linear-gradient(
-    180deg,
-    rgba(255,255,255,0.10),
-    rgba(255,255,255,0.03)
-  );
-  padding: 40px 30px;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,0.15);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 12px 55px rgba(0,0,0,0.5);
-  animation: fadeUp 1.2s ease both;
-}
-
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(50px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-/* TITLE */
-.about-card h2 {
-  font-size: 32px;
-  text-align: center;
-/* --------------------------------------------------
-   ABOUT PAGE – PREMIUM LEVEL 3 (GOLD ELITE)
-   SUPER CLEAN LUXURY EDITION
----------------------------------------------------*/
-
-/* HERO PARALLAX */
+/* HERO (about) */
 .about-hero {
   height: 78vh;
   position: relative;
@@ -488,7 +416,7 @@ body{
   gap: 30px;
 }
 
-about-icons div {
+.about-icons div {
   font-size: 44px;
   animation: float 3s infinite ease-in-out;
   opacity: 0.75;
@@ -501,8 +429,22 @@ about-icons div {
 }
 
 /* SEPARATOR */
-The styles.css file is long — but user pasted it. They asked earlier to send final fix. Now they pasted styles.css and expect perhaps to finish. They previously asked "Kirim final fix semua" and I delivered files. Now they posted styles.css; likely they want me to integrate final scripts? But last user message included styles.css and nothing else — they might be asking me to check or fix errors. I should respond: point out small issues in CSS: there's a missing dot before about-icons (they wrote about-icons div missing dot), duplicated blocks, stray `/* TITLE */ .about-card h2 { font-size: 32px; text-align: center;` truncated, and extra unmatched braces earlier (I saw an extra `}` after .promo-card?). Need to provide corrected styles.css final and instructions to paste. Also ensure hamburger CSS present. The user likely expects final combined file. So produce cleaned, merged styles.css (complete) and tell them to replace file. Must not be too verbose.
+.separator {
+  width: 150px;
+  height: 3px;
+  margin: 25px auto 35px;
+  background: linear-gradient(90deg, transparent, #f0d6a5, transparent);
+  opacity: 0;
+  animation: sepFade 1.7s ease forwards;
+}
 
-I'll produce corrected full styles.css (cleaned duplicates, fixed .about-icons selector, remove stray duplicates and duplicate @keyframes blinkLamp). Keep necessary styles. Provide downloadable? No. Provide content.
+@keyframes sepFade {
+  to { opacity:1; }
+}
 
-Let's craft cleaned styles.css content (not too huge but include all essential). I'll produce a consolidated stylesheet including all parts used earlier. Ensure no syntax errors. Provide as code block and instruct to replace.
+/* small mobile tweaks */
+@media (max-width:480px){
+  .hero-title{font-size:26px}
+  .about-hero h1{font-size:34px}
+  .nav-links a{font-size:16px}
+}
