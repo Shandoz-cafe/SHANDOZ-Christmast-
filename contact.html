@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contact – Shando'z Café & Coffee Bar</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact – Shando’z Café & Coffee Bar</title>
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
 <header class="navbar">
-  <div class="nav-inner container">
+  <div class="container nav-inner">
     <div class="logo">Shando'z Café & Coffee Bar</div>
-    <button id="hamburgerBtn" class="hamburger" aria-label="Menu">☰</button>
-    <nav id="mobileMenu" class="nav-links">
+
+    <button class="hamburger" id="hamburgerBtn">☰</button>
+
+    <nav class="nav-links" id="mobileMenu">
       <a href="index.html">Home</a>
       <a href="about.html">About</a>
       <a href="index.html#promo">Promo</a>
       <a href="index.html#menu">Menu</a>
-      <a href="index.html#gallery">Gallery</a>
+      <a href="gallery.html">Gallery</a>
       <a href="contact.html" class="active">Contact</a>
     </nav>
   </div>
@@ -25,29 +30,39 @@
 
 <div id="snow-container"></div>
 
-<section class="contact-section" style="padding:110px 18px 80px;">
-  <div class="container">
-    <div class="contact-card" style="background:rgba(255,255,255,0.03);padding:28px;border-radius:12px;backdrop-filter:blur(8px);box-shadow:0 8px 40px rgba(0,0,0,0.5);">
-      <h1 style="text-align:center;color:var(--cream);margin-bottom:8px">Contact & Location</h1>
-      <p style="text-align:center;color:#e3d4bd;margin-bottom:18px">Shando'z Café & Coffee Bar — buka setiap hari. Klik peta untuk buka di Google Maps.</p>
+<section class="contact-section">
 
-      <!-- MAP (embed via query fallback to share link) -->
-      <div style="width:100%;height:360px;border-radius:10px;overflow:hidden;margin-bottom:12px">
-        <iframe
-          src="https://maps.app.goo.gl/LT2jE9xgNimJoQKa7"
-          width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
-      </div>
+  <div class="contact-card">
 
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center;margin-bottom:8px">
-        <a href="https://maps.app.goo.gl/LT2jE9xgNimJoQKa7" target="_blank" rel="noopener" class="btn">Buka di Google Maps</a>
-        <a href="tel:+6285706370841" class="btn ghost">Telepon: +62 857-0637-0841</a>
-      </div>
+    <h1 class="contact-title">Contact & Location</h1>
 
-      <p style="text-align:center;color:#d8c7ad;margin-top:8px">
-        Alamat (Banceuy Permai C3 No.88 Sumur Bandung):<br>
+    <p class="contact-sub">
+      Shando’z Café & Coffee Bar — buka setiap hari.<br>
+      Klik peta untuk membuka langsung di Google Maps.
+    </p>
 
+    <!-- MAP FIXED -->
+    <div class="map-wrapper">
+      <iframe
+        class="map-frame"
+        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1982.6614197552372!2d107.033114!3d-6.493806!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sid!2sid!4v1700000000000"
+        loading="lazy"
+        allowfullscreen=""
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
     </div>
+
+    <a href="https://maps.app.goo.gl/bVCJ7szFcv2WdHsJ9" class="map-btn">
+      Buka di Google Maps
+    </a>
+
+    <div class="contact-info">
+      <p><b>Telepon:</b> <a href="tel:+6285706370841">+62 857-0637-0841</a></p>
+      <p><b>Alamat:</b> Banceuy Permai C3 No.88, Sumur Bandung</p>
+    </div>
+
   </div>
+
 </section>
 
 <script src="snow.js"></script>
