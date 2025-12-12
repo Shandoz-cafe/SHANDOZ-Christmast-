@@ -1,87 +1,112 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>About – Shando’z Café & Coffee Bar</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+  <title>About – Shando’z Café & Coffee Bar</title>
 
-<link rel="stylesheet" href="styles.css">
-
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="logo">Shando’z</div>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="about.html" class="active">About</a>
-    <a href="gallery.html">Gallery</a>
-    <a href="contact.html">Contact</a>
-  </div>
-</div>
+  <!-- CHRISTMAS DECORATION -->
+  <img id="tree-left" class="tree" src="pohon.png" alt="">
+  <img id="tree-right" class="tree" src="pohon.png" alt="">
+  <img id="gift-bottom" class="gift" src="kado.png" alt="">
+  <img id="lamp-line" class="lamp" src="lampu.png" alt="">
 
-<!-- Snow -->
-<div id="snow-container"></div>
+  <!-- SNOW -->
+  <div id="snow-container"></div>
 
-<!-- HERO -->
-<section class="about-hero">
-  <h1>Tentang Shando’z Café</h1>
-  <div class="gold-dust" id="goldDust"></div>
-</section>
+  <!-- NAVBAR (FINAL GLOBAL NAVBAR) -->
+  <header class="navbar">
+    <div class="nav-inner container">
 
-<!-- CONTENT -->
-<section class="about-section">
-  <div class="about-card">
+      <!-- LOGO -->
+      <div class="logo">SHANDO'Z CAFE & COFFEE BAR</div>
 
-    <div class="separator"></div>
+      <!-- HAMBURGER -->
+      <button id="hamburgerBtn" class="hamburger" aria-label="Menu">☰</button>
 
-    <h2>Coffee • Comfort • Community</h2>
+      <!-- NAV LINKS -->
+      <nav id="mobileMenu" class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html" class="active">About</a>
+        <a href="index.html#promo">Promo</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="contact.html">Contact</a>
+      </nav>
 
-    <p>
-      Shando’z Café & Coffee Bar hadir sebagai ruang nyaman dengan konsep hangat dan elegan,
-      menghadirkan pengalaman menikmati kopi yang terasa lebih personal dan premium.
-    </p>
-
-    <img src="about-interior.jpg" class="about-img" alt="Interior Shando’z">
-
-    <p>
-      Kami menggunakan bahan baku premium, roasted fresh coffee, serta mengkombinasikan atmosfer
-      estetis dengan pelayanan ramah untuk menciptakan pengalaman terbaik bagi setiap pengunjung.
-    </p>
-
-    <p>
-      Setiap sudut, detail pencahayaan, aroma, hingga musik ambient dipilih untuk menghadirkan
-      suasana layaknya lounge hotel premium namun tetap nyaman untuk semua kalangan.
-    </p>
-
-    <div class="about-icons">
-      <div>☕</div>
-      <div>✨</div>
-      <div>🍰</div>
     </div>
+  </header>
 
-  </div>
-</section>
+  <!-- ABOUT HERO -->
+  <section class="about-hero">
+    <h1>Tentang Shando’z Café</h1>
+    <div class="gold-dust" id="goldDust"></div>
+  </section>
 
-<script src="snow.js"></script>
+  <!-- ABOUT CONTENT -->
+  <section class="about-section">
+    <div class="about-card">
 
-<script>
-// GENERATE GOLD DUST
-(function goldDust(){
-  const box = document.getElementById("goldDust");
-  for(let i=0;i<22;i++){
-    const d=document.createElement("div");
-    d.className="gold-dot";
-    d.style.left = Math.random()*100 + "vw";
-    d.style.top  = 20 + Math.random()*60 + "vh";
-    d.style.animationDelay = (Math.random()*6) + "s";
-    d.style.transform = `scale(${0.7 + Math.random()*1.2})`;
-    box.appendChild(d);
-  }
-})();
-</script>
+      <div class="separator"></div>
+
+      <h2>Coffee • Comfort • Community</h2>
+
+      <p>
+        Shando’z Café & Coffee Bar hadir sebagai ruang nyaman dengan konsep hangat dan elegan,
+        menghadirkan pengalaman menikmati kopi yang terasa lebih personal dan premium.
+      </p>
+
+      <img src="about-interior.jpg" class="about-img" alt="Interior Shando’z">
+
+      <p>
+        Kami menggunakan bahan baku premium, roasted fresh coffee, serta mengkombinasikan atmosfer
+        estetis dengan pelayanan ramah untuk menciptakan pengalaman terbaik bagi setiap pengunjung.
+      </p>
+
+      <p>
+        Setiap sudut, detail pencahayaan, aroma, hingga musik ambient dipilih untuk menghadirkan
+        suasana layaknya lounge hotel premium namun tetap nyaman untuk semua kalangan.
+      </p>
+
+      <div class="about-icons">
+        <div>☕</div>
+        <div>✨</div>
+        <div>🍰</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MUSIC + FLOATING BUTTONS (OPSIONAL, jika ingin musik jalan di semua halaman) -->
+  <audio id="bgm" src="christmas.mp3" loop preload="auto"></audio>
+  <button id="music-toggle" class="wa-btn" aria-label="Toggle music">🔇</button>
+
+  <a href="https://wa.me/6285706370841?text=Halo%20Shando'z%20Cafe%2C%20saya%20ingin%20memesan." class="wa-floating" target="_blank" aria-label="WhatsApp">💬</a>
+
+  <script src="snow.js"></script>
+  <script src="script.js"></script>
+
+  <!-- GOLD DUST GENERATOR -->
+  <script>
+    (function goldDust(){
+      const box = document.getElementById("goldDust");
+      for(let i=0;i<22;i++){
+        const d=document.createElement("div");
+        d.className="gold-dot";
+        d.style.left = Math.random()*100 + "vw";
+        d.style.top  = 20 + Math.random()*60 + "vh";
+        d.style.animationDelay = (Math.random()*6) + "s";
+        d.style.transform = `scale(${0.7 + Math.random()*1.2})`;
+        box.appendChild(d);
+      }
+    })();
+  </script>
 
 </body>
 </html>
