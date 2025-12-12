@@ -219,3 +219,138 @@ body{
 .snow {
   background: url("salju.png") center/cover no-repeat !important;
 }
+
+/* ============================
+   ABOUT PAGE – PREMIUM STYLE
+   ============================ */
+
+/* HERO */
+.about-hero {
+  height: 75vh;
+  position: relative;
+  background: url("about-hero.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.about-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.25), #1c1613 80%);
+}
+
+.about-hero h1 {
+  z-index: 5;
+  font-size: 60px;
+  font-weight: 900;
+  text-align: center;
+  background: linear-gradient(90deg, #e3cda3, #fff4d4, #d6bc86);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shimmerGold 6s linear infinite;
+  letter-spacing: 2px;
+}
+
+@keyframes shimmerGold {
+  0% { filter: brightness(0.75); }
+  50% { filter: brightness(1.25); }
+  100% { filter: brightness(0.75); }
+}
+
+/* CONTENT WRAPPER */
+.about-section {
+  padding: 90px 20px;
+  max-width: 980px;
+  margin: auto;
+}
+
+/* GLASS CARD PREMIUM */
+.about-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.03)
+  );
+  padding: 40px 30px;
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 55px rgba(0,0,0,0.5);
+  animation: fadeUp 1.2s ease both;
+}
+
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* TITLE */
+.about-card h2 {
+  font-size: 32px;
+  text-align: center;
+  color: var(--cream);
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+/* PARAGRAPH */
+.about-card p {
+  color: #e7dec9;
+  font-size: 18px;
+  line-height: 1.65;
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+/* IMAGE PREMIUM */
+.about-img {
+  width: 100%;
+  border-radius: 16px;
+  margin: 32px 0;
+  box-shadow: 0 8px 35px rgba(0,0,0,0.55);
+}
+
+/* GOLD SEPARATOR */
+.separator {
+  width: 150px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e0c58f, transparent);
+  margin: 10px auto 35px;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: sepFade 1.2s ease 0.4s forwards;
+}
+
+@keyframes sepFade {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* FLOATING ICONS */
+.about-icons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  filter: drop-shadow(0 0 10px rgba(255,225,170,0.25));
+}
+
+.about-icons div {
+  font-size: 48px;
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+/* MOBILE ADJUST */
+@media(max-width:640px){
+  .about-hero h1 { font-size: 40px; }
+  .about-card { padding: 26px; }
+  .about-card p { font-size: 16px; }
+}
